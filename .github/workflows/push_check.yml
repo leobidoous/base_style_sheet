@@ -18,8 +18,8 @@ jobs:
         with:
           flutter-version: "3.19.4"
           channel: "stable"
-      - run: cd app_b2b && flutter clean
-      - run: cd app_b2b && flutter pub get
-      - run: cd app_b2b && dart format .
-      - run: cd app_b2b && flutter analyze
-      - run: cd app_b2b && flutter test
+      - run: flutter clean
+      - run: flutter pub get
+      - run: dart format .
+      - run: flutter analyze
+      - run: flutter test
