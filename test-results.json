@@ -1,0 +1,11 @@
+{"protocolVersion":"0.1.1","runnerVersion":null,"pid":75540,"type":"start","time":0}
+{"suite":{"id":0,"platform":"vm","path":"/Users/leobidoous/Documents/PayPay/mobile-retailer/base_style_sheet/test/lib/style_sheet_test.dart"},"type":"suite","time":0}
+{"test":{"id":1,"name":"loading /Users/leobidoous/Documents/PayPay/mobile-retailer/base_style_sheet/test/lib/style_sheet_test.dart","suiteID":0,"groupIDs":[],"metadata":{"skip":false,"skipReason":null},"line":null,"column":null,"url":null},"type":"testStart","time":0}
+{"count":1,"time":3,"type":"allSuites"}
+
+[{"event":"test.startedProcess","params":{"vmServiceUri":null,"observatoryUri":null}}]
+{"testID":1,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":1033}
+{"group":{"id":2,"suiteID":0,"parentID":null,"name":"","metadata":{"skip":false,"skipReason":null},"testCount":1,"line":null,"column":null,"url":null},"type":"group","time":1034}
+{"test":{"id":3,"name":"base_style_sheet ...","suiteID":0,"groupIDs":[2],"metadata":{"skip":false,"skipReason":null},"line":165,"column":5,"url":"package:flutter_test/src/widget_tester.dart","root_line":4,"root_column":3,"root_url":"file:///Users/leobidoous/Documents/PayPay/mobile-retailer/base_style_sheet/test/lib/style_sheet_test.dart"},"type":"testStart","time":1035}
+{"testID":3,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":1132}
+{"success":true,"type":"done","time":1140}

@@ -1,0 +1,70 @@
+import 'package:flutter/material.dart';
+
+import '../../../core/themes/app_theme_factory.dart';
+import '../../extensions/build_context_extensions.dart';
+
+class CustomCard extends StatelessWidget {
+  const CustomCard({
+    super.key,
+    this.borderRadius,
+    this.border,
+    this.shaddow,
+    this.color,
+    this.onTap,
+    required this.child,
+    this.isSelected = false,
+    this.isEnabled = true,
+    this.padding = EdgeInsets.zero,
+  });
+
+  final Function()? onTap;
+  final Widget child;
+  final bool isSelected;
+  final bool isEnabled;
+  final EdgeInsets padding;
+  final BorderRadius? borderRadius;
+  final Border? border;
+  final Color? color;
+  final List<BoxShadow>? shaddow;
+
+  @override
+  Widget build(BuildContext context) {
+    return Opacity(
+      opacity: isEnabled ? 1 : .5,
+      child: Semantics(
+        button: isEnabled ? onTap != null : null,
+        child: InkWell(
+          onTap: isEnabled ? onTap : null,
+          child: Container(
+            decoration: BoxDecoration(
+              color: isSelected
+                  ? context.colorScheme.primary
+                  : color ?? context.colorScheme.background,
+              borderRadius: borderRadius ?? context.theme.borderRadiusMD,
+              border: border ??
+                  Border.all(
+                    color: isSelected
+                        ? context.colorScheme.primary
+                        : color ?? Colors.grey.shade200,
+                    width: context.textTheme.lineHeightRegular,
+                  ),
+              boxShadow: shaddow == null
+                  ? [context.theme.shadowLightmodeLevel0]
+                  : (shaddow?.isEmpty ?? false)
+                      ? null
+                      : shaddow,
+            ),
+            clipBehavior: Clip.antiAliasWithSaveLayer,
+            child: ClipRRect(
+              borderRadius: borderRadius ?? context.theme.borderRadiusMD,
+              child: Padding(
+                padding: padding,
+                child: child,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}

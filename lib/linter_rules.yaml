@@ -1,0 +1,135 @@
+include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  strong-mode:
+    implicit-casts: false
+    implicit-dynamic: false
+
+  errors:
+    always_declare_return_types: error
+    missing_required_param: error
+    missing_return: error
+    parameter_assignments: error
+    one_member_abstracts: ignore
+    todo: ignore
+    dead_code: error
+
+  exclude:
+    - "lib/gen/**/*.dart"
+    - build/**
+    - "**/*.g.dart"
+    - "**/*.freezed.dart"
+    - "**/*.mocks.dart"
+
+linter:
+  rules:
+    overridden_fields: true
+    sort_pub_dependencies: false
+    sort_constructors_first: true
+    prefer_single_quotes: true
+    avoid_function_literals_in_foreach_calls: true
+    avoid_positional_boolean_parameters: false
+    unnecessary_raw_strings: true
+    public_member_api_docs: false
+    always_specify_types: false
+    lines_longer_than_80_chars: true
+    avoid_classes_with_only_static_members: false
+    prefer_relative_imports: true
+    directives_ordering: true
+    library_private_types_in_public_api: false
+    require_trailing_commas: true
+    depend_on_referenced_packages: false
+    # avoid_print: false
+    # avoid_empty_else: false
+    # avoid_relative_lib_imports: false
+    # avoid_types_as_parameter_names: false
+    # collection_methods_unrelated_type: false
+    # control_flow_in_finally: false
+    # empty_statements: false
+    # hash_and_equals: false
+    # no_duplicate_case_values: false
+    # no_logic_in_create_state: false
+    # unrelated_type_equality_checks: false
+    # use_build_context_synchronously: false
+    # use_key_in_widget_constructors: false
+    # valid_regexps: false
+    # annotate_overrides: false
+    # avoid_init_to_null: false
+    # avoid_null_checks_in_equality_operators: false
+    # avoid_renaming_method_parameters: false
+    # avoid_return_types_on_setters: false
+    # avoid_shadowing_type_parameters: false
+    # avoid_single_cascade_in_expression_statements: false
+    # avoid_unnecessary_containers: false
+    # await_only_futures: false
+    # camel_case_extensions: false
+    # camel_case_types: false
+    # constant_identifier_names: false
+    # curly_braces_in_flow_control_structures: false
+    # dangling_library_doc_comments: false
+    # empty_catches: false
+    # empty_constructor_bodies: false
+    # exhaustive_cases: false
+    # file_names: false
+    # implementation_imports: false
+    # implicit_call_tearoffs: false
+    # library_names: false
+    # library_prefixes: false
+    # no_leading_underscores_for_library_prefixes: false
+    # no_leading_underscores_for_local_identifiers: false
+    # non_constant_identifier_names: false
+    # null_check_on_nullable_type_parameter: false
+    # null_closures: false
+    # package_prefixed_library_names: false
+    # prefer_adjacent_string_concatenation: false
+    # prefer_collection_literals: false
+    # prefer_conditional_assignment: false
+    # prefer_const_constructors: false
+    # prefer_const_constructors_in_immutables: false
+    # prefer_const_declarations: false
+    # prefer_const_literals_to_create_immutables: false
+    # prefer_contains: false
+    # prefer_final_fields: false
+    # prefer_for_elements_to_map_fromIterable: false
+    # prefer_function_declarations_over_variables: false
+    # prefer_generic_function_type_aliases: false
+    # prefer_if_null_operators: false
+    # prefer_initializing_formals: false
+    # prefer_inlined_adds: false
+    # prefer_interpolation_to_compose_strings: false
+    # prefer_is_empty: false
+    # prefer_is_not_empty: false
+    # prefer_is_not_operator: false
+    # prefer_iterable_whereType: false
+    # prefer_null_aware_operators: false
+    # secure_pubspec_urls: false
+    # package_names: false
+    # void_checks: false
+    # use_super_parameters: false
+    # use_string_in_part_of_directives: false
+    # use_rethrow_when_possible: false
+    # use_function_type_syntax_for_parameters: false
+    # use_full_hex_values_for_flutter_colors: false
+    # unnecessary_to_list_in_spreads: false
+    # unnecessary_this: false
+    # unnecessary_string_interpolations: false
+    # unnecessary_string_escapes: false
+    # unnecessary_overrides: false
+    # unnecessary_nullable_for_final_variable_declarations: false
+    # unnecessary_null_in_if_null_operators: false
+    # unnecessary_null_aware_assignments: false
+    # unnecessary_new: false
+    # unnecessary_late: false
+    # unnecessary_getters_setters: false
+    # unnecessary_constructor_name: false
+    # unnecessary_const: false
+    # unnecessary_brace_in_string_interps: false
+    # type_literal_in_constant_pattern: false
+    # type_init_formals: false
+    # sort_child_properties_last: false
+    # slash_for_doc_comments: false
+    # sized_box_for_whitespace: false
+    # recursive_getters: false
+    # provide_deprecation_message: false
+    # prefer_typing_uninitialized_variables: false
+    # prefer_spread_collections: false

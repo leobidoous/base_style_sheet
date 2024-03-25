@@ -1,0 +1,1 @@
+enum CodeScanType { bar, qr }
