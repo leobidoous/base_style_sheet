@@ -1,7 +1,6 @@
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart' as cri;
 import 'package:flutter/material.dart';
 
-import '../../core/constants/style_sheet_assets.dart';
 import '../../core/themes/app_theme_factory.dart';
 import '../../core/themes/typography/typography_constants.dart';
 import '../extensions/build_context_extensions.dart';
@@ -11,12 +10,12 @@ import 'image_view/custom_image.dart';
 class CustomRefreshIndicator extends StatefulWidget {
   const CustomRefreshIndicator({
     super.key,
-    this.logo = StyleSheetAssets.customRefreshIndicatorLogo,
+    this.refreshLogo,
     required this.child,
     required this.onRefresh,
   });
   final Widget child;
-  final String? logo;
+  final String? refreshLogo;
   final Future<void> Function() onRefresh;
 
   @override
@@ -73,14 +72,14 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
                     axisAlignment: 1,
                     sizeFactor: controller,
                     child: FadeTransition(
-                      opacity: widget.logo != null ? animation : controller,
+                      opacity:
+                          widget.refreshLogo != null ? animation : controller,
                       child: Center(
-                        child: widget.logo != null
+                        child: widget.refreshLogo != null
                             ? CustomImage(
-                                svgAsset: widget.logo,
-                                packageName: 'base_style_sheet',
-                                border: context.theme.borderNone,
                                 shaddow: const [],
+                                svgAsset: widget.refreshLogo,
+                                border: context.theme.borderNone,
                                 backgroundColor: Colors.transparent,
                                 imageSize: Size.fromHeight(_offsetToArmed * .4),
                               )

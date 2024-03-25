@@ -9,6 +9,7 @@ class CustomScrollContent extends StatelessWidget {
     super.key,
     this.physics,
     this.onRefresh,
+    this.refreshLogo,
     required this.child,
     this.reverse = false,
     this.expanded = false,
@@ -24,6 +25,7 @@ class CustomScrollContent extends StatelessWidget {
   final bool expanded;
   final Clip clipBehavior;
   final EdgeInsets padding;
+  final String? refreshLogo;
   final Axis scrollDirection;
   final bool alwaysScrollable;
   final ScrollPhysics? physics;
@@ -64,6 +66,7 @@ class CustomScrollContent extends StatelessWidget {
         if (onRefresh != null) {
           return CustomRefreshIndicator(
             onRefresh: onRefresh!,
+            refreshLogo: refreshLogo,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [Expanded(child: scroll)],
@@ -77,7 +80,11 @@ class CustomScrollContent extends StatelessWidget {
       }
       return scroll;
     } else if (onRefresh != null) {
-      return CustomRefreshIndicator(onRefresh: onRefresh!, child: scroll);
+      return CustomRefreshIndicator(
+        refreshLogo: refreshLogo,
+        onRefresh: onRefresh!,
+        child: scroll,
+      );
     }
     return scroll;
   }

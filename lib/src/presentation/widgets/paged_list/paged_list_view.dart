@@ -14,6 +14,7 @@ import 'paged_list_controller.dart';
 class PagedListView<E, S> extends StatefulWidget {
   const PagedListView({
     super.key,
+    required this.refreshLogo,
     this.scrollController,
     this.shrinkWrap = false,
     required this.itemBuilder,
@@ -31,6 +32,7 @@ class PagedListView<E, S> extends StatefulWidget {
   });
   final bool shrinkWrap;
   final EdgeInsets padding;
+  final String? refreshLogo;
   final bool initWithRequest;
   final bool safeAreaLastItem;
   final ScrollController? scrollController;
@@ -149,6 +151,7 @@ class _PagedListViewState<E, S> extends State<PagedListView<E, S>> {
         }
         return CustomRefreshIndicator(
           onRefresh: controller.refresh,
+          refreshLogo: widget.refreshLogo,
           child: RawScrollbar(
             padding: EdgeInsets.zero,
             controller:

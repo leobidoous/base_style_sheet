@@ -38,4 +38,3 @@ flutter:
   assets:
     - assets/images/
     - assets/images/server/
-    - assets/images/custom_refresh_indicator/
