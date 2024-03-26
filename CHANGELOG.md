@@ -1,3 +1,8 @@
+## 1.0.2
+
+* Remove unused asset
+* Update CustomRefreshIndicator
+  
 ## 1.0.1
 
 * Update dependencies and improve documentation
