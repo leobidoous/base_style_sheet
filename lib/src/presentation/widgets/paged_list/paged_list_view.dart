@@ -14,7 +14,7 @@ import 'paged_list_controller.dart';
 class PagedListView<E, S> extends StatefulWidget {
   const PagedListView({
     super.key,
-    required this.refreshLogo,
+     this.refreshLogo,
     this.scrollController,
     this.shrinkWrap = false,
     required this.itemBuilder,

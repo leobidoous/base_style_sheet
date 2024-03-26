@@ -60,7 +60,7 @@ class CustomButton extends StatefulWidget {
       padding: padding ?? EdgeInsets.symmetric(horizontal: Spacing.md.value),
       color: color,
       isSafe: isSafe,
-      child: iconValue(icon, type: type, iconColor: iconColor),
+      child: _iconValue(icon, type: type, iconColor: iconColor),
     );
   }
 
@@ -115,7 +115,7 @@ class CustomButton extends StatefulWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         mainAxisSize: MainAxisSize.min,
         children: [
-          iconValue(icon, type: type, iconColor: iconColor),
+          _iconValue(icon, type: type, iconColor: iconColor),
           Spacing.xs.horizontal,
           Flexible(child: _textValue(text, type: type, textStyle: textStyle)),
         ],
@@ -152,7 +152,7 @@ class CustomButton extends StatefulWidget {
         children: [
           Flexible(child: _textValue(text, type: type, textStyle: textStyle)),
           Spacing.xs.horizontal,
-          iconValue(icon, type: type, iconColor: iconColor),
+          _iconValue(icon, type: type, iconColor: iconColor),
         ],
       ),
     );
@@ -185,7 +185,7 @@ class CustomButton extends StatefulWidget {
   @override
   State<CustomButton> createState() => _CustomButtonState();
 
-  static Widget iconValue(
+  static Widget _iconValue(
     IconData iconData, {
     Color? iconColor,
     ButtonType type = ButtonType.primary,

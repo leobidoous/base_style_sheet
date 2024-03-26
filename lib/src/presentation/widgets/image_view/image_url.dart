@@ -10,12 +10,18 @@ class ImageUrl extends StatelessWidget {
     super.key,
     required this.fit,
     required this.url,
+    required this.headers,
     required this.imageSize,
+    required this.maxWidthDiskCache,
+    required this.maxHeightDiskCache,
   });
 
   final BoxFit fit;
   final String url;
   final Size? imageSize;
+  final int? maxWidthDiskCache;
+  final int? maxHeightDiskCache;
+  final Map<String, String>? headers;
 
   @override
   Widget build(BuildContext context) {
@@ -27,8 +33,10 @@ class ImageUrl extends StatelessWidget {
           height: imageSize?.height ?? 32,
         ),
       ),
-      maxHeightDiskCache: 1000,
-      maxWidthDiskCache: 1000,
+      
+      maxHeightDiskCache: maxHeightDiskCache,
+      maxWidthDiskCache: maxWidthDiskCache,
+      httpHeaders: headers,
       imageBuilder: (context, image) {
         return Semantics(
           button: true,
@@ -38,9 +46,7 @@ class ImageUrl extends StatelessWidget {
           ),
         );
       },
-      errorWidget: (context, url, error) {
-        return ImageError(error: error.toString());
-      },
+      errorWidget: (context, url, error) => ImageError(error: error.toString()),
     );
   }
 }

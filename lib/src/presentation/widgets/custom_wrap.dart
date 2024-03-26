@@ -1,14 +1,4 @@
-import 'package:flutter/material.dart'
-    show
-        BuildContext,
-        EdgeInsets,
-        LayoutBuilder,
-        Padding,
-        SizedBox,
-        StatelessWidget,
-        Widget,
-        Wrap,
-        WrapAlignment;
+import 'package:flutter/cupertino.dart';
 
 class CustomWrap<T> extends StatelessWidget {
   const CustomWrap({
@@ -18,14 +8,18 @@ class CustomWrap<T> extends StatelessWidget {
     this.runSpacing = 8,
     required this.items,
     this.padding = EdgeInsets.zero,
-    this.wrapAlignment = WrapAlignment.start,
+    this.alignment = WrapAlignment.start,
+    this.runAlignment = WrapAlignment.start,
+    this.crossAxisAlignment = WrapCrossAlignment.center,
   });
   final int? nCols;
   final double spacing;
   final double runSpacing;
   final List<Widget> items;
   final EdgeInsets padding;
-  final WrapAlignment wrapAlignment;
+  final WrapAlignment runAlignment;
+  final WrapAlignment alignment;
+  final WrapCrossAlignment crossAxisAlignment;
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +30,9 @@ class CustomWrap<T> extends StatelessWidget {
           return Wrap(
             spacing: spacing,
             runSpacing: runSpacing,
-            alignment: wrapAlignment,
+            alignment: alignment,
+            runAlignment: runAlignment,
+            crossAxisAlignment: crossAxisAlignment,
             children: items.map((item) {
               return SizedBox(
                 width: nCols != null

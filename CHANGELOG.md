@@ -1,3 +1,12 @@
+## 1.0.4
+
+* Update CustomWrap
+  
+## 1.0.3
+
+* Add headers to CustomImage
+* Remove required field into PagedListView
+  
 ## 1.0.2
 
 * Remove unused asset

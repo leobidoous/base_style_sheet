@@ -35,7 +35,7 @@ class CustomImage extends StatelessWidget {
     super.key,
     this.url,
     this.file,
-    this.urlSvg,
+    this.urlSvgAsset,
     this.imageSize,
     this.asset,
     this.svgAsset,
@@ -43,17 +43,20 @@ class CustomImage extends StatelessWidget {
     this.backgroundColor,
     this.border,
     this.packageName,
-    this.imageColor,
     this.shaddow = const [],
     this.fit = BoxFit.contain,
     this.enableGestures = false,
     this.borderRadius = BorderRadius.zero,
+    this.imageColor,
+    this.headers,
+    this.maxHeightDiskCache,
+    this.maxWidthDiskCache,
   });
 
   final File? file;
   final BoxFit fit;
   final String? url;
-  final String? urlSvg;
+  final String? urlSvgAsset;
   final String? asset;
   final String? svgAsset;
   final Size? imageSize;
@@ -65,15 +68,18 @@ class CustomImage extends StatelessWidget {
   final BorderRadius borderRadius;
   final bool enableGestures;
   final Function()? onTap;
+  final int? maxWidthDiskCache;
+  final int? maxHeightDiskCache;
+  final Map<String, String>? headers;
 
   @override
   Widget build(BuildContext context) {
     return CustomCard(
       onTap: onTap,
-      borderRadius: borderRadius,
+      border: border,
       shaddow: shaddow,
       color: backgroundColor,
-      border: border,
+      borderRadius: borderRadius,
       child: SizedBox(
         width: imageSize?.width,
         height: imageSize?.height,
@@ -85,9 +91,12 @@ class CustomImage extends StatelessWidget {
                 return ImageUrl(
                   fit: fit,
                   url: url!,
+                  headers: headers,
                   imageSize: imageSize,
+                  maxWidthDiskCache: maxWidthDiskCache,
+                  maxHeightDiskCache: maxHeightDiskCache,
                 );
-              } else if (urlSvg != null && urlSvg!.isNotEmpty) {
+              } else if (urlSvgAsset != null && urlSvgAsset!.isNotEmpty) {
                 return Semantics(
                   button: true,
                   child: InkWell(
@@ -95,13 +104,14 @@ class CustomImage extends StatelessWidget {
                       image: AssetImage(asset!, package: packageName),
                     ).show(context),
                     child: SvgPicture.network(
-                      urlSvg!,
+                      urlSvgAsset!,
                       fit: fit,
                       width: imageSize?.width,
                       height: imageSize?.height,
                       colorFilter: (imageColor != null)
                           ? ColorFilter.mode(imageColor!, BlendMode.srcIn)
                           : null,
+                      headers: headers,
                       placeholderBuilder: (context) => Center(
                         child: CustomShimmer(
                           width: imageSize?.width ?? 32,
@@ -143,8 +153,9 @@ class CustomImage extends StatelessWidget {
                 return Semantics(
                   button: true,
                   child: InkWell(
-                    onTap: () =>
-                        CustomPhotoView(image: FileImage(file!)).show(context),
+                    onTap: () => CustomPhotoView(image: FileImage(file!)).show(
+                      context,
+                    ),
                     child: Image.file(
                       file!,
                       fit: fit,
