@@ -1,3 +1,11 @@
+## 1.0.6
+
+* Update ColumnLabelValue
+
+## 1.0.5
+
+* Add ColumnLabelValue
+
 ## 1.0.4
 
 * Update CustomWrap

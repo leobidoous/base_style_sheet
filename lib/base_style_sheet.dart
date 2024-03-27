@@ -21,6 +21,8 @@ export 'package:base_style_sheet/src/presentation/widgets/animated_dot.dart';
 export 'package:base_style_sheet/src/presentation/widgets/bottom_sheets/custom_bottom_sheet.dart';
 export 'package:base_style_sheet/src/presentation/widgets/buttons/app_bar_button.dart';
 export 'package:base_style_sheet/src/presentation/widgets/buttons/custom_button.dart';
+export 'package:base_style_sheet/src/presentation/widgets/column_label/column_label_value.dart';
+export 'package:base_style_sheet/src/presentation/widgets/column_label/column_label_value_shimmer.dart';
 export 'package:base_style_sheet/src/presentation/widgets/containers/custom_card.dart';
 export 'package:base_style_sheet/src/presentation/widgets/containers/custom_shimmer.dart';
 export 'package:base_style_sheet/src/presentation/widgets/containers/dashed_rect.dart';

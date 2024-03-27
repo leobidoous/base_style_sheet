@@ -201,6 +201,7 @@ class CustomButton extends StatefulWidget {
                   : switch (type) {
                       ButtonType.secondary => context.colorScheme.onSecondary,
                       ButtonType.tertiary => context.colorScheme.onTertiary,
+                      ButtonType.primary => context.colorScheme.onPrimary,
                       ButtonType() => context.textTheme.bodyMedium?.color,
                     }),
         );
@@ -246,6 +247,8 @@ class CustomButton extends StatefulWidget {
                                 context.colorScheme.onSecondary,
                               ButtonType.tertiary =>
                                 context.colorScheme.onTertiary,
+                              ButtonType.primary =>
+                                context.colorScheme.onPrimary,
                               ButtonType() =>
                                 context.textTheme.bodyMedium?.color,
                             }),
