@@ -27,7 +27,7 @@ class ColumnLabelValueShimmer extends StatelessWidget {
           children: [
             ListView.separated(
               shrinkWrap: true,
-              itemCount: nValueLines,
+              itemCount: nLabelLines,
               physics: const NeverScrollableScrollPhysics(),
               separatorBuilder: (_, __) => Spacing.xxs.vertical,
               itemBuilder: (_, index) {
@@ -36,11 +36,11 @@ class ColumnLabelValueShimmer extends StatelessWidget {
                   alignment: Alignment.centerLeft,
                   child: Padding(
                     padding: EdgeInsets.only(
-                      bottom: index == nValueLines - 1 ? 0 : Spacing.xxs.value,
+                      bottom: index == nLabelLines - 1 ? 0 : Spacing.xxs.value,
                     ),
                     child: CustomShimmer(
                       height: AppFontSize.bodyMedium.value,
-                      width: index == nValueLines - 1
+                      width: index == nLabelLines - 1
                           ? constrains.maxWidth *
                               (factor < 3 ? .5 : factor / 10)
                           : double.infinity,

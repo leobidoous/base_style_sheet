@@ -1,3 +1,7 @@
+## 1.0.7
+
+* Update CustomInputField and CustomButton
+  
 ## 1.0.6
 
 * Update ColumnLabelValue

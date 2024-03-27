@@ -24,10 +24,12 @@ class CustomButton extends StatefulWidget {
     bool isLoading = false,
     bool isSafe = false,
     EdgeInsets? padding,
+    BorderRadius? borderRadius,
     Color? color,
   }) {
     return CustomButton(
       type: type,
+      borderRadius: borderRadius,
       onPressed: onPressed,
       heightType: heightType,
       isEnabled: isEnabled,
@@ -49,10 +51,12 @@ class CustomButton extends StatefulWidget {
     bool isLoading = false,
     bool isSafe = false,
     EdgeInsets? padding = EdgeInsets.zero,
+    BorderRadius? borderRadius,
     Color? color,
   }) {
     return CustomButton(
       type: type,
+      borderRadius: borderRadius,
       onPressed: onPressed,
       heightType: heightType,
       isEnabled: isEnabled,
@@ -73,10 +77,12 @@ class CustomButton extends StatefulWidget {
     bool isLoading = false,
     bool isSafe = false,
     Color? color,
+    BorderRadius? borderRadius,
     EdgeInsets? padding = EdgeInsets.zero,
   }) {
     return CustomButton(
       type: type,
+      borderRadius: borderRadius,
       onPressed: onPressed,
       heightType: heightType,
       isEnabled: isEnabled,
@@ -100,10 +106,12 @@ class CustomButton extends StatefulWidget {
     bool isLoading = false,
     bool isSafe = false,
     EdgeInsets? padding,
+    BorderRadius? borderRadius,
     Color? color,
   }) {
     return CustomButton(
       type: type,
+      borderRadius: borderRadius,
       onPressed: onPressed,
       heightType: heightType,
       isEnabled: isEnabled,
@@ -136,9 +144,11 @@ class CustomButton extends StatefulWidget {
     bool isSafe = false,
     EdgeInsets? padding,
     Color? color,
+    BorderRadius? borderRadius,
   }) {
     return CustomButton(
       type: type,
+      borderRadius: borderRadius,
       onPressed: onPressed,
       heightType: heightType,
       isEnabled: isEnabled,
@@ -166,6 +176,7 @@ class CustomButton extends StatefulWidget {
     this.isLoading = false,
     this.isSafe = false,
     this.color,
+    this.borderRadius,
     this.type = ButtonType.primary,
     this.heightType = ButtonHeightType.normal,
   }) : assert(
@@ -181,6 +192,7 @@ class CustomButton extends StatefulWidget {
   final bool isLoading;
   final bool isSafe;
   final EdgeInsets padding;
+  final BorderRadius? borderRadius;
 
   @override
   State<CustomButton> createState() => _CustomButtonState();
@@ -290,14 +302,20 @@ class _CustomButtonState extends State<CustomButton> {
             shape: MaterialStateProperty.all(
               RoundedRectangleBorder(
                 borderRadius: BorderRadius.only(
-                  topLeft: context.theme.borderRadiusXLG.topLeft,
-                  topRight: context.theme.borderRadiusXLG.topRight,
+                  topLeft:
+                      (widget.borderRadius ?? context.theme.borderRadiusXLG)
+                          .topLeft,
+                  topRight:
+                      (widget.borderRadius ?? context.theme.borderRadiusXLG)
+                          .topRight,
                   bottomLeft: widget.isSafe
                       ? Radius.zero
-                      : context.theme.borderRadiusXLG.bottomLeft,
+                      : (widget.borderRadius ?? context.theme.borderRadiusXLG)
+                          .bottomLeft,
                   bottomRight: widget.isSafe
                       ? Radius.zero
-                      : context.theme.borderRadiusXLG.bottomRight,
+                      : (widget.borderRadius ?? context.theme.borderRadiusXLG)
+                          .bottomRight,
                 ),
               ),
             ),

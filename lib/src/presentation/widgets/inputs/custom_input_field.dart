@@ -48,6 +48,7 @@ class CustomInputField extends StatefulWidget {
     this.inputHeightType = InputHeightType.normal,
     this.floatingLabelBehavior = FloatingLabelBehavior.always,
     this.focusedBorder,
+    this.borderRadius,
     this.autofillHints = const [],
     this.textAlign = TextAlign.start,
     this.enableinteractiveSelection = true,
@@ -77,7 +78,9 @@ class CustomInputField extends StatefulWidget {
   final int maxLines;
   final bool autofocus;
   final bool enabled;
+  final BorderRadius? borderRadius;
   final bool enableinteractiveSelection;
+  final bool readOnly;
   final double? opacityDisabled;
   final InputHeightType inputHeightType;
   final bool obscureText;
@@ -85,7 +88,6 @@ class CustomInputField extends StatefulWidget {
   final List<String> autofillHints;
   final AutovalidateMode? autovalidateMode;
   final Function(String)? onFieldSubmitted;
-  final bool readOnly;
   final Function()? onEditingComplete;
   final Function()? onTap;
   final InputLabel? labelWidget;
@@ -97,7 +99,7 @@ class CustomInputField extends StatefulWidget {
 }
 
 class _CustomInputFieldState extends State<CustomInputField> {
-  BoxConstraints get boxConstraints {
+  BoxConstraints get _boxConstraints {
     switch (widget.inputHeightType) {
       case InputHeightType.normal:
         return BoxConstraints(
@@ -123,7 +125,7 @@ class _CustomInputFieldState extends State<CustomInputField> {
     return error;
   }
 
-  double get fontSize {
+  double get _fontSize {
     switch (widget.inputHeightType) {
       case InputHeightType.normal:
         return AppFontSize.bodyMedium.value;
@@ -132,12 +134,12 @@ class _CustomInputFieldState extends State<CustomInputField> {
     }
   }
 
-  double get padding {
+  double get _padding {
     switch (widget.inputHeightType) {
       case InputHeightType.normal:
-        return AppFontSize.bodyMedium.value;
+        return _fontSize * 1.25;
       case InputHeightType.small:
-        return AppFontSize.bodySmall.value / 2;
+        return _fontSize;
     }
   }
 
@@ -150,14 +152,13 @@ class _CustomInputFieldState extends State<CustomInputField> {
         children: [
           if (widget.labelWidget != null) ...[
             widget.labelWidget!,
-            Spacing.xxs.vertical,
+            Spacing.xxxs.vertical,
           ],
           Opacity(
             opacity: widget.enabled ? 1 : 0.5,
             child: TextFormField(
               key: widget.key,
               onTap: widget.onTap,
-              cursorHeight: fontSize,
               enabled: widget.enabled,
               maxLines: widget.maxLines,
               readOnly: widget.readOnly,
@@ -180,12 +181,12 @@ class _CustomInputFieldState extends State<CustomInputField> {
               textInputAction: widget.textInputAction ?? TextInputAction.done,
               style: context.textTheme.bodyMedium?.copyWith(
                 fontWeight: AppFontWeight.normal.value,
-                fontSize: fontSize,
+                fontSize: _fontSize,
               ),
               obscureText: widget.obscureText,
               decoration: InputDecoration(
                 filled: true,
-                isDense: false,
+                isDense: true,
                 isCollapsed: true,
                 fillColor: widget.enabled
                     ? widget.fillColor ?? context.theme.scaffoldBackgroundColor
@@ -195,16 +196,16 @@ class _CustomInputFieldState extends State<CustomInputField> {
                 hintStyle: context.textTheme.bodyMedium?.copyWith(
                   fontWeight: AppFontWeight.normal.value,
                   color: context.textTheme.bodyMedium?.color?.withOpacity(.75),
-                  fontSize: fontSize,
+                  fontSize: _fontSize,
                 ),
                 labelStyle: context.textTheme.titleMedium?.copyWith(
                   fontWeight: AppFontWeight.medium.value,
                 ),
-                contentPadding: EdgeInsets.all(padding),
+                contentPadding: EdgeInsets.all(_padding),
                 helperStyle: context.textTheme.labelSmall,
                 prefix: Text(widget.prefix ?? ''),
-                suffixIconConstraints: boxConstraints,
-                prefixIconConstraints: boxConstraints,
+                suffixIconConstraints: _boxConstraints,
+                prefixIconConstraints: _boxConstraints,
                 suffixIcon: widget.suffixIcon,
                 prefixIcon: widget.prefixIcon,
                 hintText: widget.hintText,
@@ -213,7 +214,7 @@ class _CustomInputFieldState extends State<CustomInputField> {
                 errorStyle: context.textTheme.labelSmall?.copyWith(
                   color: Colors.red,
                 ),
-                constraints: boxConstraints,
+                constraints: _boxConstraints,
                 errorMaxLines: 2,
                 counterText: '',
                 floatingLabelBehavior: widget.floatingLabelBehavior,
@@ -237,7 +238,7 @@ class _CustomInputFieldState extends State<CustomInputField> {
 
   InputBorder _border(Color color) {
     return OutlineInputBorder(
-      borderRadius: context.theme.borderRadiusXLG,
+      borderRadius: widget.borderRadius ?? context.theme.borderRadiusXLG,
       borderSide: BorderSide(color: color, width: .5),
     );
   }
