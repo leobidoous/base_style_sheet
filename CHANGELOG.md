@@ -1,3 +1,7 @@
+## 1.0.8
+
+* Fix CustomInputField
+  
 ## 1.0.7
 
 * Update CustomInputField and CustomButton

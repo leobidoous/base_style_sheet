@@ -134,15 +134,6 @@ class _CustomInputFieldState extends State<CustomInputField> {
     }
   }
 
-  double get _padding {
-    switch (widget.inputHeightType) {
-      case InputHeightType.normal:
-        return _fontSize * 1.25;
-      case InputHeightType.small:
-        return _fontSize;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -174,6 +165,7 @@ class _CustomInputFieldState extends State<CustomInputField> {
               smartDashesType: SmartDashesType.enabled,
               autovalidateMode: widget.autovalidateMode,
               onFieldSubmitted: widget.onFieldSubmitted,
+              textAlignVertical: TextAlignVertical.center,
               enableSuggestions: widget.enableSuggestions,
               onEditingComplete: widget.onEditingComplete,
               textCapitalization: widget.textCapitalization,
@@ -201,7 +193,7 @@ class _CustomInputFieldState extends State<CustomInputField> {
                 labelStyle: context.textTheme.titleMedium?.copyWith(
                   fontWeight: AppFontWeight.medium.value,
                 ),
-                contentPadding: EdgeInsets.all(_padding),
+                contentPadding: EdgeInsets.symmetric(horizontal: _fontSize),
                 helperStyle: context.textTheme.labelSmall,
                 prefix: Text(widget.prefix ?? ''),
                 suffixIconConstraints: _boxConstraints,
