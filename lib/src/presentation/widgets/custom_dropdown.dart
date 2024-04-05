@@ -36,9 +36,9 @@ class CustomDropdown<T> extends StatefulWidget {
     this.boxConstraints,
     this.placeholder = '',
     required this.items,
-    this.itemSelectedStyle,
     this.isEnabled = true,
     this.readOnly = false,
+    this.itemSelectedStyle,
     this.isLoading = false,
     this.isExpanded = false,
   });
@@ -51,8 +51,8 @@ class CustomDropdown<T> extends StatefulWidget {
   final bool isEnabled;
   final double? maxHeight;
   final String placeholder;
-  final TextStyle? itemStyle;
   final Function()? onClear;
+  final TextStyle? itemStyle;
   final Function(T)? onChange;
   final EdgeInsets? listPadding;
   final EdgeInsets? childPadding;
@@ -104,27 +104,26 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
   }
 
   void _getWidgetInfo() {
-    final RenderBox renderBox =
-        key.currentContext?.findRenderObject() as RenderBox;
+    final renderBox = key.currentContext?.findRenderObject() as RenderBox;
     size = renderBox.size;
     offset = renderBox.localToGlobal(Offset.zero);
   }
 
-  bool isOnTop(BoxConstraints constrains) {
-    return (offset.dy + (size.height / 2)) <= constrains.maxHeight / 2;
+  bool isOnTop(BoxConstraints constraints) {
+    return (offset.dy + (size.height / 2)) <= constraints.maxHeight / 2;
   }
 
-  double getTopPosition(BoxConstraints constrains) {
+  double getTopPosition(BoxConstraints constraints) {
     late double dy;
-    dy = isOnTop(constrains) ? offset.dy : 0;
+    dy = isOnTop(constraints) ? offset.dy : 0;
     return dy;
   }
 
-  double getBottomPosition(BoxConstraints constrains) {
+  double getBottomPosition(BoxConstraints constraints) {
     late double dy;
-    dy = isOnTop(constrains)
+    dy = isOnTop(constraints)
         ? 0
-        : constrains.maxHeight - offset.dy - size.height;
+        : constraints.maxHeight - offset.dy - size.height;
     return dy;
   }
 
@@ -134,22 +133,22 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
     return left;
   }
 
-  double getRightPosition(BoxConstraints constrains) {
+  double getRightPosition(BoxConstraints constraints) {
     late double right;
     right = widget.isExpanded
         ? widget.listPadding?.right ?? 0
-        : constrains.maxWidth - offset.dx - size.width;
+        : constraints.maxWidth - offset.dx - size.width;
     return right;
   }
 
-  double getMaxHeight(BoxConstraints constrains) {
+  double getMaxHeight(BoxConstraints constraints) {
     return widget.maxHeight != null
-        ? widget.maxHeight! > constrains.maxHeight
-            ? constrains.maxHeight
+        ? widget.maxHeight! > constraints.maxHeight
+            ? constraints.maxHeight
             : widget.maxHeight!
-        : isOnTop(constrains)
-            ? constrains.maxHeight - getTopPosition(constrains)
-            : constrains.maxHeight - getBottomPosition(constrains);
+        : isOnTop(constraints)
+            ? constraints.maxHeight - getTopPosition(constraints)
+            : constraints.maxHeight - getBottomPosition(constraints);
   }
 
   Future<void> _showDropdown() async {
@@ -159,6 +158,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
         .push(
           PageRouteBuilder(
             opaque: false,
+            allowSnapshotting: true,
             barrierDismissible: true,
             barrierColor: Colors.transparent,
             transitionDuration: const Duration(milliseconds: 150),
@@ -172,7 +172,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
                 ),
               );
             },
-            pageBuilder: (context, animation, secondaryAnimation) {
+            pageBuilder: (_, animation, secondaryAnimation) {
               return Material(
                 color: Colors.transparent,
                 child: Semantics(
@@ -196,12 +196,12 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
   @override
   Widget build(BuildContext context) {
     return Semantics(
-      button: true,
       key: key,
+      button: true,
       child: Opacity(
         opacity: !isEnabled ? .5 : 1,
         child: InkWell(
-          onTap: widget.readOnly || !isEnabled ? null : () => _showDropdown(),
+          onTap: widget.readOnly || !isEnabled ? null : _showDropdown,
           child: Container(
             decoration: widget.boxDecoration ??
                 BoxDecoration(
@@ -310,23 +310,23 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
 
   Widget get _dropdownBuilder {
     return LayoutBuilder(
-      builder: (context, constrains) {
-        maxHeight = getMaxHeight(constrains);
+      builder: (context, constraints) {
+        maxHeight = getMaxHeight(constraints);
         return SafeArea(
-          top: !isOnTop(constrains),
-          bottom: isOnTop(constrains),
+          top: !isOnTop(constraints),
+          bottom: isOnTop(constraints),
           child: Stack(
             fit: StackFit.expand,
             children: [
               Positioned(
                 left: getLeftPosition,
-                top: getTopPosition(constrains),
-                right: getRightPosition(constrains),
-                bottom: getBottomPosition(constrains),
+                top: getTopPosition(constraints),
+                right: getRightPosition(constraints),
+                bottom: getBottomPosition(constraints),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: isOnTop(constrains)
+                  mainAxisAlignment: isOnTop(constraints)
                       ? MainAxisAlignment.start
                       : MainAxisAlignment.end,
                   children: [
@@ -346,7 +346,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
                             mainAxisSize: MainAxisSize.min,
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
-                              if (isOnTop(constrains)) ...[
+                              if (isOnTop(constraints)) ...[
                                 _child,
                                 const CustomDivider(height: 0),
                               ],
@@ -360,7 +360,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
                                   child: _listView,
                                 ),
                               ),
-                              if (!isOnTop(constrains)) ...[
+                              if (!isOnTop(constraints)) ...[
                                 const CustomDivider(height: 0),
                                 _child,
                               ],

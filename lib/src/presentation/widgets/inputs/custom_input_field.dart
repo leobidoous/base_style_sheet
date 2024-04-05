@@ -177,7 +177,6 @@ class _CustomInputFieldState extends State<CustomInputField> {
               ),
               obscureText: widget.obscureText,
               decoration: InputDecoration(
-                filled: true,
                 isDense: true,
                 isCollapsed: true,
                 fillColor: widget.enabled
@@ -193,22 +192,30 @@ class _CustomInputFieldState extends State<CustomInputField> {
                 labelStyle: context.textTheme.titleMedium?.copyWith(
                   fontWeight: AppFontWeight.medium.value,
                 ),
-                contentPadding: EdgeInsets.symmetric(horizontal: _fontSize),
-                helperStyle: context.textTheme.labelSmall,
-                prefix: Text(widget.prefix ?? ''),
-                suffixIconConstraints: _boxConstraints,
-                prefixIconConstraints: _boxConstraints,
-                suffixIcon: widget.suffixIcon,
-                prefixIcon: widget.prefixIcon,
+                counterText: '',
+                errorMaxLines: 2,
                 hintText: widget.hintText,
                 labelText: widget.labelText,
-                errorText: widget.errorText == '' ? null : widget.errorText,
+                constraints: _boxConstraints,
+                prefix: Text(widget.prefix ?? ''),
+                suffixIconConstraints: _boxConstraints.copyWith(
+                  minWidth: widget.suffixIcon != null
+                      ? _boxConstraints.minWidth
+                      : _fontSize,
+                ),
+                prefixIconConstraints: _boxConstraints.copyWith(
+                  minWidth: widget.prefixIcon != null
+                      ? _boxConstraints.minWidth
+                      : _fontSize,
+                ),
+                helperStyle: context.textTheme.labelSmall,
+                suffixIcon: widget.suffixIcon ?? const SizedBox(),
+                prefixIcon: widget.prefixIcon ?? const SizedBox(),
                 errorStyle: context.textTheme.labelSmall?.copyWith(
                   color: Colors.red,
                 ),
-                constraints: _boxConstraints,
-                errorMaxLines: 2,
-                counterText: '',
+                contentPadding: EdgeInsets.symmetric(horizontal: _fontSize),
+                errorText: widget.errorText == '' ? null : widget.errorText,
                 floatingLabelBehavior: widget.floatingLabelBehavior,
                 focusedErrorBorder: _border(Colors.red),
                 disabledBorder: _border(Colors.grey),

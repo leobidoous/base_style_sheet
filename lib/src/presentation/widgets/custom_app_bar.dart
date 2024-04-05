@@ -113,6 +113,9 @@ class _CustomAppBarState extends State<CustomAppBar> {
                   ? Semantics(
                       button: true,
                       child: InkWell(
+                        hoverColor: Colors.transparent,
+                        splashColor: Colors.transparent,
+                        highlightColor: Colors.transparent,
                         onTap: widget.onBackTap ??
                             () => Navigator.of(context).pop(context),
                         borderRadius: AppThemeBase.borderRadiusSM,

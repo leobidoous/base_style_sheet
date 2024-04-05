@@ -1,3 +1,7 @@
+## 1.0.9
+
+* Fix CustomInputField
+
 ## 1.0.8
 
 * Fix CustomInputField
