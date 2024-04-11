@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/themes/spacing/spacing.dart';
+import '../buttons/custom_button.dart';
 
 enum ExpansionState { opened, closed }
 
 class CustomExpansion<T> extends StatefulWidget {
   const CustomExpansion({
     super.key,
+    this.body,
     this.onTap,
-    required this.body,
     required this.title,
     this.isSelected = false,
     this.showTrailing = true,
@@ -81,14 +81,18 @@ class CustomExpansionState<T> extends State<CustomExpansion<T>>
     return Semantics(
       button: true,
       child: InkWell(
-        onTap: () async {
-          if (_animationController.isCompleted) {
-            _animationController.reverse();
-          } else {
-            await widget.onTap?.call();
-            _animationController.forward();
-          }
-        },
+        onTap: widget.onTap ??
+            () {
+              if (_animationController.isCompleted) {
+                _animationController.reverse();
+              } else {
+                _animationController.forward();
+              }
+            },
+        focusColor: Colors.transparent,
+        hoverColor: Colors.transparent,
+        splashColor: Colors.transparent,
+        highlightColor: Colors.transparent,
         child: AnimatedBuilder(
           animation: _animationController,
           child: Semantics(
@@ -110,11 +114,19 @@ class CustomExpansionState<T> extends State<CustomExpansion<T>>
                     children: [
                       Flexible(child: widget.title),
                       if (widget.showTrailing) ...[
-                        Spacing.sm.horizontal,
                         RotationTransition(
                           turns: _rotateAnimation,
-                          child: Icon(
-                            switch (widget.initialState) {
+                          child: CustomButton.icon(
+                            onPressed: () {
+                              if (_animationController.isCompleted) {
+                                _animationController.reverse();
+                              } else {
+                                _animationController.forward();
+                              }
+                            },
+                            heightType: ButtonHeightType.small,
+                            type: ButtonType.noShape,
+                            icon: switch (widget.initialState) {
                               ExpansionState.opened =>
                                 Icons.keyboard_arrow_up_rounded,
                               ExpansionState.closed =>

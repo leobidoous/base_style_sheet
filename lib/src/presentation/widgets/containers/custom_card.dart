@@ -35,6 +35,9 @@ class CustomCard extends StatelessWidget {
         button: isEnabled ? onTap != null : null,
         child: InkWell(
           onTap: isEnabled ? onTap : null,
+          hoverColor: Colors.transparent,
+          splashColor: Colors.transparent,
+          highlightColor: Colors.transparent,
           child: Container(
             decoration: BoxDecoration(
               color: isSelected

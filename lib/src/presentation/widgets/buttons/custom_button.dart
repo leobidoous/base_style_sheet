@@ -34,7 +34,7 @@ class CustomButton extends StatefulWidget {
       heightType: heightType,
       isEnabled: isEnabled,
       isLoading: isLoading,
-      padding: padding ?? EdgeInsets.symmetric(horizontal: Spacing.md.value),
+      padding: padding ?? EdgeInsets.symmetric(horizontal: Spacing.sm.value),
       color: color,
       isSafe: isSafe,
       child: _textValue(text, type: type, textStyle: textStyle),
@@ -61,10 +61,15 @@ class CustomButton extends StatefulWidget {
       heightType: heightType,
       isEnabled: isEnabled,
       isLoading: isLoading,
-      padding: padding ?? EdgeInsets.symmetric(horizontal: Spacing.md.value),
+      padding: padding ?? EdgeInsets.symmetric(horizontal: Spacing.sm.value),
       color: color,
       isSafe: isSafe,
-      child: _iconValue(icon, type: type, iconColor: iconColor),
+      child: _iconValue(
+        icon,
+        type: type,
+        iconColor: iconColor,
+        heightType: heightType,
+      ),
     );
   }
 
@@ -87,7 +92,7 @@ class CustomButton extends StatefulWidget {
       heightType: heightType,
       isEnabled: isEnabled,
       isLoading: isLoading,
-      padding: padding ?? EdgeInsets.symmetric(horizontal: Spacing.md.value),
+      padding: padding ?? EdgeInsets.symmetric(horizontal: Spacing.sm.value),
       color: color,
       isSafe: isSafe,
       child: child,
@@ -116,14 +121,19 @@ class CustomButton extends StatefulWidget {
       heightType: heightType,
       isEnabled: isEnabled,
       isLoading: isLoading,
-      padding: padding ?? EdgeInsets.symmetric(horizontal: Spacing.md.value),
+      padding: padding ?? EdgeInsets.symmetric(horizontal: Spacing.sm.value),
       color: color,
       isSafe: isSafe,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         mainAxisSize: MainAxisSize.min,
         children: [
-          _iconValue(icon, type: type, iconColor: iconColor),
+          _iconValue(
+            icon,
+            type: type,
+            iconColor: iconColor,
+            heightType: heightType,
+          ),
           Spacing.xs.horizontal,
           Flexible(child: _textValue(text, type: type, textStyle: textStyle)),
         ],
@@ -153,7 +163,7 @@ class CustomButton extends StatefulWidget {
       heightType: heightType,
       isEnabled: isEnabled,
       isLoading: isLoading,
-      padding: padding ?? EdgeInsets.symmetric(horizontal: Spacing.md.value),
+      padding: padding ?? EdgeInsets.symmetric(horizontal: Spacing.sm.value),
       color: color,
       isSafe: isSafe,
       child: Row(
@@ -162,11 +172,17 @@ class CustomButton extends StatefulWidget {
         children: [
           Flexible(child: _textValue(text, type: type, textStyle: textStyle)),
           Spacing.xs.horizontal,
-          _iconValue(icon, type: type, iconColor: iconColor),
+          _iconValue(
+            icon,
+            type: type,
+            iconColor: iconColor,
+            heightType: heightType,
+          ),
         ],
       ),
     );
   }
+  
   const CustomButton({
     super.key,
     required this.child,
@@ -201,12 +217,16 @@ class CustomButton extends StatefulWidget {
     IconData iconData, {
     Color? iconColor,
     ButtonType type = ButtonType.primary,
+    ButtonHeightType heightType = ButtonHeightType.normal,
   }) {
     return Builder(
       builder: (context) {
         return Icon(
           iconData,
-          size: AppFontSize.iconButton.value,
+          size: switch (heightType) {
+            ButtonHeightType.normal => AppFontSize.iconButton.value,
+            ButtonHeightType.small => AppFontSize.iconButton.value * .75,
+          },
           color: iconColor ??
               (context.isDarkMode
                   ? context.colorScheme.onBackground
@@ -229,15 +249,6 @@ class CustomButton extends StatefulWidget {
   }) {
     return Builder(
       builder: (context) {
-        double? fontSize;
-        switch (heightType) {
-          case ButtonHeightType.normal:
-            fontSize = context.textTheme.bodyMedium?.fontSize;
-            break;
-          case ButtonHeightType.small:
-            fontSize = context.textTheme.bodySmall?.fontSize;
-            break;
-        }
         return CustomTooltip(
           message: text,
           child: Column(
@@ -251,7 +262,10 @@ class CustomButton extends StatefulWidget {
                 style: textStyle ??
                     context.textTheme.bodyMedium?.copyWith(
                       fontWeight: context.textTheme.fontWeightBold,
-                      fontSize: fontSize,
+                      fontSize: switch (heightType) {
+                        ButtonHeightType.small => AppFontSize.bodySmall.value,
+                        ButtonHeightType.normal => AppFontSize.bodyMedium.value,
+                      },
                       color: (context.isDarkMode
                           ? context.colorScheme.onBackground
                           : switch (type) {
@@ -275,7 +289,7 @@ class CustomButton extends StatefulWidget {
 }
 
 class _CustomButtonState extends State<CustomButton> {
-  Size get minimumSize {
+  Size get _minimumSize {
     switch (widget.heightType) {
       case ButtonHeightType.normal:
         return Size(
@@ -325,10 +339,10 @@ class _CustomButtonState extends State<CustomButton> {
                 width: context.theme.borderWidthXS,
               ),
             ),
-            elevation: MaterialStateProperty.all(5),
+            elevation: MaterialStateProperty.all(4),
             tapTargetSize: MaterialTapTargetSize.shrinkWrap,
             padding: MaterialStateProperty.all(widget.padding),
-            minimumSize: MaterialStateProperty.all(minimumSize),
+            minimumSize: MaterialStateProperty.all(_minimumSize),
             overlayColor: MaterialStateProperty.all(_overlayColor),
             shadowColor: MaterialStateProperty.all(Colors.transparent),
             backgroundColor: MaterialStateProperty.all(_backgroundColor),
@@ -339,7 +353,10 @@ class _CustomButtonState extends State<CustomButton> {
             bottom: widget.isSafe,
             top: false,
             child: ConstrainedBox(
-              constraints: BoxConstraints(minHeight: minimumSize.height),
+              constraints: BoxConstraints(
+                minHeight: _minimumSize.height,
+                minWidth: _minimumSize.width,
+              ),
               child: AnimatedSwitcher(
                 duration: const Duration(milliseconds: 500),
                 child: widget.isLoading

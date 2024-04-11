@@ -9,6 +9,8 @@ import 'containers/custom_shimmer.dart';
 import 'custom_scroll_content.dart';
 import 'dividers/custom_divider.dart';
 
+enum DropdownHeightType { normal, small }
+
 class CustomDropdownItem<T> {
   const CustomDropdownItem({
     this.item,
@@ -25,41 +27,45 @@ class CustomDropdown<T> extends StatefulWidget {
   const CustomDropdown({
     super.key,
     this.icon,
-    this.onChange,
+    this.context,
     this.onClear,
-    this.value = '',
+    this.onChange,
     this.maxHeight,
-    this.listPadding,
     this.itemStyle,
+    this.value = '',
+    this.listPadding,
     this.childPadding,
     this.boxDecoration,
     this.boxConstraints,
-    this.placeholder = '',
     required this.items,
+    this.placeholder = '',
     this.isEnabled = true,
     this.readOnly = false,
     this.itemSelectedStyle,
     this.isLoading = false,
     this.isExpanded = false,
+    this.dropdownHeightType = DropdownHeightType.normal,
   });
 
   final Widget? icon;
-  final bool isExpanded;
   final String value;
   final bool readOnly;
   final bool isLoading;
   final bool isEnabled;
+  final bool isExpanded;
   final double? maxHeight;
   final String placeholder;
   final Function()? onClear;
   final TextStyle? itemStyle;
   final Function(T)? onChange;
+  final BuildContext? context;
   final EdgeInsets? listPadding;
   final EdgeInsets? childPadding;
   final TextStyle? itemSelectedStyle;
   final BoxDecoration? boxDecoration;
   final BoxConstraints? boxConstraints;
   final List<CustomDropdownItem<T>> items;
+  final DropdownHeightType dropdownHeightType;
 
   @override
   State<CustomDropdown<T>> createState() => _CustomDropdownState<T>();
@@ -103,10 +109,14 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
     super.dispose();
   }
 
-  void _getWidgetInfo() {
+  void _getWidgetInfos() {
     final renderBox = key.currentContext?.findRenderObject() as RenderBox;
     size = renderBox.size;
-    offset = renderBox.localToGlobal(Offset.zero);
+
+    offset = renderBox.localToGlobal(
+      Offset.zero,
+      ancestor: widget.context?.findRenderObject(),
+    );
   }
 
   bool isOnTop(BoxConstraints constraints) {
@@ -152,12 +162,13 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
   }
 
   Future<void> _showDropdown() async {
-    _getWidgetInfo();
+    _getWidgetInfos();
     animationController.forward();
     await Navigator.of(context)
         .push(
           PageRouteBuilder(
             opaque: false,
+            maintainState: true,
             allowSnapshotting: true,
             barrierDismissible: true,
             barrierColor: Colors.transparent,
@@ -202,6 +213,9 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
         opacity: !isEnabled ? .5 : 1,
         child: InkWell(
           onTap: widget.readOnly || !isEnabled ? null : _showDropdown,
+          hoverColor: Colors.transparent,
+          splashColor: Colors.transparent,
+          highlightColor: Colors.transparent,
           child: Container(
             decoration: widget.boxDecoration ??
                 BoxDecoration(
@@ -225,7 +239,10 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
           ),
       constraints: widget.boxConstraints ??
           BoxConstraints(
-            minHeight: AppThemeBase.inputHeightMD,
+            minHeight: switch (widget.dropdownHeightType) {
+              DropdownHeightType.normal => AppThemeBase.buttonHeightMD,
+              DropdownHeightType.small => AppThemeBase.buttonHeightSM,
+            },
             maxHeight: context.kSize.height * .45,
           ),
       child: Row(
@@ -237,13 +254,13 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
           Spacing.xs.horizontal,
           if (widget.isLoading)
             CustomShimmer(
-              width: const Spacing(3).value,
-              height: const Spacing(3).value,
+              width: AppFontSize.iconButton.value,
+              height: AppFontSize.iconButton.value,
             ),
           if (!widget.isLoading) ...[
             if (!showClear)
               SizedBox(
-                width: const Spacing(3).value,
+                width: AppFontSize.iconButton.value,
                 child: widget.icon ??
                     RotationTransition(
                       turns: rotateAnimation,
@@ -255,7 +272,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
               ),
             if (showClear)
               SizedBox(
-                width: const Spacing(3).value,
+                width: AppFontSize.iconButton.value,
                 child: Semantics(
                   button: true,
                   child: InkWell(

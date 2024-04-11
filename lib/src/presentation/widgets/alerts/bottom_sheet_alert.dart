@@ -43,7 +43,7 @@ class BottomSheetAlert extends StatelessWidget {
   final bool cancelIsLoading;
   final bool confirmIsLoading;
   final Axis buttonsDirection;
-  final List<CustomButton> buttons;
+  final List<Widget> buttons;
   final Function()? onConfirm;
   final Function()? onCancel;
 

@@ -1,3 +1,9 @@
+## 1.0.10
+
+* Add BorderSide to CustomInputField
+* Add parentRender to CustomDropdrown
+* Update onTap params into CustomExpansion
+
 ## 1.0.9
 
 * Fix CustomInputField

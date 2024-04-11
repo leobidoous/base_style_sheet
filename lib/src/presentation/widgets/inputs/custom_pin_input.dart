@@ -67,8 +67,8 @@ class CustomPinField extends StatefulWidget {
 
 class _CustomPinFieldState extends State<CustomPinField> {
   BoxConstraints get boxConstraints => BoxConstraints(
-        minHeight: AppThemeBase.inputHeightMD,
-        minWidth: AppThemeBase.inputHeightMD,
+        minHeight: AppThemeBase.buttonHeightMD,
+        minWidth: AppThemeBase.buttonHeightMD,
       );
 
   String? _validator(String? input) {

@@ -64,7 +64,7 @@ class CustomRequestError extends StatelessWidget {
                     ),
                     Spacing.sm.vertical,
                     Text(
-                      '''No momento, não é possível utilizar essa área do app. Já estamos verificando o que ocorreu. Por enquanto, feche e abra o aplicativo, depois tente novamente''',
+                      '''No momento, não é possível utilizar este serviço. Já estamos verificando o que ocorreu. Por favor, tente novamente.''',
                       textAlign: TextAlign.center,
                       style: context.textTheme.labelMedium,
                     ),
@@ -82,7 +82,7 @@ class CustomRequestError extends StatelessWidget {
                         ),
                         crossAxisAlignment: CrossAxisAlignment.center,
                         body: Center(
-                          child: SelectableText(
+                          child: Text(
                             message!,
                             textAlign: TextAlign.center,
                             style: context.textTheme.labelMedium?.copyWith(

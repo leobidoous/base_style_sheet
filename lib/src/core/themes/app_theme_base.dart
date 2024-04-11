@@ -21,11 +21,6 @@ class AppThemeBase {
   static double get buttonHeightMD => 48.responsiveHeight;
   static double get buttonHeightLG => 56.responsiveHeight;
 
-  static double get inputHeight => 38.responsiveHeight;
-  static double get inputHeightSM => 28.responsiveHeight;
-  static double get inputHeightMD => 48.responsiveHeight;
-  static double get inputHeightLG => 56.responsiveHeight;
-
   static BorderRadius get borderRadiusNone => BorderRadius.zero;
   static BorderRadius get borderRadiusXSM => BorderRadius.circular(4);
   static BorderRadius get borderRadiusSM => BorderRadius.circular(8);

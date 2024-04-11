@@ -14,7 +14,8 @@ import 'paged_list_controller.dart';
 class PagedListView<E, S> extends StatefulWidget {
   const PagedListView({
     super.key,
-     this.refreshLogo,
+    this.thickness,
+    this.refreshLogo,
     this.scrollController,
     this.shrinkWrap = false,
     required this.itemBuilder,
@@ -30,7 +31,9 @@ class PagedListView<E, S> extends StatefulWidget {
     this.newPageProgressIndicatorBuilder,
     this.firstPageProgressIndicatorBuilder,
   });
+
   final bool shrinkWrap;
+  final double? thickness;
   final EdgeInsets padding;
   final String? refreshLogo;
   final bool initWithRequest;
@@ -157,6 +160,7 @@ class _PagedListViewState<E, S> extends State<PagedListView<E, S>> {
             controller:
                 widget.parentScrollController == null ? scrollController : null,
             thumbColor: context.colorScheme.primary,
+            thickness: widget.thickness,
             radius: context.theme.borderRadiusXLG.bottomLeft,
             child: ListView.builder(
               padding: widget.padding,

@@ -14,6 +14,7 @@ class CustomBottomSheet {
     bool isDismissible = true,
     bool allowDismissOnTap = true,
     bool isScrollControlled = true,
+    BoxConstraints? constraints,
     Color? backgroundColor,
     EdgeInsets? padding,
   }) async {
@@ -27,6 +28,7 @@ class CustomBottomSheet {
       elevation: 0,
       context: context,
       useRootNavigator: true,
+      constraints: constraints,
       isDismissible: isDismissible,
       backgroundColor: Colors.transparent,
       isScrollControlled: isScrollControlled,
@@ -109,8 +111,8 @@ class _CustomBottomSheet extends StatelessWidget {
                         : 0,
                   ),
                   child: SafeArea(
-                    bottom: useSafeArea,
                     top: useSafeArea,
+                    bottom: useSafeArea,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       mainAxisSize: MainAxisSize.min,
@@ -119,14 +121,16 @@ class _CustomBottomSheet extends StatelessWidget {
                           Align(
                             alignment: Alignment.topRight,
                             child: Padding(
-                              padding:
-                                  EdgeInsets.only(bottom: Spacing.sm.value),
+                              padding: EdgeInsets.only(
+                                bottom: Spacing.sm.value,
+                              ),
                               child: CustomButton.icon(
                                 type: ButtonType.noShape,
                                 icon: Icons.close_rounded,
                                 heightType: ButtonHeightType.small,
-                                onPressed: () =>
-                                    Navigator.of(context).pop(false),
+                                onPressed: () => Navigator.of(context).pop(
+                                  false,
+                                ),
                               ),
                             ),
                           ),

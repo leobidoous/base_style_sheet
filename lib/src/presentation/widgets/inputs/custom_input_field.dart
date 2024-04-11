@@ -38,7 +38,7 @@ class CustomInputField extends StatefulWidget {
     this.opacityDisabled = 0.5,
     this.labelWidget,
     this.autovalidateMode = AutovalidateMode.onUserInteraction,
-    this.padding = EdgeInsets.zero,
+    this.contentPadding,
     this.obscureText = false,
     this.onFieldSubmitted,
     this.onEditingComplete,
@@ -49,6 +49,7 @@ class CustomInputField extends StatefulWidget {
     this.floatingLabelBehavior = FloatingLabelBehavior.always,
     this.focusedBorder,
     this.borderRadius,
+    this.borderSide,
     this.autofillHints = const [],
     this.textAlign = TextAlign.start,
     this.enableinteractiveSelection = true,
@@ -84,7 +85,7 @@ class CustomInputField extends StatefulWidget {
   final double? opacityDisabled;
   final InputHeightType inputHeightType;
   final bool obscureText;
-  final EdgeInsets padding;
+  final EdgeInsets? contentPadding;
   final List<String> autofillHints;
   final AutovalidateMode? autovalidateMode;
   final Function(String)? onFieldSubmitted;
@@ -93,6 +94,7 @@ class CustomInputField extends StatefulWidget {
   final InputLabel? labelWidget;
   final FloatingLabelBehavior floatingLabelBehavior;
   final InputBorder? focusedBorder;
+  final BorderSide? borderSide;
 
   @override
   State<CustomInputField> createState() => _CustomInputFieldState();
@@ -103,8 +105,8 @@ class _CustomInputFieldState extends State<CustomInputField> {
     switch (widget.inputHeightType) {
       case InputHeightType.normal:
         return BoxConstraints(
-          minHeight: AppThemeBase.inputHeightMD,
-          minWidth: AppThemeBase.inputHeightMD,
+          minHeight: AppThemeBase.buttonHeightMD,
+          minWidth: AppThemeBase.buttonHeightMD,
         );
       case InputHeightType.small:
         return BoxConstraints(
@@ -136,109 +138,108 @@ class _CustomInputFieldState extends State<CustomInputField> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: widget.padding,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          if (widget.labelWidget != null) ...[
-            widget.labelWidget!,
-            Spacing.xxxs.vertical,
-          ],
-          Opacity(
-            opacity: widget.enabled ? 1 : 0.5,
-            child: TextFormField(
-              key: widget.key,
-              onTap: widget.onTap,
-              enabled: widget.enabled,
-              maxLines: widget.maxLines,
-              readOnly: widget.readOnly,
-              maxLength: widget.maxLength,
-              textAlign: widget.textAlign,
-              focusNode: widget.focusNode,
-              controller: widget.controller,
-              autocorrect: widget.autocorrect,
-              keyboardType: widget.keyboardType,
-              autofillHints: widget.autofillHints,
-              initialValue: widget.initialValue,
-              inputFormatters: widget.inputFormatters,
-              smartDashesType: SmartDashesType.enabled,
-              autovalidateMode: widget.autovalidateMode,
-              onFieldSubmitted: widget.onFieldSubmitted,
-              textAlignVertical: TextAlignVertical.center,
-              enableSuggestions: widget.enableSuggestions,
-              onEditingComplete: widget.onEditingComplete,
-              textCapitalization: widget.textCapitalization,
-              enableInteractiveSelection: widget.enableinteractiveSelection,
-              textInputAction: widget.textInputAction ?? TextInputAction.done,
-              style: context.textTheme.bodyMedium?.copyWith(
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        if (widget.labelWidget != null) ...[
+          widget.labelWidget!,
+          Spacing.xxxs.vertical,
+        ],
+        Opacity(
+          opacity: widget.enabled ? 1 : 0.5,
+          child: TextFormField(
+            key: widget.key,
+            onTap: widget.onTap,
+            enabled: widget.enabled,
+            maxLines: widget.maxLines,
+            readOnly: widget.readOnly,
+            maxLength: widget.maxLength,
+            textAlign: widget.textAlign,
+            focusNode: widget.focusNode,
+            controller: widget.controller,
+            autocorrect: widget.autocorrect,
+            keyboardType: widget.keyboardType,
+            autofillHints: widget.autofillHints,
+            initialValue: widget.initialValue,
+            inputFormatters: widget.inputFormatters,
+            smartDashesType: SmartDashesType.enabled,
+            autovalidateMode: widget.autovalidateMode,
+            onFieldSubmitted: widget.onFieldSubmitted,
+            textAlignVertical: TextAlignVertical.center,
+            enableSuggestions: widget.enableSuggestions,
+            onEditingComplete: widget.onEditingComplete,
+            textCapitalization: widget.textCapitalization,
+            enableInteractiveSelection: widget.enableinteractiveSelection,
+            textInputAction: widget.textInputAction ?? TextInputAction.done,
+            style: context.textTheme.bodyMedium?.copyWith(
+              fontWeight: AppFontWeight.normal.value,
+              fontSize: _fontSize,
+            ),
+            obscureText: widget.obscureText,
+            decoration: InputDecoration(
+              isDense: true,
+              isCollapsed: true,
+              filled: widget.fillColor != null,
+              fillColor: widget.enabled
+                  ? widget.fillColor ?? context.theme.scaffoldBackgroundColor
+                  : (widget.fillColor ?? context.theme.scaffoldBackgroundColor)
+                      .withOpacity(.75),
+              hintStyle: context.textTheme.bodyMedium?.copyWith(
                 fontWeight: AppFontWeight.normal.value,
+                color: context.textTheme.bodyMedium?.color?.withOpacity(.75),
                 fontSize: _fontSize,
               ),
-              obscureText: widget.obscureText,
-              decoration: InputDecoration(
-                isDense: true,
-                isCollapsed: true,
-                fillColor: widget.enabled
-                    ? widget.fillColor ?? context.theme.scaffoldBackgroundColor
-                    : (widget.fillColor ??
-                            context.theme.scaffoldBackgroundColor)
-                        .withOpacity(.75),
-                hintStyle: context.textTheme.bodyMedium?.copyWith(
-                  fontWeight: AppFontWeight.normal.value,
-                  color: context.textTheme.bodyMedium?.color?.withOpacity(.75),
-                  fontSize: _fontSize,
-                ),
-                labelStyle: context.textTheme.titleMedium?.copyWith(
-                  fontWeight: AppFontWeight.medium.value,
-                ),
-                counterText: '',
-                errorMaxLines: 2,
-                hintText: widget.hintText,
-                labelText: widget.labelText,
-                constraints: _boxConstraints,
-                prefix: Text(widget.prefix ?? ''),
-                suffixIconConstraints: _boxConstraints.copyWith(
-                  minWidth: widget.suffixIcon != null
-                      ? _boxConstraints.minWidth
-                      : _fontSize,
-                ),
-                prefixIconConstraints: _boxConstraints.copyWith(
-                  minWidth: widget.prefixIcon != null
-                      ? _boxConstraints.minWidth
-                      : _fontSize,
-                ),
-                helperStyle: context.textTheme.labelSmall,
-                suffixIcon: widget.suffixIcon ?? const SizedBox(),
-                prefixIcon: widget.prefixIcon ?? const SizedBox(),
-                errorStyle: context.textTheme.labelSmall?.copyWith(
-                  color: Colors.red,
-                ),
-                contentPadding: EdgeInsets.symmetric(horizontal: _fontSize),
-                errorText: widget.errorText == '' ? null : widget.errorText,
-                floatingLabelBehavior: widget.floatingLabelBehavior,
-                focusedErrorBorder: _border(Colors.red),
-                disabledBorder: _border(Colors.grey),
-                enabledBorder: _border(Colors.grey),
-                focusedBorder: _border(Colors.grey),
-                errorBorder: _border(Colors.red),
-                border: _border(Colors.grey),
-                alignLabelWithHint: true,
+              labelStyle: context.textTheme.titleMedium?.copyWith(
+                fontWeight: AppFontWeight.medium.value,
               ),
-              onChanged: widget.onChanged,
-              autofocus: widget.autofocus,
-              validator: widget.validator ?? _validator,
+              counterText: '',
+              errorMaxLines: 2,
+              hintText: widget.hintText,
+              labelText: widget.labelText,
+              constraints: _boxConstraints,
+              prefix: Text(widget.prefix ?? ''),
+              suffixIconConstraints: _boxConstraints.copyWith(
+                minWidth: widget.suffixIcon != null
+                    ? _boxConstraints.minWidth
+                    : widget.contentPadding?.right ?? _fontSize,
+              ),
+              prefixIconConstraints: _boxConstraints.copyWith(
+                minWidth: widget.prefixIcon != null
+                    ? _boxConstraints.minWidth
+                    : widget.contentPadding?.left ?? _fontSize,
+              ),
+              helperStyle: context.textTheme.labelSmall,
+              suffixIcon: widget.suffixIcon ?? const SizedBox(),
+              prefixIcon: widget.prefixIcon ?? const SizedBox(),
+              errorStyle: context.textTheme.labelSmall?.copyWith(
+                color: Colors.red,
+              ),
+              contentPadding: widget.contentPadding ??
+                  EdgeInsets.symmetric(horizontal: _fontSize),
+              errorText: widget.errorText == '' ? null : widget.errorText,
+              floatingLabelBehavior: widget.floatingLabelBehavior,
+              focusedErrorBorder: _border(Colors.red),
+              disabledBorder: _border(Colors.grey),
+              enabledBorder: _border(Colors.grey),
+              focusedBorder: _border(Colors.grey),
+              errorBorder: _border(Colors.red),
+              border: _border(Colors.grey),
+              alignLabelWithHint: true,
             ),
+            onChanged: widget.onChanged,
+            autofocus: widget.autofocus,
+            validator: widget.validator ?? _validator,
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
   InputBorder _border(Color color) {
     return OutlineInputBorder(
       borderRadius: widget.borderRadius ?? context.theme.borderRadiusXLG,
-      borderSide: BorderSide(color: color, width: .5),
+      borderSide: widget.borderSide ?? BorderSide(color: color, width: .5),
     );
   }
 }

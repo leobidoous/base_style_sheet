@@ -5,6 +5,7 @@ import '../../core/themes/app_theme_base.dart';
 import '../../core/themes/app_theme_factory.dart';
 import '../../core/themes/spacing/spacing.dart';
 import '../extensions/build_context_extensions.dart';
+import 'buttons/custom_button.dart';
 
 class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
   factory CustomAppBar.zero() {
@@ -110,27 +111,12 @@ class _CustomAppBarState extends State<CustomAppBar> {
                           Navigator.of(context).canPop() ||
                       widget.leadingIcon != null ||
                       widget.onBackTap != null
-                  ? Semantics(
-                      button: true,
-                      child: InkWell(
-                        hoverColor: Colors.transparent,
-                        splashColor: Colors.transparent,
-                        highlightColor: Colors.transparent,
-                        onTap: widget.onBackTap ??
-                            () => Navigator.of(context).pop(context),
-                        borderRadius: AppThemeBase.borderRadiusSM,
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Padding(
-                            padding: EdgeInsets.only(left: Spacing.md.value),
-                            child: widget.leadingIcon ??
-                                Icon(
-                                  Icons.chevron_left_rounded,
-                                  color: context.textTheme.bodyMedium?.color,
-                                ),
-                          ),
-                        ),
-                      ),
+                  ? CustomButton.child(
+                      onPressed: widget.onBackTap ??
+                          () => Navigator.of(context).pop(context),
+                      type: ButtonType.noShape,
+                      child: widget.leadingIcon ??
+                          const Icon(Icons.chevron_left_rounded),
                     )
                   : const SizedBox(),
               scrolledUnderElevation: widget.scrolledUnderElevation ?? 0,

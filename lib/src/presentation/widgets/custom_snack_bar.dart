@@ -58,8 +58,8 @@ class CustomSnackBar {
   }) {
     FToast().removeQueuedCustomToasts();
     FToast().init(context).showToast(
-          gravity: ToastGravity.TOP,
           isDismissable: true,
+          gravity: ToastGravity.TOP,
           toastDuration: const Duration(seconds: 5),
           positionedToastBuilder: (context, child) {
             return Positioned(
