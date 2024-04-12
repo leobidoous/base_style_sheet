@@ -23,7 +23,7 @@ class CustomButton extends StatefulWidget {
     bool isEnabled = true,
     bool isLoading = false,
     bool isSafe = false,
-    EdgeInsets? padding = EdgeInsets.zero,
+    EdgeInsets? padding,
     BorderRadius? borderRadius,
     Color? color,
   }) {

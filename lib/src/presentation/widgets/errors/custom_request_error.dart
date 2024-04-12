@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/themes/responsive/responsive_extension.dart';
 import '../../../core/themes/spacing/spacing.dart';
 import '../../extensions/build_context_extensions.dart';
 import '../buttons/custom_button.dart';
 import '../custom_scroll_content.dart';
 import '../expansions/custom_expansion.dart';
-import '../image_view/custom_image.dart';
 
 class CustomRequestError extends StatelessWidget {
   const CustomRequestError({
@@ -47,13 +45,26 @@ class CustomRequestError extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    CustomImage(
-                      packageName: 'base_style_sheet',
-                      asset: 'assets/images/server/server_error.png',
-                      backgroundColor: Colors.transparent,
-                      imageSize: Size(
-                        52.responsiveHeight,
-                        52.responsiveHeight,
+                    DecoratedBox(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.red.withOpacity(.25),
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.all(Spacing.xxs.value),
+                        child: DecoratedBox(
+                          decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.red,
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.all(Spacing.xs.value),
+                            child: Icon(
+                              Icons.error_outline_rounded,
+                              color: context.colorScheme.background,
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                     Spacing.sm.vertical,

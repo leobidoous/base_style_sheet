@@ -31,6 +31,7 @@ class CustomInputField extends StatefulWidget {
     this.focusNode,
     this.maxLength,
     this.maxLines = 1,
+    this.minLines,
     this.autofocus = false,
     this.textInputAction,
     this.enabled = true,
@@ -74,6 +75,7 @@ class CustomInputField extends StatefulWidget {
   final String? Function(String?)? validator;
   final FocusNode? focusNode;
   final int? maxLength;
+  final int? minLines;
   final bool enableSuggestions;
   final bool autocorrect;
   final int maxLines;
@@ -153,6 +155,7 @@ class _CustomInputFieldState extends State<CustomInputField> {
             onTap: widget.onTap,
             enabled: widget.enabled,
             maxLines: widget.maxLines,
+            minLines: widget.minLines,
             readOnly: widget.readOnly,
             maxLength: widget.maxLength,
             textAlign: widget.textAlign,
@@ -210,8 +213,8 @@ class _CustomInputFieldState extends State<CustomInputField> {
                     : widget.contentPadding?.left ?? _fontSize,
               ),
               helperStyle: context.textTheme.labelSmall,
-              suffixIcon: widget.suffixIcon ?? const SizedBox(),
-              prefixIcon: widget.prefixIcon ?? const SizedBox(),
+              suffixIcon: widget.suffixIcon ?? SizedBox(width: _fontSize),
+              prefixIcon: widget.prefixIcon ?? SizedBox(width: _fontSize),
               errorStyle: context.textTheme.labelSmall?.copyWith(
                 color: Colors.red,
               ),

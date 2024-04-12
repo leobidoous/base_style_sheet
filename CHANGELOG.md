@@ -1,3 +1,8 @@
+## 1.0.13
+
+* Remove unused params
+* Add translations
+
 ## 1.0.12
 
 * Remove unused params
