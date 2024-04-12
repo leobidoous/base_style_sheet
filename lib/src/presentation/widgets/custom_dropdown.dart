@@ -5,6 +5,7 @@ import '../../core/themes/app_theme_factory.dart';
 import '../../core/themes/spacing/spacing.dart';
 import '../../core/themes/typography/typography_constants.dart';
 import '../extensions/build_context_extensions.dart';
+import 'buttons/custom_button.dart';
 import 'containers/custom_shimmer.dart';
 import 'custom_scroll_content.dart';
 import 'dividers/custom_divider.dart';
@@ -34,7 +35,6 @@ class CustomDropdown<T> extends StatefulWidget {
     this.itemStyle,
     this.value = '',
     this.listPadding,
-    this.childPadding,
     this.boxDecoration,
     this.boxConstraints,
     required this.items,
@@ -44,7 +44,8 @@ class CustomDropdown<T> extends StatefulWidget {
     this.itemSelectedStyle,
     this.isLoading = false,
     this.isExpanded = false,
-    this.dropdownHeightType = DropdownHeightType.normal,
+    this.childPadding = EdgeInsets.zero,
+    this.heightType = DropdownHeightType.normal,
   });
 
   final Widget? icon;
@@ -63,9 +64,9 @@ class CustomDropdown<T> extends StatefulWidget {
   final EdgeInsets? childPadding;
   final TextStyle? itemSelectedStyle;
   final BoxDecoration? boxDecoration;
+  final DropdownHeightType heightType;
   final BoxConstraints? boxConstraints;
   final List<CustomDropdownItem<T>> items;
-  final DropdownHeightType dropdownHeightType;
 
   @override
   State<CustomDropdown<T>> createState() => _CustomDropdownState<T>();
@@ -223,7 +224,11 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
                   borderRadius: context.theme.borderRadiusSM,
                   color: context.colorScheme.background,
                 ),
-            child: _child,
+            clipBehavior: Clip.hardEdge,
+            child: ClipRRect(
+              borderRadius: context.theme.borderRadiusSM,
+              child: _child,
+            ),
           ),
         ),
       ),
@@ -232,14 +237,11 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
 
   Widget get _child {
     return Container(
-      padding: widget.childPadding ??
-          EdgeInsets.symmetric(
-            horizontal: const Spacing(2).value,
-            vertical: const Spacing(1).value,
-          ),
+      padding: widget.childPadding,
+      color: widget.boxDecoration?.color ?? context.colorScheme.background,
       constraints: widget.boxConstraints ??
           BoxConstraints(
-            minHeight: switch (widget.dropdownHeightType) {
+            minHeight: switch (widget.heightType) {
               DropdownHeightType.normal => AppThemeBase.buttonHeightMD,
               DropdownHeightType.small => AppThemeBase.buttonHeightSM,
             },
@@ -251,7 +253,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
         children: [
           if (widget.isExpanded) Expanded(child: _textValue),
           if (!widget.isExpanded) Flexible(child: _textValue),
-          Spacing.xs.horizontal,
+          Spacing.xxs.horizontal,
           if (widget.isLoading)
             CustomShimmer(
               width: AppFontSize.iconButton.value,
@@ -260,7 +262,14 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
           if (!widget.isLoading) ...[
             if (!showClear)
               SizedBox(
-                width: AppFontSize.iconButton.value,
+                width: switch (widget.heightType) {
+                  DropdownHeightType.normal => AppThemeBase.buttonHeightMD,
+                  DropdownHeightType.small => AppThemeBase.buttonHeightSM,
+                },
+                height: switch (widget.heightType) {
+                  DropdownHeightType.normal => AppThemeBase.buttonHeightMD,
+                  DropdownHeightType.small => AppThemeBase.buttonHeightSM,
+                },
                 child: widget.icon ??
                     RotationTransition(
                       turns: rotateAnimation,
@@ -272,25 +281,27 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
               ),
             if (showClear)
               SizedBox(
-                width: AppFontSize.iconButton.value,
-                child: Semantics(
-                  button: true,
-                  child: InkWell(
-                    onTap: widget.readOnly || !isEnabled
-                        ? null
-                        : () {
-                            setState(() {
-                              textController.text = widget.placeholder;
-                              widget.onClear?.call();
-                              showClear = false;
-                            });
-                          },
-                    child: widget.icon ??
-                        Icon(
-                          Icons.close,
-                          size: AppFontSize.titleLarge.value,
-                        ),
-                  ),
+                width: switch (widget.heightType) {
+                  DropdownHeightType.normal => AppThemeBase.buttonHeightMD,
+                  DropdownHeightType.small => AppThemeBase.buttonHeightSM,
+                },
+                height: switch (widget.heightType) {
+                  DropdownHeightType.normal => AppThemeBase.buttonHeightMD,
+                  DropdownHeightType.small => AppThemeBase.buttonHeightSM,
+                },
+                child: CustomButton.icon(
+                  onPressed: widget.readOnly || !isEnabled
+                      ? null
+                      : () {
+                          setState(() {
+                            textController.text = widget.placeholder;
+                            widget.onClear?.call();
+                            showClear = false;
+                          });
+                        },
+                  type: ButtonType.noShape,
+                  heightType: ButtonHeightType.small,
+                  icon: Icons.close,
                 ),
               ),
           ],
@@ -341,8 +352,8 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
                 right: getRightPosition(constraints),
                 bottom: getBottomPosition(constraints),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   mainAxisAlignment: isOnTop(constraints)
                       ? MainAxisAlignment.start
                       : MainAxisAlignment.end,
@@ -351,8 +362,8 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
                       child: Container(
                         decoration: widget.boxDecoration ??
                             BoxDecoration(
-                              border: Border.all(color: Colors.grey, width: .5),
                               borderRadius: context.theme.borderRadiusSM,
+                              border: Border.all(color: Colors.grey, width: .5),
                             ),
                         constraints: BoxConstraints(maxHeight: maxHeight),
                         width: size.width,
@@ -369,10 +380,8 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
                               ],
                               Flexible(
                                 child: Container(
-                                  constraints: BoxConstraints(
-                                    maxHeight: maxHeight,
-                                  ),
-                                  color: context.colorScheme.background,
+                                  color: widget.boxDecoration?.color ??
+                                      context.colorScheme.background,
                                   width: size.width,
                                   child: _listView,
                                 ),
@@ -427,18 +436,27 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
                   Padding(
                     padding: widget.listPadding ??
                         EdgeInsets.symmetric(
-                          horizontal: const Spacing(2).value,
-                          vertical: const Spacing(1.75).value,
+                          horizontal: switch (widget.heightType) {
+                            DropdownHeightType.normal => Spacing.xs.value,
+                            DropdownHeightType.small => Spacing.xxs.value,
+                          },
+                          vertical: switch (widget.heightType) {
+                            DropdownHeightType.normal => Spacing.xs.value,
+                            DropdownHeightType.small => Spacing.xxs.value,
+                          },
                         ),
-                    child: Text(
-                      widget.items[index].label,
-                      style: widget.items[index].label == textController.text
-                          ? widget.itemSelectedStyle ??
-                              context.textTheme.bodyMedium?.copyWith(
-                                fontWeight: AppFontWeight.bold.value,
-                                color: context.colorScheme.primary,
-                              )
-                          : widget.itemStyle ?? context.textTheme.bodyMedium,
+                    child: CustomScrollContent(
+                      scrollDirection: Axis.horizontal,
+                      child: Text(
+                        widget.items[index].label,
+                        style: widget.items[index].label == textController.text
+                            ? widget.itemSelectedStyle ??
+                                context.textTheme.bodyMedium?.copyWith(
+                                  fontWeight: AppFontWeight.bold.value,
+                                  color: context.colorScheme.primary,
+                                )
+                            : widget.itemStyle ?? context.textTheme.bodyMedium,
+                      ),
                     ),
                   ),
             ),

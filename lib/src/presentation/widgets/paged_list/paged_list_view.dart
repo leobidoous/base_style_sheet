@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -14,7 +15,6 @@ import 'paged_list_controller.dart';
 class PagedListView<E, S> extends StatefulWidget {
   const PagedListView({
     super.key,
-    this.thickness,
     this.refreshLogo,
     this.scrollController,
     this.shrinkWrap = false,
@@ -33,7 +33,6 @@ class PagedListView<E, S> extends StatefulWidget {
   });
 
   final bool shrinkWrap;
-  final double? thickness;
   final EdgeInsets padding;
   final String? refreshLogo;
   final bool initWithRequest;
@@ -160,7 +159,7 @@ class _PagedListViewState<E, S> extends State<PagedListView<E, S>> {
             controller:
                 widget.parentScrollController == null ? scrollController : null,
             thumbColor: context.colorScheme.primary,
-            thickness: widget.thickness,
+            thickness: kIsWeb ? 0 : null,
             radius: context.theme.borderRadiusXLG.bottomLeft,
             child: ListView.builder(
               padding: widget.padding,

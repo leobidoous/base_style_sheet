@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../core/themes/app_theme_factory.dart';
@@ -58,6 +59,7 @@ class CustomScrollContent extends StatelessWidget {
       if (scrollDirection == Axis.vertical) {
         scroll = RawScrollbar(
           padding: EdgeInsets.zero,
+          thickness: kIsWeb ? 0 : null,
           controller: scrollController,
           thumbColor: context.colorScheme.primary,
           radius: context.theme.borderRadiusXLG.bottomLeft,

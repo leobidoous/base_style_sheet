@@ -39,6 +39,7 @@ class AppBarButton extends StatelessWidget {
       ),
       child: CustomButton.child(
         isEnabled: isEnabled,
+        padding: EdgeInsets.zero,
         onPressed: isEnabled ? onTap : null,
         heightType: ButtonHeightType.small,
         type: ButtonType.noShape,

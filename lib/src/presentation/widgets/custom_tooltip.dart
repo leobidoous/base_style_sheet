@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../core/themes/app_theme_factory.dart';
-import '../../core/themes/responsive/responsive_extension.dart';
-import '../../core/themes/spacing/spacing.dart';
 import '../extensions/build_context_extensions.dart';
 
 class CustomTooltip extends StatelessWidget {
@@ -21,7 +19,7 @@ class CustomTooltip extends StatelessWidget {
   Widget build(BuildContext context) {
     return Tooltip(
       message: message,
-      verticalOffset: const Spacing(5).value.responsiveHeight,
+      verticalOffset: 0,
       excludeFromSemantics: true,
       decoration: BoxDecoration(
         color: context.colorScheme.primaryContainer,

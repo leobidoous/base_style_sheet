@@ -23,7 +23,7 @@ class CustomButton extends StatefulWidget {
     bool isEnabled = true,
     bool isLoading = false,
     bool isSafe = false,
-    EdgeInsets? padding,
+    EdgeInsets? padding = EdgeInsets.zero,
     BorderRadius? borderRadius,
     Color? color,
   }) {
@@ -182,7 +182,7 @@ class CustomButton extends StatefulWidget {
       ),
     );
   }
-  
+
   const CustomButton({
     super.key,
     required this.child,
@@ -225,7 +225,7 @@ class CustomButton extends StatefulWidget {
           iconData,
           size: switch (heightType) {
             ButtonHeightType.normal => AppFontSize.iconButton.value,
-            ButtonHeightType.small => AppFontSize.iconButton.value * .75,
+            ButtonHeightType.small => AppFontSize.iconButton.value * .9,
           },
           color: iconColor ??
               (context.isDarkMode
@@ -261,7 +261,7 @@ class CustomButton extends StatefulWidget {
                 overflow: TextOverflow.ellipsis,
                 style: textStyle ??
                     context.textTheme.bodyMedium?.copyWith(
-                      fontWeight: context.textTheme.fontWeightBold,
+                      fontWeight: AppFontWeight.bold.value,
                       fontSize: switch (heightType) {
                         ButtonHeightType.small => AppFontSize.bodySmall.value,
                         ButtonHeightType.normal => AppFontSize.bodyMedium.value,

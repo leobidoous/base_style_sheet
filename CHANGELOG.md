@@ -1,3 +1,11 @@
+## 1.0.12
+
+* Remove unused params
+
+## 1.0.11
+
+* Rename params into CustomDropdrown
+
 ## 1.0.10
 
 * Add BorderSide to CustomInputField

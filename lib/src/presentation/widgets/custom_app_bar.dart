@@ -106,7 +106,13 @@ class _CustomAppBarState extends State<CustomAppBar> {
                       ),
                     ),
               ),
-              leadingWidth: widget.leadingWidth,
+              leadingWidth: widget.leadingWidth ??
+                  (widget.automaticallyImplyLeading &&
+                              Navigator.of(context).canPop() ||
+                          widget.leadingIcon != null ||
+                          widget.onBackTap != null
+                      ? null
+                      : 0),
               leading: widget.automaticallyImplyLeading &&
                           Navigator.of(context).canPop() ||
                       widget.leadingIcon != null ||
