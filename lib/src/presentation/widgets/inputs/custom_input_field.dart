@@ -45,8 +45,9 @@ class CustomInputField extends StatefulWidget {
     this.onEditingComplete,
     this.onTap,
     this.fillColor,
+    this.buildCounter,
     this.readOnly = false,
-    this.inputHeightType = InputHeightType.normal,
+    this.heightType = InputHeightType.normal,
     this.floatingLabelBehavior = FloatingLabelBehavior.always,
     this.focusedBorder,
     this.borderRadius,
@@ -85,7 +86,7 @@ class CustomInputField extends StatefulWidget {
   final bool enableinteractiveSelection;
   final bool readOnly;
   final double? opacityDisabled;
-  final InputHeightType inputHeightType;
+  final InputHeightType heightType;
   final bool obscureText;
   final EdgeInsets? contentPadding;
   final List<String> autofillHints;
@@ -97,6 +98,12 @@ class CustomInputField extends StatefulWidget {
   final FloatingLabelBehavior floatingLabelBehavior;
   final InputBorder? focusedBorder;
   final BorderSide? borderSide;
+  final Widget? Function(
+    BuildContext, {
+    required int currentLength,
+    required bool isFocused,
+    required int? maxLength,
+  })? buildCounter;
 
   @override
   State<CustomInputField> createState() => _CustomInputFieldState();
@@ -104,7 +111,7 @@ class CustomInputField extends StatefulWidget {
 
 class _CustomInputFieldState extends State<CustomInputField> {
   BoxConstraints get _boxConstraints {
-    switch (widget.inputHeightType) {
+    switch (widget.heightType) {
       case InputHeightType.normal:
         return BoxConstraints(
           minHeight: AppThemeBase.buttonHeightMD,
@@ -130,7 +137,7 @@ class _CustomInputFieldState extends State<CustomInputField> {
   }
 
   double get _fontSize {
-    switch (widget.inputHeightType) {
+    switch (widget.heightType) {
       case InputHeightType.normal:
         return AppFontSize.bodyMedium.value;
       case InputHeightType.small:
@@ -165,6 +172,7 @@ class _CustomInputFieldState extends State<CustomInputField> {
             keyboardType: widget.keyboardType,
             autofillHints: widget.autofillHints,
             initialValue: widget.initialValue,
+            buildCounter: widget.buildCounter,
             inputFormatters: widget.inputFormatters,
             smartDashesType: SmartDashesType.enabled,
             autovalidateMode: widget.autovalidateMode,
@@ -219,7 +227,10 @@ class _CustomInputFieldState extends State<CustomInputField> {
                 color: Colors.red,
               ),
               contentPadding: widget.contentPadding ??
-                  EdgeInsets.symmetric(horizontal: _fontSize),
+                  EdgeInsets.symmetric(
+                    horizontal: _fontSize,
+                    vertical: widget.maxLines > 1 ? _fontSize : 0,
+                  ),
               errorText: widget.errorText == '' ? null : widget.errorText,
               floatingLabelBehavior: widget.floatingLabelBehavior,
               focusedErrorBorder: _border(Colors.red),

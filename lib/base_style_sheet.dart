@@ -61,3 +61,4 @@ export 'package:base_style_sheet/src/presentation/widgets/tab_bar/custom_tab_bar
 export 'package:base_style_sheet/src/presentation/widgets/tab_bar/rating_bar.dart';
 export 'package:base_style_sheet/src/presentation/widgets/tab_bar/tab_bar_item.dart';
 export 'package:base_style_sheet/src/presentation/widgets/text_link.dart';
+export 'package:file_picker/file_picker.dart';

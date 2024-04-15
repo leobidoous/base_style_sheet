@@ -1,13 +1,6 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
-import '../../../core/themes/app_theme_base.dart';
-import '../../../core/themes/app_theme_factory.dart';
-import '../../../core/themes/spacing/spacing.dart';
-import '../../../core/themes/typography/typography_constants.dart';
-import '../../extensions/build_context_extensions.dart';
-import '../custom_loading.dart';
-import '../custom_tooltip.dart';
+import '../../../../base_style_sheet.dart';
 
 enum ButtonType { primary, secondary, tertiary, background, noShape }
 
@@ -37,7 +30,14 @@ class CustomButton extends StatefulWidget {
       padding: padding ?? EdgeInsets.symmetric(horizontal: Spacing.sm.value),
       color: color,
       isSafe: isSafe,
-      child: _textValue(text, type: type, textStyle: textStyle),
+      child: CustomTooltip(
+        verticalOffset: switch (heightType) {
+          ButtonHeightType.normal => Spacing.md.value,
+          ButtonHeightType.small => Spacing.sm.value,
+        },
+        message: text,
+        child: _textValue(text, type: type, textStyle: textStyle),
+      ),
     );
   }
 
@@ -124,19 +124,26 @@ class CustomButton extends StatefulWidget {
       padding: padding ?? EdgeInsets.symmetric(horizontal: Spacing.sm.value),
       color: color,
       isSafe: isSafe,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          _iconValue(
-            icon,
-            type: type,
-            iconColor: iconColor,
-            heightType: heightType,
-          ),
-          Spacing.xs.horizontal,
-          Flexible(child: _textValue(text, type: type, textStyle: textStyle)),
-        ],
+      child: CustomTooltip(
+        verticalOffset: switch (heightType) {
+          ButtonHeightType.normal => Spacing.md.value,
+          ButtonHeightType.small => Spacing.sm.value,
+        },
+        message: text,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _iconValue(
+              icon,
+              type: type,
+              iconColor: iconColor,
+              heightType: heightType,
+            ),
+            Spacing.xs.horizontal,
+            Flexible(child: _textValue(text, type: type, textStyle: textStyle)),
+          ],
+        ),
       ),
     );
   }
@@ -166,19 +173,26 @@ class CustomButton extends StatefulWidget {
       padding: padding ?? EdgeInsets.symmetric(horizontal: Spacing.sm.value),
       color: color,
       isSafe: isSafe,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Flexible(child: _textValue(text, type: type, textStyle: textStyle)),
-          Spacing.xs.horizontal,
-          _iconValue(
-            icon,
-            type: type,
-            iconColor: iconColor,
-            heightType: heightType,
-          ),
-        ],
+      child: CustomTooltip(
+        verticalOffset: switch (heightType) {
+          ButtonHeightType.normal => Spacing.md.value,
+          ButtonHeightType.small => Spacing.sm.value,
+        },
+        message: text,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Flexible(child: _textValue(text, type: type, textStyle: textStyle)),
+            Spacing.xs.horizontal,
+            _iconValue(
+              icon,
+              type: type,
+              iconColor: iconColor,
+              heightType: heightType,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -249,39 +263,34 @@ class CustomButton extends StatefulWidget {
   }) {
     return Builder(
       builder: (context) {
-        return CustomTooltip(
-          message: text,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              AutoSizeText(
-                text,
-                maxLines: 1,
-                textAlign: TextAlign.center,
-                overflow: TextOverflow.ellipsis,
-                style: textStyle ??
-                    context.textTheme.bodyMedium?.copyWith(
-                      fontWeight: AppFontWeight.bold.value,
-                      fontSize: switch (heightType) {
-                        ButtonHeightType.small => AppFontSize.bodySmall.value,
-                        ButtonHeightType.normal => AppFontSize.bodyMedium.value,
-                      },
-                      color: (context.isDarkMode
-                          ? context.colorScheme.onBackground
-                          : switch (type) {
-                              ButtonType.secondary =>
-                                context.colorScheme.onSecondary,
-                              ButtonType.tertiary =>
-                                context.colorScheme.onTertiary,
-                              ButtonType.primary =>
-                                context.colorScheme.onPrimary,
-                              ButtonType() =>
-                                context.textTheme.bodyMedium?.color,
-                            }),
-                    ),
-              ),
-            ],
-          ),
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            AutoSizeText(
+              text,
+              maxLines: 1,
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis,
+              style: textStyle ??
+                  context.textTheme.bodyMedium?.copyWith(
+                    fontWeight: AppFontWeight.bold.value,
+                    fontSize: switch (heightType) {
+                      ButtonHeightType.small => AppFontSize.bodySmall.value,
+                      ButtonHeightType.normal => AppFontSize.bodyMedium.value,
+                    },
+                    color: (context.isDarkMode
+                        ? context.colorScheme.onBackground
+                        : switch (type) {
+                            ButtonType.secondary =>
+                              context.colorScheme.onSecondary,
+                            ButtonType.tertiary =>
+                              context.colorScheme.onTertiary,
+                            ButtonType.primary => context.colorScheme.onPrimary,
+                            ButtonType() => context.textTheme.bodyMedium?.color,
+                          }),
+                  ),
+            ),
+          ],
         );
       },
     );
