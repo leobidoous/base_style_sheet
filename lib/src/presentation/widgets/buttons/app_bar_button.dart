@@ -14,7 +14,7 @@ class AppBarButton extends StatelessWidget {
     this.isLastButtom = true,
   });
 
-  final Function() onTap;
+  final Function()? onTap;
   final Widget child;
   final bool isEnabled;
   final bool isLastButtom;

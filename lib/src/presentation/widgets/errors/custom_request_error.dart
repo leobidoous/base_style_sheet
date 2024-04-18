@@ -14,7 +14,7 @@ class CustomRequestError extends StatelessWidget {
     this.maxHeight,
     this.btnType = ButtonType.primary,
     this.padding = const EdgeInsets.symmetric(vertical: 16),
-    this.btnLabel = 'Tentar novamente',
+    this.btnLabel = '',
   });
   final String? message;
   final String btnLabel;
@@ -83,8 +83,11 @@ class CustomRequestError extends StatelessWidget {
                       Spacing.sm.vertical,
                       CustomExpansion(
                         title: Padding(
-                          padding: EdgeInsets.symmetric(
-                            vertical: const Spacing(1).value,
+                          padding: EdgeInsets.fromLTRB(
+                            0,
+                            Spacing.xs.value,
+                            Spacing.xs.value,
+                            Spacing.xs.value,
                           ),
                           child: Text(
                             'Ver mais',

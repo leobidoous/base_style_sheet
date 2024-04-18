@@ -20,12 +20,12 @@ import '../custom_scroll_content.dart';
 class ListEmpty extends StatelessWidget {
   const ListEmpty({
     super.key,
-    this.message = 'Nenhum resultado encontrado',
+    required this.message,
     this.content,
     this.onPressed,
     this.header,
     this.padding = const EdgeInsets.symmetric(vertical: 16),
-    this.btnLabel = 'Buscar novamente',
+    this.btnLabel = '',
   });
 
   final EdgeInsets padding;

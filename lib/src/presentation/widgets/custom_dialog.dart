@@ -62,7 +62,7 @@ class CustomDialog {
     Function()? onPressed,
     EdgeInsets? padding,
     bool showClose = true,
-    String btnLabel = 'Tentar novamente',
+    String btnLabel = '',
   }) async {
     return await show(
       context,

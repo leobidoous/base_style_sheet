@@ -5,12 +5,12 @@ import 'package:flutter/widgets.dart';
 
 import '../../../core/themes/app_theme_factory.dart';
 import '../../../core/themes/spacing/spacing.dart';
+import '../../controllers/paged_list_controller.dart';
 import '../../extensions/build_context_extensions.dart';
 import '../custom_loading.dart';
 import '../custom_refresh_indicator.dart';
 import '../empties/list_empty.dart';
 import '../errors/custom_request_error.dart';
-import 'paged_list_controller.dart';
 
 class PagedListView<E, S> extends StatefulWidget {
   const PagedListView({

@@ -1,3 +1,7 @@
+## 1.0.15
+
+* Upgrade dependencies
+
 ## 1.0.14
 
 * Remove unused params
