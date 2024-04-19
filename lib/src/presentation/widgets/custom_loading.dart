@@ -27,18 +27,20 @@ enum LoadingType { primary, linear }
 class CustomLoading extends StatefulWidget {
   const CustomLoading({
     super.key,
-    this.type = LoadingType.primary,
+    this.value,
     this.width = 32,
     this.itemBuilder,
-    this.duration = const Duration(milliseconds: 1500),
     this.height = 32,
     this.primaryColor,
     this.secondaryColor,
+    this.type = LoadingType.primary,
+    this.duration = const Duration(milliseconds: 1500),
   });
 
   final LoadingType type;
   final double width;
   final double height;
+  final double? value;
   final Duration duration;
   final Widget Function(BuildContext, int)? itemBuilder;
   final Color? primaryColor;
@@ -91,7 +93,12 @@ class _CustomLoadingState extends State<CustomLoading>
         if (widget.type == LoadingType.linear)
           ClipRRect(
             borderRadius: BorderRadius.circular(24),
-            child: const LinearProgressIndicator(minHeight: .5),
+            child: LinearProgressIndicator(
+              minHeight: widget.height,
+              color: widget.primaryColor,
+              value: widget.value,
+              backgroundColor: widget.secondaryColor,
+            ),
           ),
         if (widget.type == LoadingType.primary)
           SizedBox(

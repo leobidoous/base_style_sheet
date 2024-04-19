@@ -1,3 +1,8 @@
+## 1.0.16
+
+* Update CustomLoading
+* Update CustomAppBar
+
 ## 1.0.15
 
 * Upgrade dependencies

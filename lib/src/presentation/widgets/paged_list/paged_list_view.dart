@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 import '../../../core/themes/app_theme_factory.dart';
-import '../../../core/themes/spacing/spacing.dart';
+import '../../../core/themes/typography/typography_constants.dart';
 import '../../controllers/paged_list_controller.dart';
 import '../../extensions/build_context_extensions.dart';
 import '../custom_loading.dart';
@@ -229,8 +229,8 @@ class _PagedListViewState<E, S> extends State<PagedListView<E, S>> {
         widget.newPageProgressIndicatorBuilder?.call(context) ??
             Center(
               child: CustomLoading(
-                width: const Spacing(3).value,
-                height: const Spacing(3).value,
+                width: AppFontSize.iconButton.value,
+                height: AppFontSize.iconButton.value,
               ),
             ),
     ];

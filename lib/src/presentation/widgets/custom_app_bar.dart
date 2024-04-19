@@ -8,9 +8,10 @@ import '../extensions/build_context_extensions.dart';
 import 'buttons/custom_button.dart';
 
 class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
-  factory CustomAppBar.zero() {
-    return const CustomAppBar(
+  factory CustomAppBar.zero({bool enableShadow = false}) {
+    return CustomAppBar(
       toolbarHeight: 0,
+      enableShadow: enableShadow,
       automaticallyImplyLeading: false,
     );
   }
