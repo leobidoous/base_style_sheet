@@ -110,7 +110,7 @@ class CustomRequestError extends StatelessWidget {
                 ),
               ),
             ),
-            if (onPressed != null) ...[
+            if (onPressed != null && btnLabel.isNotEmpty) ...[
               Spacing.xs.vertical,
               Padding(
                 padding: EdgeInsets.only(top: const Spacing(2).value),

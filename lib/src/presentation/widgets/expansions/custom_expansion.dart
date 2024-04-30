@@ -81,14 +81,14 @@ class CustomExpansionState<T> extends State<CustomExpansion<T>>
     return Semantics(
       button: true,
       child: InkWell(
-        onTap: widget.onTap ??
-            () {
-              if (_animationController.isCompleted) {
-                _animationController.reverse();
-              } else {
-                _animationController.forward();
-              }
-            },
+        onTap: () {
+          if (_animationController.isCompleted) {
+            _animationController.reverse();
+          } else {
+            widget.onTap?.call();
+            _animationController.forward();
+          }
+        },
         focusColor: Colors.transparent,
         hoverColor: Colors.transparent,
         splashColor: Colors.transparent,
@@ -121,6 +121,7 @@ class CustomExpansionState<T> extends State<CustomExpansion<T>>
                               if (_animationController.isCompleted) {
                                 _animationController.reverse();
                               } else {
+                                widget.onTap?.call();
                                 _animationController.forward();
                               }
                             },

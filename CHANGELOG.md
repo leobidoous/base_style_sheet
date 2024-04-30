@@ -1,3 +1,8 @@
+## 1.0.17
+
+* Update CustomExpansion
+* Update CustomRequestError
+
 ## 1.0.16
 
 * Update CustomLoading
