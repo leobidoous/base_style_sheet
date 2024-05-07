@@ -36,8 +36,6 @@ class ImageError extends StatefulWidget {
 class _ImageErrorState extends State<ImageError> {
   @override
   Widget build(BuildContext context) {
-    final theme = context;
-
     return Semantics(
       button: true,
       child: InkWell(
@@ -50,7 +48,7 @@ class _ImageErrorState extends State<ImageError> {
         },
         child: DecoratedBox(
           decoration: BoxDecoration(
-            color: theme.colorScheme.primary.withOpacity(.025),
+            color: context.colorScheme.primary.withOpacity(.025),
           ),
           child: Icon(
             Icons.image_not_supported_rounded,
@@ -80,10 +78,7 @@ class _ImageErrorState extends State<ImageError> {
                   text: '$error',
                   style: context.textTheme.bodyMedium,
                   children: [
-                    if (stackTrace != null)
-                      TextSpan(
-                        text: '\n\n$stackTrace',
-                      ),
+                    if (stackTrace != null) TextSpan(text: '\n\n$stackTrace'),
                   ],
                 ),
               ),

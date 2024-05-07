@@ -55,6 +55,10 @@ class CustomSnackBar {
     required BuildContext context,
     required String message,
     SnackBarType type = SnackBarType.info,
+    TextStyle? style,
+    Color? infoColor,
+    Color? errorColor,
+    Color? successColor,
   }) {
     FToast().removeQueuedCustomToasts();
     FToast().init(context).showToast(
@@ -76,9 +80,10 @@ class CustomSnackBar {
           },
           child: CustomCard(
             color: switch (type) {
-              SnackBarType.error => context.colorScheme.error,
-              SnackBarType.info => context.colorScheme.secondary,
-              SnackBarType.success => context.colorScheme.primary,
+              SnackBarType.error => errorColor ?? context.colorScheme.error,
+              SnackBarType.info => infoColor ?? context.colorScheme.secondary,
+              SnackBarType.success =>
+                successColor ?? context.colorScheme.primary,
             },
             borderRadius: context.theme.borderRadiusSM,
             padding: EdgeInsets.all(Spacing.sm.value),
@@ -86,22 +91,12 @@ class CustomSnackBar {
               children: <Widget>[
                 Icon(
                   switch (type) {
+                    SnackBarType.error => Icons.error,
                     SnackBarType.info => Icons.info_rounded,
                     SnackBarType.success => Icons.check_circle_outline_rounded,
-                    SnackBarType.error => Icons.error,
                   },
-                  color: switch (type) {
-                    SnackBarType.info => context.theme.scaffoldBackgroundColor,
-                    SnackBarType.success => context.textTheme.bodyMedium?.color,
-                    SnackBarType.error => context.theme.scaffoldBackgroundColor,
-                  },
-                ),
-                Spacing.sm.horizontal,
-                Expanded(
-                  child: Text(
-                    message,
-                    style: context.textTheme.bodyMedium?.copyWith(
-                      color: switch (type) {
+                  color: style?.color ??
+                      switch (type) {
                         SnackBarType.info =>
                           context.theme.scaffoldBackgroundColor,
                         SnackBarType.success =>
@@ -109,7 +104,22 @@ class CustomSnackBar {
                         SnackBarType.error =>
                           context.theme.scaffoldBackgroundColor,
                       },
-                    ),
+                ),
+                Spacing.sm.horizontal,
+                Expanded(
+                  child: Text(
+                    message,
+                    style: style ??
+                        context.textTheme.bodyMedium?.copyWith(
+                          color: switch (type) {
+                            SnackBarType.info =>
+                              context.theme.scaffoldBackgroundColor,
+                            SnackBarType.success =>
+                              context.textTheme.bodyMedium?.color,
+                            SnackBarType.error =>
+                              context.theme.scaffoldBackgroundColor,
+                          },
+                        ),
                   ),
                 ),
               ],

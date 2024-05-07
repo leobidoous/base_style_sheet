@@ -35,7 +35,7 @@ class CustomImage extends StatelessWidget {
     super.key,
     this.url,
     this.file,
-    this.urlSvgAsset,
+    this.urlSvg,
     this.imageSize,
     this.asset,
     this.svgAsset,
@@ -51,12 +51,13 @@ class CustomImage extends StatelessWidget {
     this.headers,
     this.maxHeightDiskCache,
     this.maxWidthDiskCache,
+    this.errorBuilder,
   });
 
   final File? file;
   final BoxFit fit;
   final String? url;
-  final String? urlSvgAsset;
+  final String? urlSvg;
   final String? asset;
   final String? svgAsset;
   final Size? imageSize;
@@ -71,6 +72,7 @@ class CustomImage extends StatelessWidget {
   final int? maxWidthDiskCache;
   final int? maxHeightDiskCache;
   final Map<String, String>? headers;
+  final Widget Function(String)? errorBuilder;
 
   @override
   Widget build(BuildContext context) {
@@ -96,28 +98,21 @@ class CustomImage extends StatelessWidget {
                   maxWidthDiskCache: maxWidthDiskCache,
                   maxHeightDiskCache: maxHeightDiskCache,
                 );
-              } else if (urlSvgAsset != null && urlSvgAsset!.isNotEmpty) {
-                return Semantics(
-                  button: true,
-                  child: InkWell(
-                    onTap: () => CustomPhotoView(
-                      image: AssetImage(asset!, package: packageName),
-                    ).show(context),
-                    child: SvgPicture.network(
-                      urlSvgAsset!,
-                      fit: fit,
-                      width: imageSize?.width,
-                      height: imageSize?.height,
-                      colorFilter: (imageColor != null)
-                          ? ColorFilter.mode(imageColor!, BlendMode.srcIn)
-                          : null,
-                      headers: headers,
-                      placeholderBuilder: (context) => Center(
-                        child: CustomShimmer(
-                          width: imageSize?.width ?? 32,
-                          height: imageSize?.height ?? 32,
-                        ),
-                      ),
+              } else if (urlSvg != null && urlSvg!.isNotEmpty) {
+                return SvgPicture.network(
+                  urlSvg!,
+                  fit: fit,
+                  width: imageSize?.width,
+                  height: imageSize?.height,
+                  colorFilter: (imageColor != null)
+                      ? ColorFilter.mode(imageColor!, BlendMode.srcIn)
+                      : null,
+                  headers: headers,
+                  allowDrawingOutsideViewBox: true,
+                  placeholderBuilder: (context) => Center(
+                    child: CustomShimmer(
+                      width: imageSize?.width ?? 32,
+                      height: imageSize?.height ?? 32,
                     ),
                   ),
                 );
@@ -162,14 +157,17 @@ class CustomImage extends StatelessWidget {
                       width: imageSize?.width,
                       height: imageSize?.height,
                       color: imageColor,
-                      errorBuilder: (context, error, stackTrace) => ImageError(
-                        error: error.toString(),
-                      ),
+                      errorBuilder: (context, error, stackTrace) =>
+                          errorBuilder?.call(error.toString()) ??
+                          ImageError(
+                            error: error.toString(),
+                          ),
                     ),
                   ),
                 );
               }
-              return const ImageError(error: 'Nenhuma imagem fornecida');
+              return errorBuilder?.call('Nenhuma imagem fornecida') ??
+                  const ImageError(error: 'Nenhuma imagem fornecida');
             },
           ),
         ),

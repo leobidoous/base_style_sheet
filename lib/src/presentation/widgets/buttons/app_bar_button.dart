@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/themes/app_theme_factory.dart';
 import '../../../core/themes/spacing/spacing.dart';
 import '../../../core/themes/typography/typography_constants.dart';
+import '../../extensions/build_context_extensions.dart';
 import '../containers/custom_shimmer.dart';
 import 'custom_button.dart';
 
 class AppBarButton extends StatelessWidget {
   const AppBarButton({
     super.key,
+    this.onTap,
     required this.child,
-    required this.onTap,
     this.isEnabled = true,
     this.isLastButtom = true,
   });
@@ -43,6 +45,7 @@ class AppBarButton extends StatelessWidget {
         onPressed: isEnabled ? onTap : null,
         heightType: ButtonHeightType.small,
         type: ButtonType.noShape,
+        borderRadius: context.theme.borderRadiusNone,
         child: child,
       ),
     );
