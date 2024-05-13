@@ -1,3 +1,7 @@
+## 1.0.19
+
+* Fix CustomDropdrown
+
 ## 1.0.18
 
 * Update AppBarButton

@@ -12,6 +12,7 @@ class ImageUrl extends StatelessWidget {
     required this.url,
     required this.headers,
     required this.imageSize,
+    required this.errorBuilder,
     required this.maxWidthDiskCache,
     required this.maxHeightDiskCache,
   });
@@ -22,6 +23,7 @@ class ImageUrl extends StatelessWidget {
   final int? maxWidthDiskCache;
   final int? maxHeightDiskCache;
   final Map<String, String>? headers;
+  final Widget Function(String)? errorBuilder;
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +35,7 @@ class ImageUrl extends StatelessWidget {
           height: imageSize?.height ?? 32,
         ),
       ),
+      
       maxHeightDiskCache: maxHeightDiskCache,
       maxWidthDiskCache: maxWidthDiskCache,
       httpHeaders: headers,
@@ -45,7 +48,9 @@ class ImageUrl extends StatelessWidget {
           ),
         );
       },
-      errorWidget: (context, url, error) => ImageError(error: error.toString()),
+      errorWidget: (context, url, error) =>
+          errorBuilder?.call(error.toString()) ??
+          ImageError(error: error.toString()),
     );
   }
 }

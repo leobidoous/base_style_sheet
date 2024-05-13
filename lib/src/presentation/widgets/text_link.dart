@@ -16,14 +16,18 @@ class TextLink extends StatelessWidget {
     this.onTap,
     this.icon,
     this.styleText,
+    this.maxLines,
+    this.textAlign = TextAlign.center,
   });
 
   final Function()? onTap;
   final String text;
+  final int? maxLines;
   final bool underline;
   final bool isEnabled;
   final bool isLoading;
   final IconData? icon;
+  final TextAlign? textAlign;
   final TextStyle? styleText;
 
   @override
@@ -37,16 +41,20 @@ class TextLink extends StatelessWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(
-                text,
-                textAlign: TextAlign.center,
-                style: styleText ??
-                    context.textTheme.bodyMedium?.copyWith(
-                      color: context.textTheme.bodyMedium?.color,
-                      fontWeight: context.textTheme.fontWeightMedium,
-                      decoration: underline ? TextDecoration.underline : null,
-                      decorationColor: context.textTheme.bodyMedium?.color,
-                    ),
+              Flexible(
+                child: Text(
+                  text,
+                  maxLines: maxLines,
+                  textAlign: textAlign,
+                  overflow: maxLines != null ? TextOverflow.ellipsis : null,
+                  style: styleText ??
+                      context.textTheme.bodyMedium?.copyWith(
+                        color: context.textTheme.bodyMedium?.color,
+                        fontWeight: context.textTheme.fontWeightMedium,
+                        decoration: underline ? TextDecoration.underline : null,
+                        decorationColor: context.textTheme.bodyMedium?.color,
+                      ),
+                ),
               ),
               if (icon != null) ...[
                 Spacing.xxs.horizontal,

@@ -59,3 +59,4 @@ export 'package:base_style_sheet/src/presentation/widgets/tab_bar/rating_bar.dar
 export 'package:base_style_sheet/src/presentation/widgets/tab_bar/tab_bar_item.dart';
 export 'package:base_style_sheet/src/presentation/widgets/text_link.dart';
 export 'package:file_picker/file_picker.dart';
+export 'package:image_picker/image_picker.dart';

@@ -95,6 +95,7 @@ class CustomImage extends StatelessWidget {
                   url: url!,
                   headers: headers,
                   imageSize: imageSize,
+                  errorBuilder: errorBuilder,
                   maxWidthDiskCache: maxWidthDiskCache,
                   maxHeightDiskCache: maxHeightDiskCache,
                 );

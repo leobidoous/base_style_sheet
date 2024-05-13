@@ -127,7 +127,11 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
   double getTopPosition(BoxConstraints constraints) {
     late double dy;
     dy = isOnTop(constraints) ? offset.dy : 0;
-    return dy;
+    return dy +
+        ((widget.context?.findRenderObject() as RenderBox?)
+                ?.localToGlobal(Offset.zero)
+                .dy ??
+            0);
   }
 
   double getBottomPosition(BoxConstraints constraints) {
@@ -135,7 +139,11 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
     dy = isOnTop(constraints)
         ? 0
         : constraints.maxHeight - offset.dy - size.height;
-    return dy;
+    return dy -
+        ((widget.context?.findRenderObject() as RenderBox?)
+                ?.localToGlobal(Offset.zero)
+                .dy ??
+            0);
   }
 
   double get getLeftPosition {
@@ -163,15 +171,16 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
   }
 
   Future<void> _showDropdown() async {
-    _getWidgetInfos();
     animationController.forward();
-    await Navigator.of(context)
+    await Navigator.of(widget.context ?? context)
         .push(
           PageRouteBuilder(
             opaque: false,
             maintainState: true,
             allowSnapshotting: true,
+            settings: const RouteSettings(),
             barrierDismissible: true,
+            fullscreenDialog: false,
             barrierColor: Colors.transparent,
             transitionDuration: const Duration(milliseconds: 150),
             reverseTransitionDuration: const Duration(milliseconds: 150),
@@ -238,7 +247,11 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
   Widget get _child {
     return Container(
       padding: widget.childPadding,
-      color: widget.boxDecoration?.color ?? context.colorScheme.background,
+      decoration: BoxDecoration(
+        borderRadius:
+            widget.boxDecoration?.borderRadius ?? context.theme.borderRadiusSM,
+        color: widget.boxDecoration?.color ?? context.colorScheme.background,
+      ),
       constraints: widget.boxConstraints ??
           BoxConstraints(
             minHeight: switch (widget.heightType) {
@@ -256,8 +269,14 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
           Spacing.xxs.horizontal,
           if (widget.isLoading)
             CustomShimmer(
-              width: AppFontSize.iconButton.value,
-              height: AppFontSize.iconButton.value,
+              width: switch (widget.heightType) {
+                DropdownHeightType.normal => AppThemeBase.buttonHeightMD,
+                DropdownHeightType.small => AppThemeBase.buttonHeightSM,
+              },
+              height: switch (widget.heightType) {
+                DropdownHeightType.normal => AppThemeBase.buttonHeightMD,
+                DropdownHeightType.small => AppThemeBase.buttonHeightSM,
+              },
             ),
           if (!widget.isLoading) ...[
             if (!showClear)
@@ -339,6 +358,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
   Widget get _dropdownBuilder {
     return LayoutBuilder(
       builder: (context, constraints) {
+        _getWidgetInfos();
         maxHeight = getMaxHeight(constraints);
         return SafeArea(
           top: !isOnTop(constraints),
@@ -432,33 +452,44 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
                 });
                 Navigator.of(context).pop();
               },
-              child: widget.items[index].item ??
-                  Padding(
-                    padding: widget.listPadding ??
-                        EdgeInsets.symmetric(
-                          horizontal: switch (widget.heightType) {
-                            DropdownHeightType.normal => Spacing.xs.value,
-                            DropdownHeightType.small => Spacing.xxs.value,
-                          },
-                          vertical: switch (widget.heightType) {
-                            DropdownHeightType.normal => Spacing.xs.value,
-                            DropdownHeightType.small => Spacing.xxs.value,
-                          },
+              child: Container(
+                alignment: Alignment.centerLeft,
+                constraints: BoxConstraints(
+                  minHeight: switch (widget.heightType) {
+                    DropdownHeightType.normal => AppThemeBase.buttonHeightMD,
+                    DropdownHeightType.small => AppThemeBase.buttonHeightSM,
+                  },
+                ),
+                child: widget.items[index].item ??
+                    Padding(
+                      padding: widget.listPadding ??
+                          EdgeInsets.symmetric(
+                            horizontal: switch (widget.heightType) {
+                              DropdownHeightType.normal => Spacing.xs.value,
+                              DropdownHeightType.small => Spacing.xxs.value,
+                            },
+                            vertical: switch (widget.heightType) {
+                              DropdownHeightType.normal => Spacing.xs.value,
+                              DropdownHeightType.small => Spacing.xxs.value,
+                            },
+                          ),
+                      child: CustomScrollContent(
+                        scrollDirection: Axis.horizontal,
+                        child: Text(
+                          widget.items[index].label,
+                          style:
+                              widget.items[index].label == textController.text
+                                  ? widget.itemSelectedStyle ??
+                                      context.textTheme.bodyMedium?.copyWith(
+                                        fontWeight: AppFontWeight.bold.value,
+                                        color: context.colorScheme.primary,
+                                      )
+                                  : widget.itemStyle ??
+                                      context.textTheme.bodyMedium,
                         ),
-                    child: CustomScrollContent(
-                      scrollDirection: Axis.horizontal,
-                      child: Text(
-                        widget.items[index].label,
-                        style: widget.items[index].label == textController.text
-                            ? widget.itemSelectedStyle ??
-                                context.textTheme.bodyMedium?.copyWith(
-                                  fontWeight: AppFontWeight.bold.value,
-                                  color: context.colorScheme.primary,
-                                )
-                            : widget.itemStyle ?? context.textTheme.bodyMedium,
                       ),
                     ),
-                  ),
+              ),
             ),
           );
         },
