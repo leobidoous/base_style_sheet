@@ -1,3 +1,7 @@
+## 1.0.20
+
+* Fix CustomDropdrown
+
 ## 1.0.19
 
 * Fix CustomDropdrown

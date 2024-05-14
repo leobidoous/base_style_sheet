@@ -28,23 +28,23 @@ class CustomDropdown<T> extends StatefulWidget {
   const CustomDropdown({
     super.key,
     this.icon,
-    this.context,
     this.onClear,
     this.onChange,
     this.maxHeight,
     this.itemStyle,
     this.value = '',
     this.listPadding,
+    this.childPadding,
     this.boxDecoration,
     this.boxConstraints,
     required this.items,
+    required this.context,
     this.placeholder = '',
     this.isEnabled = true,
     this.readOnly = false,
     this.itemSelectedStyle,
     this.isLoading = false,
     this.isExpanded = false,
-    this.childPadding = EdgeInsets.zero,
     this.heightType = DropdownHeightType.normal,
   });
 
@@ -58,8 +58,8 @@ class CustomDropdown<T> extends StatefulWidget {
   final String placeholder;
   final Function()? onClear;
   final TextStyle? itemStyle;
+  final BuildContext context;
   final Function(T)? onChange;
-  final BuildContext? context;
   final EdgeInsets? listPadding;
   final EdgeInsets? childPadding;
   final TextStyle? itemSelectedStyle;
@@ -74,61 +74,63 @@ class CustomDropdown<T> extends StatefulWidget {
 
 class _CustomDropdownState<T> extends State<CustomDropdown<T>>
     with SingleTickerProviderStateMixin {
-  late final AnimationController animationController;
-  late final TextEditingController textController;
-  late final Animation<double> rotateAnimation;
-  final scrollController = ScrollController();
-  late final Animation<double> animation;
-  final key = GlobalKey();
-  bool showClear = false;
-  late double maxHeight;
-  late Offset offset;
-  late Size size;
+  late final AnimationController _animationController;
+  late final TextEditingController _textController;
+  late final Animation<double> _opacityAnimation;
+  late final Animation<double> _rotateAnimation;
+  final _scrollController = ScrollController();
+  final _key = GlobalKey();
+  bool _showClear = false;
+  late double _maxHeight;
+  late Offset _offset;
+  late Size _size;
 
   @override
   void initState() {
     super.initState();
-    textController = TextEditingController(
+    _textController = TextEditingController(
       text: widget.value.isNotEmpty ? widget.value : widget.placeholder,
     );
-    showClear = widget.value.isNotEmpty && widget.onClear != null;
-    animationController = AnimationController(
+    _showClear = widget.value.isNotEmpty && widget.onClear != null;
+    _animationController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 250),
+      duration: const Duration(milliseconds: 150),
     );
-    animation = Tween<double>(begin: 0, end: 1).animate(animationController);
-    rotateAnimation = Tween<double>(begin: 1, end: .5).animate(
-      animationController,
+    _opacityAnimation = Tween<double>(begin: 1, end: 0).animate(
+      _animationController,
+    );
+    _rotateAnimation = Tween<double>(begin: 1, end: .5).animate(
+      _animationController,
     );
   }
 
   @override
   void dispose() {
-    animationController.dispose();
-    scrollController.dispose();
-    textController.dispose();
+    _animationController.dispose();
+    _scrollController.dispose();
+    _textController.dispose();
     super.dispose();
   }
 
   void _getWidgetInfos() {
-    final renderBox = key.currentContext?.findRenderObject() as RenderBox;
-    size = renderBox.size;
+    final renderBox = _key.currentContext?.findRenderObject() as RenderBox;
+    _size = renderBox.size;
 
-    offset = renderBox.localToGlobal(
+    _offset = renderBox.localToGlobal(
       Offset.zero,
-      ancestor: widget.context?.findRenderObject(),
+      ancestor: widget.context.findRenderObject(),
     );
   }
 
   bool isOnTop(BoxConstraints constraints) {
-    return (offset.dy + (size.height / 2)) <= constraints.maxHeight / 2;
+    return (_offset.dy + (_size.height / 2)) <= constraints.maxHeight / 2;
   }
 
   double getTopPosition(BoxConstraints constraints) {
     late double dy;
-    dy = isOnTop(constraints) ? offset.dy : 0;
+    dy = isOnTop(constraints) ? _offset.dy : 0;
     return dy +
-        ((widget.context?.findRenderObject() as RenderBox?)
+        ((widget.context.findRenderObject() as RenderBox?)
                 ?.localToGlobal(Offset.zero)
                 .dy ??
             0);
@@ -138,9 +140,9 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
     late double dy;
     dy = isOnTop(constraints)
         ? 0
-        : constraints.maxHeight - offset.dy - size.height;
+        : constraints.maxHeight - _offset.dy - _size.height;
     return dy -
-        ((widget.context?.findRenderObject() as RenderBox?)
+        ((widget.context.findRenderObject() as RenderBox?)
                 ?.localToGlobal(Offset.zero)
                 .dy ??
             0);
@@ -148,7 +150,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
 
   double get getLeftPosition {
     late double left;
-    left = widget.isExpanded ? widget.listPadding?.left ?? 0 : offset.dx;
+    left = widget.isExpanded ? widget.listPadding?.left ?? 0 : _offset.dx;
     return left;
   }
 
@@ -156,7 +158,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
     late double right;
     right = widget.isExpanded
         ? widget.listPadding?.right ?? 0
-        : constraints.maxWidth - offset.dx - size.width;
+        : constraints.maxWidth - _offset.dx - _size.width;
     return right;
   }
 
@@ -171,8 +173,8 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
   }
 
   Future<void> _showDropdown() async {
-    animationController.forward();
-    await Navigator.of(widget.context ?? context)
+    _animationController.forward();
+    await Navigator.of(widget.context)
         .push(
           PageRouteBuilder(
             opaque: false,
@@ -207,7 +209,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
             },
           ),
         )
-        .whenComplete(animationController.reverse);
+        .whenComplete(_animationController.reverse);
   }
 
   bool get isEnabled {
@@ -216,27 +218,38 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
 
   @override
   Widget build(BuildContext context) {
-    return Semantics(
-      key: key,
-      button: true,
-      child: Opacity(
-        opacity: !isEnabled ? .5 : 1,
-        child: InkWell(
-          onTap: widget.readOnly || !isEnabled ? null : _showDropdown,
-          hoverColor: Colors.transparent,
-          splashColor: Colors.transparent,
-          highlightColor: Colors.transparent,
-          child: Container(
-            decoration: widget.boxDecoration ??
-                BoxDecoration(
-                  border: Border.all(color: Colors.grey),
-                  borderRadius: context.theme.borderRadiusSM,
-                  color: context.colorScheme.background,
-                ),
-            clipBehavior: Clip.hardEdge,
-            child: ClipRRect(
-              borderRadius: context.theme.borderRadiusSM,
-              child: _child,
+    return AnimatedBuilder(
+      animation: _animationController,
+      builder: (BuildContext context, Widget? child) {
+        return AnimatedOpacity(
+          opacity: _opacityAnimation.value,
+          duration: Duration.zero,
+          child: child,
+        );
+      },
+      child: Semantics(
+        key: _key,
+        button: true,
+        child: Opacity(
+          opacity: !isEnabled ? .5 : 1,
+          child: InkWell(
+            onTap: widget.readOnly || !isEnabled ? null : _showDropdown,
+            hoverColor: Colors.transparent,
+            splashColor: Colors.transparent,
+            highlightColor: Colors.transparent,
+            child: Container(
+              decoration: widget.boxDecoration ??
+                  BoxDecoration(
+                    border: Border.all(color: Colors.grey),
+                    borderRadius: context.theme.borderRadiusXSM,
+                    color: context.colorScheme.background,
+                  ),
+              clipBehavior: Clip.hardEdge,
+              child: ClipRRect(
+                borderRadius: widget.boxDecoration?.borderRadius ??
+                    context.theme.borderRadiusXSM,
+                child: _child,
+              ),
             ),
           ),
         ),
@@ -246,10 +259,10 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
 
   Widget get _child {
     return Container(
-      padding: widget.childPadding,
+      padding: widget.childPadding ?? EdgeInsets.only(left: Spacing.xs.value),
       decoration: BoxDecoration(
         borderRadius:
-            widget.boxDecoration?.borderRadius ?? context.theme.borderRadiusSM,
+            widget.boxDecoration?.borderRadius ?? context.theme.borderRadiusXSM,
         color: widget.boxDecoration?.color ?? context.colorScheme.background,
       ),
       constraints: widget.boxConstraints ??
@@ -279,50 +292,47 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
               },
             ),
           if (!widget.isLoading) ...[
-            if (!showClear)
-              SizedBox(
-                width: switch (widget.heightType) {
-                  DropdownHeightType.normal => AppThemeBase.buttonHeightMD,
-                  DropdownHeightType.small => AppThemeBase.buttonHeightSM,
-                },
-                height: switch (widget.heightType) {
-                  DropdownHeightType.normal => AppThemeBase.buttonHeightMD,
-                  DropdownHeightType.small => AppThemeBase.buttonHeightSM,
-                },
-                child: widget.icon ??
-                    RotationTransition(
-                      turns: rotateAnimation,
-                      child: Icon(
-                        Icons.keyboard_arrow_down_rounded,
-                        size: AppFontSize.titleLarge.value,
+            SizedBox(
+              width: switch (widget.heightType) {
+                DropdownHeightType.normal => AppThemeBase.buttonHeightMD,
+                DropdownHeightType.small => AppThemeBase.buttonHeightSM,
+              },
+              height: switch (widget.heightType) {
+                DropdownHeightType.normal => AppThemeBase.buttonHeightMD,
+                DropdownHeightType.small => AppThemeBase.buttonHeightSM,
+              },
+              child: _showClear
+                  ? CustomButton.icon(
+                      onPressed: widget.readOnly || !isEnabled
+                          ? null
+                          : () {
+                              setState(() {
+                                _textController.text = widget.placeholder;
+                                widget.onClear?.call();
+                                _showClear = false;
+                              });
+                            },
+                      type: ButtonType.noShape,
+                      heightType: switch (widget.heightType) {
+                        DropdownHeightType.normal => ButtonHeightType.normal,
+                        DropdownHeightType.small => ButtonHeightType.small,
+                      },
+                      icon: Icons.close,
+                    )
+                  : widget.icon ??
+                      RotationTransition(
+                        turns: _rotateAnimation,
+                        child: CustomButton.icon(
+                          type: ButtonType.noShape,
+                          heightType: switch (widget.heightType) {
+                            DropdownHeightType.normal =>
+                              ButtonHeightType.normal,
+                            DropdownHeightType.small => ButtonHeightType.small,
+                          },
+                          icon: Icons.keyboard_arrow_down_rounded,
+                        ),
                       ),
-                    ),
-              ),
-            if (showClear)
-              SizedBox(
-                width: switch (widget.heightType) {
-                  DropdownHeightType.normal => AppThemeBase.buttonHeightMD,
-                  DropdownHeightType.small => AppThemeBase.buttonHeightSM,
-                },
-                height: switch (widget.heightType) {
-                  DropdownHeightType.normal => AppThemeBase.buttonHeightMD,
-                  DropdownHeightType.small => AppThemeBase.buttonHeightSM,
-                },
-                child: CustomButton.icon(
-                  onPressed: widget.readOnly || !isEnabled
-                      ? null
-                      : () {
-                          setState(() {
-                            textController.text = widget.placeholder;
-                            widget.onClear?.call();
-                            showClear = false;
-                          });
-                        },
-                  type: ButtonType.noShape,
-                  heightType: ButtonHeightType.small,
-                  icon: Icons.close,
-                ),
-              ),
+            ),
           ],
         ],
       ),
@@ -338,10 +348,10 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
         alwaysScrollable: true,
         expanded: true,
         child: Text(
-          textController.text,
+          _textController.text,
           textAlign: TextAlign.start,
           style: (widget.value.isEmpty &&
-                  widget.placeholder == textController.text)
+                  widget.placeholder == _textController.text)
               ? context.textTheme.bodyMedium?.copyWith(
                   fontWeight: AppFontWeight.medium.value,
                   color: Colors.grey,
@@ -359,7 +369,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
     return LayoutBuilder(
       builder: (context, constraints) {
         _getWidgetInfos();
-        maxHeight = getMaxHeight(constraints);
+        _maxHeight = getMaxHeight(constraints);
         return SafeArea(
           top: !isOnTop(constraints),
           bottom: isOnTop(constraints),
@@ -380,16 +390,16 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
                   children: [
                     Flexible(
                       child: Container(
+                        clipBehavior: Clip.none,
                         decoration: widget.boxDecoration ??
                             BoxDecoration(
-                              borderRadius: context.theme.borderRadiusSM,
+                              borderRadius: context.theme.borderRadiusXSM,
                               border: Border.all(color: Colors.grey, width: .5),
                             ),
-                        constraints: BoxConstraints(maxHeight: maxHeight),
-                        width: size.width,
+                        constraints: BoxConstraints(maxHeight: _maxHeight),
                         child: ClipRRect(
                           borderRadius: widget.boxDecoration?.borderRadius ??
-                              context.theme.borderRadiusSM,
+                              context.theme.borderRadiusXSM,
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -399,10 +409,8 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
                                 const CustomDivider(height: 0),
                               ],
                               Flexible(
-                                child: Container(
-                                  color: widget.boxDecoration?.color ??
-                                      context.colorScheme.background,
-                                  width: size.width,
+                                child: SizedBox(
+                                  width: _size.width,
                                   child: _listView,
                                 ),
                               ),
@@ -428,13 +436,13 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
   Widget get _listView {
     return RawScrollbar(
       padding: EdgeInsets.zero,
-      controller: scrollController,
+      controller: _scrollController,
       thumbColor: context.colorScheme.primary,
-      radius: context.theme.borderRadiusXLG.bottomLeft,
+      radius: context.theme.borderRadiusXSM.bottomLeft,
       child: ListView.separated(
         shrinkWrap: true,
         padding: EdgeInsets.zero,
-        controller: scrollController,
+        controller: _scrollController,
         itemCount: widget.items.length,
         physics: const BouncingScrollPhysics(
           parent: AlwaysScrollableScrollPhysics(),
@@ -446,12 +454,16 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
             child: InkWell(
               onTap: () {
                 setState(() {
-                  textController.text = widget.items[index].label;
+                  _textController.text = widget.items[index].label;
                   widget.onChange?.call(widget.items[index].value);
-                  if (widget.onClear != null) showClear = true;
+                  if (widget.onClear != null) _showClear = true;
                 });
                 Navigator.of(context).pop();
               },
+              splashColor: Colors.transparent,
+              highlightColor: Colors.transparent,
+              hoverColor: Colors.transparent,
+              radius: Spacing.md.value,
               child: Container(
                 alignment: Alignment.centerLeft,
                 constraints: BoxConstraints(
@@ -463,22 +475,13 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
                 child: widget.items[index].item ??
                     Padding(
                       padding: widget.listPadding ??
-                          EdgeInsets.symmetric(
-                            horizontal: switch (widget.heightType) {
-                              DropdownHeightType.normal => Spacing.xs.value,
-                              DropdownHeightType.small => Spacing.xxs.value,
-                            },
-                            vertical: switch (widget.heightType) {
-                              DropdownHeightType.normal => Spacing.xs.value,
-                              DropdownHeightType.small => Spacing.xxs.value,
-                            },
-                          ),
+                          EdgeInsets.symmetric(horizontal: Spacing.xs.value),
                       child: CustomScrollContent(
                         scrollDirection: Axis.horizontal,
                         child: Text(
                           widget.items[index].label,
                           style:
-                              widget.items[index].label == textController.text
+                              widget.items[index].label == _textController.text
                                   ? widget.itemSelectedStyle ??
                                       context.textTheme.bodyMedium?.copyWith(
                                         fontWeight: AppFontWeight.bold.value,
