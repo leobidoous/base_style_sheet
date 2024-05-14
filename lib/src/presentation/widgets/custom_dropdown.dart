@@ -29,6 +29,7 @@ class CustomDropdown<T> extends StatefulWidget {
     super.key,
     this.icon,
     this.onClear,
+    this.prefixIcon,
     this.onChange,
     this.maxHeight,
     this.itemStyle,
@@ -55,6 +56,7 @@ class CustomDropdown<T> extends StatefulWidget {
   final bool isEnabled;
   final bool isExpanded;
   final double? maxHeight;
+  final Widget? prefixIcon;
   final String placeholder;
   final Function()? onClear;
   final TextStyle? itemStyle;
@@ -79,6 +81,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
   late final Animation<double> _opacityAnimation;
   late final Animation<double> _rotateAnimation;
   final _scrollController = ScrollController();
+  late Offset _parentContextOffset;
   final _key = GlobalKey();
   bool _showClear = false;
   late double _maxHeight;
@@ -116,10 +119,10 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
     final renderBox = _key.currentContext?.findRenderObject() as RenderBox;
     _size = renderBox.size;
 
-    _offset = renderBox.localToGlobal(
-      Offset.zero,
-      ancestor: widget.context.findRenderObject(),
-    );
+    final parendRenderBox = widget.context.findRenderObject() as RenderBox;
+    _parentContextOffset = parendRenderBox.localToGlobal(Offset.zero);
+
+    _offset = renderBox.localToGlobal(Offset.zero, ancestor: parendRenderBox);
   }
 
   bool isOnTop(BoxConstraints constraints) {
@@ -129,11 +132,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
   double getTopPosition(BoxConstraints constraints) {
     late double dy;
     dy = isOnTop(constraints) ? _offset.dy : 0;
-    return dy +
-        ((widget.context.findRenderObject() as RenderBox?)
-                ?.localToGlobal(Offset.zero)
-                .dy ??
-            0);
+    return dy + _parentContextOffset.dy;
   }
 
   double getBottomPosition(BoxConstraints constraints) {
@@ -141,11 +140,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
     dy = isOnTop(constraints)
         ? 0
         : constraints.maxHeight - _offset.dy - _size.height;
-    return dy -
-        ((widget.context.findRenderObject() as RenderBox?)
-                ?.localToGlobal(Offset.zero)
-                .dy ??
-            0);
+    return dy - _parentContextOffset.dy;
   }
 
   double get getLeftPosition {
@@ -168,8 +163,10 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
             ? constraints.maxHeight
             : widget.maxHeight!
         : isOnTop(constraints)
-            ? constraints.maxHeight - getTopPosition(constraints)
-            : constraints.maxHeight - getBottomPosition(constraints);
+            ? constraints.maxHeight -
+                (getTopPosition(constraints) + _parentContextOffset.dy)
+            : constraints.maxHeight -
+                (getBottomPosition(constraints) - _parentContextOffset.dy);
   }
 
   Future<void> _showDropdown() async {
@@ -277,6 +274,18 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
+          if (widget.prefixIcon != null)
+            SizedBox(
+              width: switch (widget.heightType) {
+                DropdownHeightType.normal => AppThemeBase.buttonHeightMD,
+                DropdownHeightType.small => AppThemeBase.buttonHeightSM,
+              },
+              height: switch (widget.heightType) {
+                DropdownHeightType.normal => AppThemeBase.buttonHeightMD,
+                DropdownHeightType.small => AppThemeBase.buttonHeightSM,
+              },
+              child: widget.prefixIcon,
+            ),
           if (widget.isExpanded) Expanded(child: _textValue),
           if (!widget.isExpanded) Flexible(child: _textValue),
           Spacing.xxs.horizontal,
