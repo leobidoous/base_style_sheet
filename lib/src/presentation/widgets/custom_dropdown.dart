@@ -239,7 +239,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
                   BoxDecoration(
                     border: Border.all(color: Colors.grey),
                     borderRadius: context.theme.borderRadiusXSM,
-                    color: context.colorScheme.background,
+                    color: context.colorScheme.surface,
                   ),
               clipBehavior: Clip.hardEdge,
               child: ClipRRect(
@@ -260,7 +260,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
       decoration: BoxDecoration(
         borderRadius:
             widget.boxDecoration?.borderRadius ?? context.theme.borderRadiusXSM,
-        color: widget.boxDecoration?.color ?? context.colorScheme.background,
+        color: widget.boxDecoration?.color ?? context.colorScheme.surface,
       ),
       constraints: widget.boxConstraints ??
           BoxConstraints(

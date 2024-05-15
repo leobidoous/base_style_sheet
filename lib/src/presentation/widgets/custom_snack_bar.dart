@@ -22,7 +22,7 @@ class CustomSnackBar {
                 SnackBarType.success => Icons.check_circle_outline_rounded,
                 SnackBarType.error => Icons.error,
               },
-              color: Theme.of(context).colorScheme.background,
+              color: Theme.of(context).colorScheme.surface,
             ),
             Spacing.sm.horizontal,
             Expanded(

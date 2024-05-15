@@ -61,7 +61,7 @@ class CustomRequestError extends StatelessWidget {
                             padding: EdgeInsets.all(Spacing.xs.value),
                             child: Icon(
                               Icons.error_outline_rounded,
-                              color: context.colorScheme.background,
+                              color: context.colorScheme.surface,
                             ),
                           ),
                         ),

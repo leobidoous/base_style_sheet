@@ -42,7 +42,7 @@ class CustomCard extends StatelessWidget {
             decoration: BoxDecoration(
               color: isSelected
                   ? context.colorScheme.primary
-                  : color ?? context.colorScheme.background,
+                  : color ?? context.colorScheme.surface,
               borderRadius: borderRadius ?? context.theme.borderRadiusMD,
               border: border ??
                   Border.all(

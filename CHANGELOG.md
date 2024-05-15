@@ -1,3 +1,11 @@
+## 1.1.1
+
+* Add example
+
+## 1.1.0
+
+* BREAK_CHANGES: Upgrade flutter version to 3.22.0
+
 ## 1.0.21
 
 * Fix CustomDropdrown

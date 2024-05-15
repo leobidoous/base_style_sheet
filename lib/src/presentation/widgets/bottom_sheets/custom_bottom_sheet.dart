@@ -92,15 +92,15 @@ class _CustomBottomSheet extends StatelessWidget {
                       topRight: context.theme.borderRadiusMD.topRight,
                     ),
                     border: Border.all(
-                      color: context.colorScheme.background,
+                      color: context.colorScheme.surface,
                       width: 2,
                     ),
-                    color: backgroundColor ?? context.colorScheme.background,
+                    color: backgroundColor ?? context.colorScheme.surface,
                     boxShadow: [
                       BoxShadow(
                         blurRadius: 5,
                         spreadRadius: -5,
-                        color: context.colorScheme.background.withOpacity(0.5),
+                        color: context.colorScheme.surface.withOpacity(0.5),
                       ),
                     ],
                   ),

@@ -68,7 +68,7 @@ class CustomRadioTile<T> extends StatelessWidget {
           shape: BoxShape.circle,
           color: isSelected
               ? context.colorScheme.primary
-              : context.colorScheme.background,
+              : context.colorScheme.surface,
         ),
       ),
     );

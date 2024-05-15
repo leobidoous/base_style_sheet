@@ -101,15 +101,15 @@ class _CustomDialog extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: context.theme.borderRadiusMD,
                   border: Border.all(
-                    color: context.colorScheme.background,
+                    color: context.colorScheme.surface,
                     width: 2,
                   ),
-                  color: context.colorScheme.background,
+                  color: context.colorScheme.surface,
                   boxShadow: [
                     BoxShadow(
                       blurRadius: 5,
                       spreadRadius: -5,
-                      color: context.colorScheme.background.withOpacity(0.5),
+                      color: context.colorScheme.surface.withOpacity(0.5),
                     ),
                   ],
                 ),

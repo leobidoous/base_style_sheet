@@ -23,7 +23,7 @@ class CustomShimmer extends StatelessWidget {
       highlightColor: Colors.grey.shade500,
       child: Container(
         decoration: BoxDecoration(
-          color: context.colorScheme.background,
+          color: context.colorScheme.surface,
           borderRadius: borderRadius ?? AppThemeBase.borderRadiusXSM,
         ),
         width: width,

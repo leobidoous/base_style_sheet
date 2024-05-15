@@ -77,7 +77,7 @@ class CustomCheckboxTile<T> extends StatelessWidget {
         child: isSelected
             ? Icon(
                 Icons.check_rounded,
-                color: context.colorScheme.background,
+                color: context.colorScheme.surface,
                 size: const Spacing(1.5).value,
               )
             : null,

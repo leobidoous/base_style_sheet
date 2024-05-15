@@ -243,7 +243,7 @@ class CustomButton extends StatefulWidget {
           },
           color: iconColor ??
               (context.isDarkMode
-                  ? context.colorScheme.onBackground
+                  ? context.colorScheme.onSurface
                   : switch (type) {
                       ButtonType.secondary => context.colorScheme.onSecondary,
                       ButtonType.tertiary => context.colorScheme.onTertiary,
@@ -279,7 +279,7 @@ class CustomButton extends StatefulWidget {
                       ButtonHeightType.normal => AppFontSize.bodyMedium.value,
                     },
                     color: (context.isDarkMode
-                        ? context.colorScheme.onBackground
+                        ? context.colorScheme.onSurface
                         : switch (type) {
                             ButtonType.secondary =>
                               context.colorScheme.onSecondary,
@@ -322,7 +322,7 @@ class _CustomButtonState extends State<CustomButton> {
         child: ElevatedButton(
           onPressed: widget.onPressed,
           style: ButtonStyle(
-            shape: MaterialStateProperty.all(
+            shape: WidgetStateProperty.all(
               RoundedRectangleBorder(
                 borderRadius: BorderRadius.only(
                   topLeft:
@@ -342,20 +342,20 @@ class _CustomButtonState extends State<CustomButton> {
                 ),
               ),
             ),
-            side: MaterialStateProperty.all(
+            side: WidgetStateProperty.all(
               BorderSide(
                 color: _borderColor,
                 width: context.theme.borderWidthXS,
               ),
             ),
-            elevation: MaterialStateProperty.all(4),
+            elevation: WidgetStateProperty.all(4),
             tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            padding: MaterialStateProperty.all(widget.padding),
-            minimumSize: MaterialStateProperty.all(_minimumSize),
-            overlayColor: MaterialStateProperty.all(_overlayColor),
-            shadowColor: MaterialStateProperty.all(Colors.transparent),
-            backgroundColor: MaterialStateProperty.all(_backgroundColor),
-            surfaceTintColor: MaterialStateProperty.all(_surfaceTintColor),
+            padding: WidgetStateProperty.all(widget.padding),
+            minimumSize: WidgetStateProperty.all(_minimumSize),
+            overlayColor: WidgetStateProperty.all(_overlayColor),
+            shadowColor: WidgetStateProperty.all(Colors.transparent),
+            backgroundColor: WidgetStateProperty.all(_backgroundColor),
+            surfaceTintColor: WidgetStateProperty.all(_surfaceTintColor),
           ),
           clipBehavior: Clip.antiAliasWithSaveLayer,
           child: SafeArea(
@@ -406,7 +406,7 @@ class _CustomButtonState extends State<CustomButton> {
       case ButtonType.secondary:
         return context.colorScheme.secondary;
       case ButtonType.background:
-        return context.colorScheme.background;
+        return context.colorScheme.surface;
       case ButtonType.tertiary:
         return context.colorScheme.tertiary;
       case ButtonType.noShape:
@@ -422,7 +422,7 @@ class _CustomButtonState extends State<CustomButton> {
       case ButtonType.secondary:
         return context.colorScheme.onSecondary.withOpacity(.1);
       case ButtonType.background:
-        return context.colorScheme.onBackground.withOpacity(.1);
+        return context.colorScheme.onSurface.withOpacity(.1);
       case ButtonType.noShape:
         return Colors.transparent.withOpacity(.1);
       case ButtonType.tertiary:

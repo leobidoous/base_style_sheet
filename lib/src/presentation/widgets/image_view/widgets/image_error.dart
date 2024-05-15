@@ -52,7 +52,7 @@ class _ImageErrorState extends State<ImageError> {
           ),
           child: Icon(
             Icons.image_not_supported_rounded,
-            color: context.colorScheme.onBackground,
+            color: context.colorScheme.onSurface,
           ),
         ),
       ),
@@ -70,7 +70,7 @@ class _ImageErrorState extends State<ImageError> {
             'Image Error',
             style: context.textTheme.titleLarge,
           ),
-          Divider(color: context.colorScheme.onBackground),
+          Divider(color: context.colorScheme.onSurface),
           Flexible(
             child: CustomScrollContent(
               child: RichText(
