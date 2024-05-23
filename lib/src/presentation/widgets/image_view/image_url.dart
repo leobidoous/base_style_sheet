@@ -35,7 +35,6 @@ class ImageUrl extends StatelessWidget {
           height: imageSize?.height ?? 32,
         ),
       ),
-      
       maxHeightDiskCache: maxHeightDiskCache,
       maxWidthDiskCache: maxWidthDiskCache,
       httpHeaders: headers,

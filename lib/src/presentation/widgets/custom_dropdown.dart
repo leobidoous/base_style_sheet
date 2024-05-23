@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../core/themes/app_theme_base.dart';
@@ -22,6 +23,15 @@ class CustomDropdownItem<T> {
   final T value;
   final String label;
   final Widget? item;
+
+  CustomDropdownItem<T> copyWith({
+    String? label,
+  }) {
+    return CustomDropdownItem(
+      value: value,
+      label: label ?? this.label,
+    );
+  }
 }
 
 class CustomDropdown<T> extends StatefulWidget {
@@ -29,14 +39,14 @@ class CustomDropdown<T> extends StatefulWidget {
     super.key,
     this.icon,
     this.onClear,
-    this.prefixIcon,
     this.onChange,
     this.maxHeight,
+    this.prefixIcon,
     this.itemStyle,
-    this.value = '',
     this.listPadding,
     this.childPadding,
     this.boxDecoration,
+    this.initialValue,
     this.boxConstraints,
     required this.items,
     required this.context,
@@ -46,19 +56,20 @@ class CustomDropdown<T> extends StatefulWidget {
     this.itemSelectedStyle,
     this.isLoading = false,
     this.isExpanded = false,
+    this.useSafeArea = true,
     this.heightType = DropdownHeightType.normal,
   });
 
   final Widget? icon;
-  final String value;
   final bool readOnly;
   final bool isLoading;
   final bool isEnabled;
   final bool isExpanded;
+  final bool useSafeArea;
   final double? maxHeight;
   final Widget? prefixIcon;
   final String placeholder;
-  final Function()? onClear;
+  final Function(T)? onClear;
   final TextStyle? itemStyle;
   final BuildContext context;
   final Function(T)? onChange;
@@ -69,6 +80,7 @@ class CustomDropdown<T> extends StatefulWidget {
   final DropdownHeightType heightType;
   final BoxConstraints? boxConstraints;
   final List<CustomDropdownItem<T>> items;
+  final CustomDropdownItem<T>? initialValue;
 
   @override
   State<CustomDropdown<T>> createState() => _CustomDropdownState<T>();
@@ -77,10 +89,10 @@ class CustomDropdown<T> extends StatefulWidget {
 class _CustomDropdownState<T> extends State<CustomDropdown<T>>
     with SingleTickerProviderStateMixin {
   late final AnimationController _animationController;
-  late final TextEditingController _textController;
   late final Animation<double> _opacityAnimation;
   late final Animation<double> _rotateAnimation;
   final _scrollController = ScrollController();
+  CustomDropdownItem<T>? _valueSelected;
   late Offset _parentContextOffset;
   final _key = GlobalKey();
   bool _showClear = false;
@@ -91,10 +103,8 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
   @override
   void initState() {
     super.initState();
-    _textController = TextEditingController(
-      text: widget.value.isNotEmpty ? widget.value : widget.placeholder,
-    );
-    _showClear = widget.value.isNotEmpty && widget.onClear != null;
+    _valueSelected = widget.initialValue;
+    _showClear = _valueSelected != null && widget.onClear != null;
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 150),
@@ -111,7 +121,6 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
   void dispose() {
     _animationController.dispose();
     _scrollController.dispose();
-    _textController.dispose();
     super.dispose();
   }
 
@@ -132,7 +141,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
   double getTopPosition(BoxConstraints constraints) {
     late double dy;
     dy = isOnTop(constraints) ? _offset.dy : 0;
-    return dy + _parentContextOffset.dy;
+    return dy + (widget.useSafeArea ? _parentContextOffset.dy : 0);
   }
 
   double getBottomPosition(BoxConstraints constraints) {
@@ -140,7 +149,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
     dy = isOnTop(constraints)
         ? 0
         : constraints.maxHeight - _offset.dy - _size.height;
-    return dy - _parentContextOffset.dy;
+    return dy - (widget.useSafeArea ? _parentContextOffset.dy : 0);
   }
 
   double get getLeftPosition {
@@ -164,9 +173,11 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
             : widget.maxHeight!
         : isOnTop(constraints)
             ? constraints.maxHeight -
-                (getTopPosition(constraints) + _parentContextOffset.dy)
+                (getTopPosition(constraints) +
+                    (widget.useSafeArea ? _parentContextOffset.dy : 0))
             : constraints.maxHeight -
-                (getBottomPosition(constraints) - _parentContextOffset.dy);
+                (getBottomPosition(constraints) -
+                    (widget.useSafeArea ? _parentContextOffset.dy : 0));
   }
 
   Future<void> _showDropdown() async {
@@ -175,11 +186,8 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
         .push(
           PageRouteBuilder(
             opaque: false,
-            maintainState: true,
-            allowSnapshotting: true,
-            settings: const RouteSettings(),
+            fullscreenDialog: true,
             barrierDismissible: true,
-            fullscreenDialog: false,
             barrierColor: Colors.transparent,
             transitionDuration: const Duration(milliseconds: 150),
             reverseTransitionDuration: const Duration(milliseconds: 150),
@@ -198,7 +206,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
                 child: Semantics(
                   button: true,
                   child: InkWell(
-                    onTap: Navigator.of(context).pop,
+                    onTap: Navigator.of(widget.context).pop,
                     child: _dropdownBuilder,
                   ),
                 ),
@@ -316,8 +324,8 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
                           ? null
                           : () {
                               setState(() {
-                                _textController.text = widget.placeholder;
-                                widget.onClear?.call();
+                                widget.onClear?.call(_valueSelected!.value);
+                                _valueSelected = null;
                                 _showClear = false;
                               });
                             },
@@ -328,19 +336,22 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
                       },
                       icon: Icons.close,
                     )
-                  : widget.icon ??
-                      RotationTransition(
-                        turns: _rotateAnimation,
-                        child: CustomButton.icon(
-                          type: ButtonType.noShape,
-                          heightType: switch (widget.heightType) {
-                            DropdownHeightType.normal =>
-                              ButtonHeightType.normal,
-                            DropdownHeightType.small => ButtonHeightType.small,
-                          },
-                          icon: Icons.keyboard_arrow_down_rounded,
-                        ),
-                      ),
+                  : AbsorbPointer(
+                      child: widget.icon ??
+                          RotationTransition(
+                            turns: _rotateAnimation,
+                            child: CustomButton.icon(
+                              type: ButtonType.noShape,
+                              heightType: switch (widget.heightType) {
+                                DropdownHeightType.normal =>
+                                  ButtonHeightType.normal,
+                                DropdownHeightType.small =>
+                                  ButtonHeightType.small,
+                              },
+                              icon: Icons.keyboard_arrow_down_rounded,
+                            ),
+                          ),
+                    ),
             ),
           ],
         ],
@@ -349,7 +360,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
   }
 
   Widget get _textValue {
-    return Container(
+    return ConstrainedBox(
       key: widget.key,
       constraints: BoxConstraints(minWidth: const Spacing(.5).value),
       child: CustomScrollContent(
@@ -357,10 +368,9 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
         alwaysScrollable: true,
         expanded: true,
         child: Text(
-          _textController.text,
+          _valueSelected?.label ?? widget.placeholder,
           textAlign: TextAlign.start,
-          style: (widget.value.isEmpty &&
-                  widget.placeholder == _textController.text)
+          style: _valueSelected == null
               ? context.textTheme.bodyMedium?.copyWith(
                   fontWeight: AppFontWeight.medium.value,
                   color: Colors.grey,
@@ -445,6 +455,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
   Widget get _listView {
     return RawScrollbar(
       padding: EdgeInsets.zero,
+      thickness: kIsWeb ? 0 : null,
       controller: _scrollController,
       thumbColor: context.colorScheme.primary,
       radius: context.theme.borderRadiusXSM.bottomLeft,
@@ -463,7 +474,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
             child: InkWell(
               onTap: () {
                 setState(() {
-                  _textController.text = widget.items[index].label;
+                  _valueSelected = widget.items[index];
                   widget.onChange?.call(widget.items[index].value);
                   if (widget.onClear != null) _showClear = true;
                 });
@@ -490,7 +501,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
                         child: Text(
                           widget.items[index].label,
                           style:
-                              widget.items[index].label == _textController.text
+                              widget.items[index].label == _valueSelected?.label
                                   ? widget.itemSelectedStyle ??
                                       context.textTheme.bodyMedium?.copyWith(
                                         fontWeight: AppFontWeight.bold.value,

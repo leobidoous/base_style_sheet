@@ -1,3 +1,13 @@
+## 1.1.3
+
+* Update CustomDropdrown
+* Update PagedListView
+* Update ImageView
+
+## 1.1.2
+
+* Fix CustomDropdrown
+
 ## 1.1.1
 
 * Add example

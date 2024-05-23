@@ -55,7 +55,7 @@ class ColumnLabelValue extends StatelessWidget {
         Row(
           crossAxisAlignment: crossAxisAlignment,
           children: [
-            Expanded(
+            Flexible(
               child: Text(
                 label,
                 style: labelStyle ??

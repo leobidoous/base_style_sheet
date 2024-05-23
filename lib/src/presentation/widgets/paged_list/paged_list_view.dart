@@ -29,6 +29,7 @@ class PagedListView<E, S> extends StatefulWidget {
     this.newPageErrorIndicatorBuilder,
     this.firstPageErrorIndicatorBuilder,
     this.newPageProgressIndicatorBuilder,
+    this.scrollDirection = Axis.vertical,
     this.firstPageProgressIndicatorBuilder,
   });
 
@@ -36,6 +37,7 @@ class PagedListView<E, S> extends StatefulWidget {
   final EdgeInsets padding;
   final String? refreshLogo;
   final bool initWithRequest;
+  final Axis scrollDirection;
   final bool safeAreaLastItem;
   final ScrollController? scrollController;
   final ScrollController? parentScrollController;
@@ -126,50 +128,52 @@ class _PagedListViewState<E, S> extends State<PagedListView<E, S>> {
                 ),
               );
         } else if (controller.hasError && state.isEmpty) {
-          return Center(
-            child: widget.firstPageErrorIndicatorBuilder?.call(
-                  context,
-                  (controller.error as E),
-                  controller.refresh,
-                ) ??
-                CustomRequestError(
+          return widget.firstPageErrorIndicatorBuilder?.call(
+                context,
+                (controller.error as E),
+                controller.refresh,
+              ) ??
+              Center(
+                child: CustomRequestError(
                   padding: widget.padding,
                   message: controller.error.toString(),
                   onPressed: controller.refresh,
                 ),
-          );
+              );
         } else if (state.isEmpty) {
-          return Center(
-            child: widget.noItemsFoundIndicatorBuilder?.call(
-                  context,
-                  controller.refresh,
-                ) ??
-                ListEmpty(
+          return widget.noItemsFoundIndicatorBuilder?.call(
+                context,
+                controller.refresh,
+              ) ??
+              Center(
+                child: ListEmpty(
                   padding: widget.padding,
                   onPressed: controller.refresh,
                   message: 'Nenhum item encontrado.',
                 ),
-          );
+              );
         }
         return CustomRefreshIndicator(
           onRefresh: controller.refresh,
           refreshLogo: widget.refreshLogo,
           child: RawScrollbar(
             padding: EdgeInsets.zero,
+            thickness: kIsWeb ? 0 : null,
+            thumbColor: context.colorScheme.primary,
+            radius: context.theme.borderRadiusXLG.bottomLeft,
             controller:
                 widget.parentScrollController == null ? scrollController : null,
-            thumbColor: context.colorScheme.primary,
-            thickness: kIsWeb ? 0 : null,
-            radius: context.theme.borderRadiusXLG.bottomLeft,
-            child: ListView.builder(
+            child: ListView.separated(
               padding: widget.padding,
               itemCount: state.length,
               reverse: controller.reverse,
               addAutomaticKeepAlives: false,
+              separatorBuilder: widget.separatorBuilder,
               controller: widget.parentScrollController == null
                   ? scrollController
                   : null,
               shrinkWrap: widget.shrinkWrap,
+              scrollDirection: widget.scrollDirection,
               physics: widget.shrinkWrap
                   ? const NeverScrollableScrollPhysics()
                   : const BouncingScrollPhysics(
@@ -193,15 +197,14 @@ class _PagedListViewState<E, S> extends State<PagedListView<E, S>> {
             widget.safeAreaLastItem,
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: switch (widget.scrollDirection) {
+            Axis.horizontal => CrossAxisAlignment.start,
+            Axis.vertical => CrossAxisAlignment.stretch,
+          },
           children: [
             if (controller.reverse)
               if (items.last == items[index]) ..._errorAndLoading(index),
             widget.itemBuilder(context, items[index], index),
-            if ((controller.reverse
-                ? items.first != items[index]
-                : items.last != items[index]))
-              widget.separatorBuilder(context, index),
             if (!controller.reverse)
               if (items.last == items[index]) ..._errorAndLoading(index),
           ],
@@ -222,8 +225,8 @@ class _PagedListViewState<E, S> extends State<PagedListView<E, S>> {
             ) ??
             CustomRequestError(
               padding: EdgeInsets.zero,
-              message: controller.error.toString(),
               onPressed: _fetchItemsAndScroll,
+              message: controller.error.toString(),
             ),
       if (controller.isLoading)
         widget.newPageProgressIndicatorBuilder?.call(context) ??
