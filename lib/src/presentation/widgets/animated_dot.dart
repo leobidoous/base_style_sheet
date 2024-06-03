@@ -4,12 +4,15 @@ import '../../core/themes/app_theme_factory.dart';
 import '../../core/themes/spacing/spacing.dart';
 import '../extensions/build_context_extensions.dart';
 
+/// [DotState] of [AnimatedDot]
 enum DotState { opened, closed }
 
 class AnimatedDot extends StatefulWidget {
   const AnimatedDot({super.key, this.onTap, this.selected = false});
+
   final bool selected;
   final Function()? onTap;
+
   @override
   _AnimatedDotState createState() => _AnimatedDotState();
 }

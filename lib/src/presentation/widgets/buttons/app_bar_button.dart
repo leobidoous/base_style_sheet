@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/themes/app_theme_factory.dart';
 import '../../../core/themes/spacing/spacing.dart';
 import '../../../core/themes/typography/typography_constants.dart';
-import '../../extensions/build_context_extensions.dart';
 import '../containers/custom_shimmer.dart';
 import 'custom_button.dart';
 
@@ -11,6 +9,7 @@ class AppBarButton extends StatelessWidget {
   const AppBarButton({
     super.key,
     this.onTap,
+    this.borderRadius,
     required this.child,
     this.isEnabled = true,
     this.isLastButtom = true,
@@ -20,15 +19,21 @@ class AppBarButton extends StatelessWidget {
   final Widget child;
   final bool isEnabled;
   final bool isLastButtom;
+  final BorderRadius? borderRadius;
 
   static Widget shimmer({isLastButtom = true}) {
     return Padding(
       padding: EdgeInsets.only(
         right: isLastButtom ? Spacing.md.value : 0,
       ),
-      child: CustomShimmer(
-        height: AppFontSize.iconButton.value,
-        width: AppFontSize.iconButton.value,
+      child: CustomButton.child(
+        padding: EdgeInsets.zero,
+        type: ButtonType.noShape,
+        heightType: ButtonHeightType.small,
+        child: CustomShimmer(
+          height: AppFontSize.iconButton.value,
+          width: AppFontSize.iconButton.value,
+        ),
       ),
     );
   }
@@ -42,10 +47,10 @@ class AppBarButton extends StatelessWidget {
       child: CustomButton.child(
         isEnabled: isEnabled,
         padding: EdgeInsets.zero,
+        type: ButtonType.noShape,
+        borderRadius: borderRadius,
         onPressed: isEnabled ? onTap : null,
         heightType: ButtonHeightType.small,
-        type: ButtonType.noShape,
-        borderRadius: context.theme.borderRadiusNone,
         child: child,
       ),
     );

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/themes/app_theme_base.dart';
 import '../../../core/themes/app_theme_factory.dart';
 import '../../../core/themes/spacing/spacing.dart';
 import '../../extensions/build_context_extensions.dart';
@@ -71,11 +72,12 @@ class _CustomBottomSheet extends StatelessWidget {
     return Stack(
       fit: StackFit.expand,
       children: [
-        Positioned(
+        Positioned.fill(
           child: GestureDetector(
             onTap: allowDismissOnTap
                 ? () => Navigator.of(context).pop(false)
                 : null,
+            child: const ColoredBox(color: Colors.transparent),
           ),
         ),
         Column(
@@ -83,59 +85,91 @@ class _CustomBottomSheet extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Flexible(
-              child: Material(
-                color: Colors.transparent,
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                      topLeft: context.theme.borderRadiusMD.topLeft,
-                      topRight: context.theme.borderRadiusMD.topRight,
-                    ),
-                    border: Border.all(
-                      color: context.colorScheme.surface,
-                      width: 2,
-                    ),
-                    color: backgroundColor ?? context.colorScheme.surface,
-                    boxShadow: [
-                      BoxShadow(
-                        blurRadius: 5,
-                        spreadRadius: -5,
-                        color: context.colorScheme.surface.withOpacity(0.5),
+              child: Padding(
+                padding: EdgeInsets.only(
+                  top: useSafeArea ? context.theme.appBarTheme.appBarHeight : 0,
+                ),
+                child: Material(
+                  color: Colors.transparent,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                        topLeft: context.theme.borderRadiusMD.topLeft,
+                        topRight: context.theme.borderRadiusMD.topRight,
                       ),
-                    ],
-                  ),
-                  padding: padding ?? EdgeInsets.all(Spacing.md.value),
-                  margin: EdgeInsets.only(
-                    top: useSafeArea
-                        ? context.theme.appBarTheme.appBarHeight
-                        : 0,
-                  ),
-                  child: SafeArea(
-                    top: useSafeArea,
-                    bottom: useSafeArea,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        if (showClose)
-                          Align(
-                            alignment: Alignment.topRight,
-                            child: Padding(
-                              padding: EdgeInsets.only(
-                                bottom: Spacing.sm.value,
-                              ),
-                              child: CustomButton.icon(
-                                type: ButtonType.noShape,
-                                icon: Icons.close_rounded,
-                                heightType: ButtonHeightType.small,
-                                onPressed: () => Navigator.of(context).pop(
-                                  false,
+                      border: Border.all(
+                        color: context.colorScheme.surface,
+                        width: 2,
+                      ),
+                      color: backgroundColor ?? context.colorScheme.surface,
+                      boxShadow: [
+                        BoxShadow(
+                          blurRadius: 5,
+                          spreadRadius: -5,
+                          color: context.colorScheme.surface.withOpacity(0.5),
+                        ),
+                      ],
+                    ),
+                    child: SafeArea(
+                      top: useSafeArea,
+                      bottom: useSafeArea,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(
+                              Spacing.xs.value,
+                              Spacing.xxxs.value,
+                              Spacing.xs.value,
+                              0,
+                            ),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                SizedBox(width: AppThemeBase.buttonHeightMD),
+                                Padding(
+                                  padding:
+                                      EdgeInsets.only(top: Spacing.xs.value),
+                                  child: DecoratedBox(
+                                    decoration: BoxDecoration(
+                                      color:
+                                          context.colorScheme.primaryContainer,
+                                      borderRadius:
+                                          context.theme.borderRadiusMD,
+                                    ),
+                                    child: SizedBox(
+                                      height: Spacing.xxs.value,
+                                      width: const Spacing(8).value,
+                                    ),
+                                  ),
                                 ),
-                              ),
+                                if (!showClose)
+                                  SizedBox(
+                                    width: AppThemeBase.buttonHeightMD,
+                                  ),
+                                if (showClose)
+                                  CustomButton.icon(
+                                    type: ButtonType.noShape,
+                                    icon: Icons.close_rounded,
+                                    heightType: ButtonHeightType.small,
+                                    onPressed: () => Navigator.of(context).pop(
+                                      false,
+                                    ),
+                                  ),
+                              ],
                             ),
                           ),
-                        Flexible(child: child),
-                      ],
+                          Flexible(
+                            child: Padding(
+                              padding:
+                                  padding ?? EdgeInsets.all(Spacing.md.value),
+                              child: child,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),

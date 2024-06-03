@@ -15,6 +15,7 @@ import '../errors/custom_request_error.dart';
 class PagedListView<E, S> extends StatefulWidget {
   const PagedListView({
     super.key,
+    this.thickness,
     this.refreshLogo,
     this.scrollController,
     this.shrinkWrap = false,
@@ -34,6 +35,7 @@ class PagedListView<E, S> extends StatefulWidget {
   });
 
   final bool shrinkWrap;
+  final double? thickness;
   final EdgeInsets padding;
   final String? refreshLogo;
   final bool initWithRequest;
@@ -148,6 +150,7 @@ class _PagedListViewState<E, S> extends State<PagedListView<E, S>> {
               Center(
                 child: ListEmpty(
                   padding: widget.padding,
+                  btnLabel: 'Tentar novamente',
                   onPressed: controller.refresh,
                   message: 'Nenhum item encontrado.',
                 ),
@@ -158,9 +161,9 @@ class _PagedListViewState<E, S> extends State<PagedListView<E, S>> {
           refreshLogo: widget.refreshLogo,
           child: RawScrollbar(
             padding: EdgeInsets.zero,
-            thickness: kIsWeb ? 0 : null,
             thumbColor: context.colorScheme.primary,
             radius: context.theme.borderRadiusXLG.bottomLeft,
+            thickness: widget.thickness ?? (kIsWeb ? 0 : null),
             controller:
                 widget.parentScrollController == null ? scrollController : null,
             child: ListView.separated(
@@ -195,20 +198,29 @@ class _PagedListViewState<E, S> extends State<PagedListView<E, S>> {
                 ? items.first == items[index]
                 : items.last == items[index]) &&
             widget.safeAreaLastItem,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: switch (widget.scrollDirection) {
-            Axis.horizontal => CrossAxisAlignment.start,
-            Axis.vertical => CrossAxisAlignment.stretch,
-          },
-          children: [
-            if (controller.reverse)
-              if (items.last == items[index]) ..._errorAndLoading(index),
-            widget.itemBuilder(context, items[index], index),
-            if (!controller.reverse)
-              if (items.last == items[index]) ..._errorAndLoading(index),
-          ],
-        ),
+        child: switch (widget.scrollDirection) {
+          Axis.horizontal => Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (controller.reverse)
+                  if (items.last == items[index]) ..._errorAndLoading(index),
+                widget.itemBuilder(context, items[index], index),
+                if (!controller.reverse)
+                  if (items.last == items[index]) ..._errorAndLoading(index),
+              ],
+            ),
+          Axis() => Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                if (controller.reverse)
+                  if (items.last == items[index]) ..._errorAndLoading(index),
+                widget.itemBuilder(context, items[index], index),
+                if (!controller.reverse)
+                  if (items.last == items[index]) ..._errorAndLoading(index),
+              ],
+            ),
+        },
       ),
     );
   }

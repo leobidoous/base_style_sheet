@@ -3,6 +3,7 @@ import 'package:flutter/material.dart'
         Align,
         Alignment,
         Border,
+        BoxConstraints,
         BoxDecoration,
         BoxShadow,
         BuildContext,
@@ -18,10 +19,10 @@ import 'package:flutter/material.dart'
         MaterialLocalizations,
         Navigator,
         Padding,
+        PopScope,
         SafeArea,
         StatelessWidget,
         Widget,
-        PopScope,
         showGeneralDialog;
 
 import '../../core/themes/app_theme_factory.dart';
@@ -36,6 +37,7 @@ class CustomDialog {
     Widget child, {
     bool showClose = true,
     EdgeInsets? padding,
+    BoxConstraints? constraints,
   }) async {
     return await showGeneralDialog<bool>(
       context: context,
@@ -49,6 +51,7 @@ class CustomDialog {
           child: _CustomDialog(
             showClose: showClose,
             padding: padding,
+            constraints: constraints,
             child: child,
           ),
         );
@@ -63,6 +66,7 @@ class CustomDialog {
     EdgeInsets? padding,
     bool showClose = true,
     String btnLabel = '',
+    BoxConstraints? constraints,
   }) async {
     return await show(
       context,
@@ -72,6 +76,7 @@ class CustomDialog {
         onPressed: onPressed,
         padding: EdgeInsets.zero,
       ),
+      constraints: constraints,
       showClose: showClose,
     );
   }
@@ -81,11 +86,13 @@ class _CustomDialog extends StatelessWidget {
   const _CustomDialog({
     required this.showClose,
     required this.child,
+    this.constraints,
     this.padding,
   });
   final bool showClose;
   final Widget child;
   final EdgeInsets? padding;
+  final BoxConstraints? constraints;
 
   @override
   Widget build(BuildContext context) {
@@ -98,6 +105,7 @@ class _CustomDialog extends StatelessWidget {
             child: Material(
               color: Colors.transparent,
               child: Container(
+                constraints: constraints,
                 decoration: BoxDecoration(
                   borderRadius: context.theme.borderRadiusMD,
                   border: Border.all(

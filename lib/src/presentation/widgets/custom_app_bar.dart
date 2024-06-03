@@ -118,12 +118,15 @@ class _CustomAppBarState extends State<CustomAppBar> {
                           Navigator.of(context).canPop() ||
                       widget.leadingIcon != null ||
                       widget.onBackTap != null
-                  ? CustomButton.child(
-                      onPressed: widget.onBackTap ??
-                          () => Navigator.of(context).pop(context),
-                      type: ButtonType.noShape,
-                      child: widget.leadingIcon ??
-                          const Icon(Icons.chevron_left_rounded),
+                  ? Align(
+                      child: CustomButton.child(
+                        onPressed: widget.onBackTap ??
+                            () => Navigator.of(context).pop(context),
+                        type: ButtonType.noShape,
+                        heightType: ButtonHeightType.small,
+                        child: widget.leadingIcon ??
+                            const Icon(Icons.chevron_left_rounded),
+                      ),
                     )
                   : const SizedBox(),
               scrolledUnderElevation: widget.scrolledUnderElevation ?? 0,

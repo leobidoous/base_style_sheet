@@ -1,3 +1,11 @@
+## 1.2.0
+
+* Upgrade dependencies
+
+## 1.1.4
+
+* Update PagedListView
+
 ## 1.1.3
 
 * Update CustomDropdrown
