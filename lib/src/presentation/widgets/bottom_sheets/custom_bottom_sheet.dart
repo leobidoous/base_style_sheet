@@ -30,6 +30,7 @@ class CustomBottomSheet {
       context: context,
       useRootNavigator: true,
       constraints: constraints,
+      enableDrag: isDismissible,
       isDismissible: isDismissible,
       backgroundColor: Colors.transparent,
       isScrollControlled: isScrollControlled,

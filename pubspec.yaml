@@ -16,8 +16,8 @@ dependencies:
   shimmer: ^3.0.0
   file_picker: ^8.0.3
   photo_view: ^0.15.0
-  fluttertoast: ^8.2.5
-  image_picker: ^1.1.1
+  fluttertoast: ^8.2.6
+  image_picker: ^1.1.2
   flutter_svg: ^2.0.10+1
   auto_size_text: ^3.0.0
   webview_flutter: ^4.8.0

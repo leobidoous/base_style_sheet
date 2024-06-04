@@ -63,7 +63,7 @@ class CustomInputField extends StatefulWidget {
   final TextEditingController? controller;
   final TextInputType? keyboardType;
   final TextInputAction? textInputAction;
-  final Function(String?)? onChanged;
+  final Function(String)? onChanged;
   final String? initialValue;
   final String? labelText;
   final Color? fillColor;
