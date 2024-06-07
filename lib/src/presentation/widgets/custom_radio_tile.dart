@@ -11,6 +11,7 @@ class CustomRadioTile<T> extends StatelessWidget {
     required this.title,
     required this.value,
     this.isSelected = false,
+    this.padding = EdgeInsets.zero,
     this.controlAffinity = ListTileControlAffinity.leading,
   });
 
@@ -18,7 +19,8 @@ class CustomRadioTile<T> extends StatelessWidget {
   final Widget title;
   final bool isSelected;
   final Widget? subtitle;
-  final Function(T?)? onChanged;
+  final Function(T)? onChanged;
+  final EdgeInsetsGeometry padding;
   final ListTileControlAffinity controlAffinity;
 
   @override
@@ -27,24 +29,27 @@ class CustomRadioTile<T> extends StatelessWidget {
       button: true,
       child: InkWell(
         onTap: () => onChanged?.call(value),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Row(
-              children: [
-                if (controlAffinity == ListTileControlAffinity.leading) ...[
-                  _radioCheck(context),
-                  Spacing.sm.horizontal,
+        child: Padding(
+          padding: padding,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Row(
+                children: [
+                  if (controlAffinity == ListTileControlAffinity.leading) ...[
+                    _radioCheck(context),
+                    Spacing.xs.horizontal,
+                  ],
+                  Expanded(child: title),
+                  if (controlAffinity == ListTileControlAffinity.trailing) ...[
+                    Spacing.xs.horizontal,
+                    _radioCheck(context),
+                  ],
                 ],
-                Expanded(child: title),
-                if (controlAffinity == ListTileControlAffinity.trailing) ...[
-                  Spacing.sm.horizontal,
-                  _radioCheck(context),
-                ],
-              ],
-            ),
-            if (subtitle != null) ...[Spacing.xxs.vertical, subtitle!],
-          ],
+              ),
+              if (subtitle != null) ...[Spacing.xxs.vertical, subtitle!],
+            ],
+          ),
         ),
       ),
     );

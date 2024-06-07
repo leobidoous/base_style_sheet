@@ -1,3 +1,9 @@
+## 1.2.1
+
+* Update CustomAppBar
+* Update AppBarButtom
+* Update CustomRadioTile
+
 ## 1.2.0
 
 * Upgrade dependencies

@@ -8,11 +8,17 @@ import '../extensions/build_context_extensions.dart';
 import 'buttons/custom_button.dart';
 
 class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
-  factory CustomAppBar.zero({bool enableShadow = false}) {
+  factory CustomAppBar.zero({
+    bool enableShadow = false,
+    Color? backgroundColor,
+    final EdgeInsets? linearProgressPadding,
+  }) {
     return CustomAppBar(
       toolbarHeight: 0,
       enableShadow: enableShadow,
+      backgroundColor: backgroundColor,
       automaticallyImplyLeading: false,
+      linearProgressPadding: linearProgressPadding,
     );
   }
   const CustomAppBar({
@@ -24,12 +30,15 @@ class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
     this.titleColor,
     this.titleWidget,
     this.leadingIcon,
+    this.titleSpacing,
     this.leadingWidth,
     this.toolbarHeight,
     this.backgroundColor,
     this.centerTitle = true,
     this.enableShadow = true,
+    this.linearProgressPadding,
     this.scrolledUnderElevation,
+    this.titlePadding = EdgeInsets.zero,
     this.automaticallyImplyLeading = true,
   });
 
@@ -40,13 +49,16 @@ class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
   final bool enableShadow;
   final Widget? titleWidget;
   final Widget? leadingIcon;
+  final double? titleSpacing;
   final double? leadingWidth;
   final List<Widget>? actions;
   final double? toolbarHeight;
   final Color? backgroundColor;
   final VoidCallback? onBackTap;
+  final EdgeInsets titlePadding;
   final double? scrolledUnderElevation;
   final bool automaticallyImplyLeading;
+  final EdgeInsets? linearProgressPadding;
 
   @override
   State<CustomAppBar> createState() => _CustomAppBarState();
@@ -63,6 +75,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
   Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Flexible(
           child: DecoratedBox(
@@ -76,6 +89,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
               elevation: 0,
               actions: widget.actions,
               centerTitle: widget.centerTitle,
+              titleSpacing: widget.titleSpacing,
               shadowColor: Colors.transparent,
               toolbarHeight: widget.toolbarHeight,
               foregroundColor: Colors.transparent,
@@ -92,9 +106,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
               backgroundColor: widget.backgroundColor ??
                   context.theme.scaffoldBackgroundColor,
               title: Padding(
-                padding: EdgeInsets.only(
-                  left: widget.leadingWidth == 0 ? Spacing.xs.value : 0,
-                ),
+                padding: widget.titlePadding,
                 child: widget.titleWidget ??
                     AutoSizeText(
                       widget.title ?? '',
@@ -123,6 +135,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
                         onPressed: widget.onBackTap ??
                             () => Navigator.of(context).pop(context),
                         type: ButtonType.noShape,
+                        padding: EdgeInsets.zero,
                         heightType: ButtonHeightType.small,
                         child: widget.leadingIcon ??
                             const Icon(Icons.chevron_left_rounded),
@@ -135,7 +148,8 @@ class _CustomAppBarState extends State<CustomAppBar> {
         ),
         if (widget.progress != null)
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: const Spacing(3).value),
+            padding: widget.linearProgressPadding ??
+                EdgeInsets.symmetric(horizontal: Spacing.sm.value),
             child: ClipRRect(
               borderRadius: context.theme.borderRadiusXLG,
               child: LinearProgressIndicator(

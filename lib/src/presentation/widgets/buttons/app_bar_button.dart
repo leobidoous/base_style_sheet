@@ -9,6 +9,7 @@ class AppBarButton extends StatelessWidget {
   const AppBarButton({
     super.key,
     this.onTap,
+    this.padding,
     this.borderRadius,
     required this.child,
     this.isEnabled = true,
@@ -19,12 +20,13 @@ class AppBarButton extends StatelessWidget {
   final Widget child;
   final bool isEnabled;
   final bool isLastButtom;
+  final double? padding;
   final BorderRadius? borderRadius;
 
-  static Widget shimmer({isLastButtom = true}) {
+  static Widget shimmer({isLastButtom = true, double? padding}) {
     return Padding(
       padding: EdgeInsets.only(
-        right: isLastButtom ? Spacing.md.value : 0,
+        right: isLastButtom ? (padding ?? Spacing.md.value) : 0,
       ),
       child: CustomButton.child(
         padding: EdgeInsets.zero,
@@ -42,7 +44,7 @@ class AppBarButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(
-        right: isLastButtom ? Spacing.md.value : 0,
+        right: isLastButtom ? (padding ?? Spacing.md.value) : 0,
       ),
       child: CustomButton.child(
         isEnabled: isEnabled,
