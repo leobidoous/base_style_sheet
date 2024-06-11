@@ -11,6 +11,7 @@ class CustomCard extends StatelessWidget {
     this.shaddow,
     this.color,
     this.onTap,
+    this.constraints,
     required this.child,
     this.isSelected = false,
     this.isEnabled = true,
@@ -26,6 +27,7 @@ class CustomCard extends StatelessWidget {
   final Border? border;
   final Color? color;
   final List<BoxShadow>? shaddow;
+  final BoxConstraints? constraints;
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +41,7 @@ class CustomCard extends StatelessWidget {
           splashColor: Colors.transparent,
           highlightColor: Colors.transparent,
           child: Container(
+            constraints: constraints,
             decoration: BoxDecoration(
               color: isSelected
                   ? context.colorScheme.primary

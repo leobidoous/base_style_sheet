@@ -1,3 +1,9 @@
+## 1.2.2
+
+* Add cache manager
+* Fix refresh indicator
+* Update app bar
+
 ## 1.2.1
 
 * Update CustomAppBar

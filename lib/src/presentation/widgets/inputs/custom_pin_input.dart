@@ -94,7 +94,7 @@ class _CustomPinFieldState extends State<CustomPinField> {
         decoration: BoxDecoration(
           borderRadius: context.theme.borderRadiusXSM,
           color: context.theme.scaffoldBackgroundColor,
-          border: Border.all(color: Colors.grey.shade300, width: .5),
+          border: Border.all(color: Colors.grey.shade300, width: 1),
         ),
       );
 
@@ -103,7 +103,7 @@ class _CustomPinFieldState extends State<CustomPinField> {
         height: const Spacing(7).value,
         decoration: BoxDecoration(
           color: Colors.white,
-          border: Border.all(color: context.colorScheme.primary, width: .5),
+          border: Border.all(color: context.colorScheme.primary, width: 1),
           borderRadius: context.theme.borderRadiusXSM,
         ),
       );
@@ -113,7 +113,7 @@ class _CustomPinFieldState extends State<CustomPinField> {
         height: const Spacing(7).value,
         textStyle: pinTextStyle,
         decoration: BoxDecoration(
-          border: Border.all(color: context.colorScheme.error, width: .5),
+          border: Border.all(color: context.colorScheme.error, width: 1),
           borderRadius: context.theme.borderRadiusXSM,
         ),
       );

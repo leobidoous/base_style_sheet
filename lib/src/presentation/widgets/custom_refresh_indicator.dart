@@ -2,7 +2,6 @@ import 'package:custom_refresh_indicator/custom_refresh_indicator.dart' as cri;
 import 'package:flutter/material.dart';
 
 import '../../core/themes/app_theme_factory.dart';
-import '../../core/themes/typography/typography_constants.dart';
 import '../extensions/build_context_extensions.dart';
 import 'custom_loading.dart';
 import 'image_view/custom_image.dart';
@@ -27,6 +26,7 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
   late final AnimationController animationController;
   final duration = const Duration(seconds: 1);
   late final Animation<double> animation;
+  cri.IndicatorState? _indicatorState;
   double get _offsetToArmed => 40;
 
   @override
@@ -46,8 +46,9 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
   Widget build(BuildContext context) {
     return cri.CustomRefreshIndicator(
       autoRebuild: false,
-      offsetToArmed: _offsetToArmed,
       onRefresh: widget.onRefresh,
+      offsetToArmed: _offsetToArmed,
+      triggerMode: cri.IndicatorTriggerMode.anywhere,
       onStateChanged: (change) {
         switch (change.currentState) {
           case cri.IndicatorState.dragging:
@@ -55,6 +56,12 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
             return;
           case cri.IndicatorState.complete:
             animationController.stop();
+            return;
+          case cri.IndicatorState.armed:
+            _indicatorState = change.currentState;
+            return;
+          case cri.IndicatorState.settling:
+            _indicatorState = change.currentState;
             return;
           default:
             break;
@@ -84,14 +91,15 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
                                 imageSize: Size.fromHeight(_offsetToArmed * .4),
                               )
                             : CustomLoading(
-                                height: AppFontSize.iconButton.value,
-                                width: AppFontSize.iconButton.value,
+                                height: _offsetToArmed,
+                                width: _offsetToArmed,
                               ),
                       ),
                     ),
                   ),
                 ),
                 Transform.translate(
+                  key: ObjectKey(_indicatorState),
                   offset: Offset(0.0, _offsetToArmed * controller.value),
                   child: child,
                 ),

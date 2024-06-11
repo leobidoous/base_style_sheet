@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
 import '../containers/custom_shimmer.dart';
 import 'widgets/custom_photo_view.dart';
@@ -11,7 +12,9 @@ class ImageUrl extends StatelessWidget {
     required this.fit,
     required this.url,
     required this.headers,
+    required this.cacheKey,
     required this.imageSize,
+    required this.cacheManager,
     required this.errorBuilder,
     required this.maxWidthDiskCache,
     required this.maxHeightDiskCache,
@@ -19,10 +22,12 @@ class ImageUrl extends StatelessWidget {
 
   final BoxFit fit;
   final String url;
+  final String? cacheKey;
   final Size? imageSize;
   final int? maxWidthDiskCache;
   final int? maxHeightDiskCache;
   final Map<String, String>? headers;
+  final BaseCacheManager? cacheManager;
   final Widget Function(String)? errorBuilder;
 
   @override
@@ -35,6 +40,8 @@ class ImageUrl extends StatelessWidget {
           height: imageSize?.height ?? 32,
         ),
       ),
+      cacheKey: cacheKey,
+      cacheManager: cacheManager,
       maxHeightDiskCache: maxHeightDiskCache,
       maxWidthDiskCache: maxWidthDiskCache,
       httpHeaders: headers,

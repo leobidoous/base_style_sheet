@@ -22,6 +22,7 @@ import 'package:flutter/material.dart'
         SizedBox,
         StatelessWidget,
         Widget;
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_svg/svg.dart';
 
 import '../containers/custom_card.dart';
@@ -49,6 +50,8 @@ class CustomImage extends StatelessWidget {
     this.borderRadius = BorderRadius.zero,
     this.imageColor,
     this.headers,
+    this.cacheManager,
+    this.cacheKey,
     this.maxHeightDiskCache,
     this.maxWidthDiskCache,
     this.errorBuilder,
@@ -58,12 +61,14 @@ class CustomImage extends StatelessWidget {
   final BoxFit fit;
   final String? url;
   final String? urlSvg;
+  final String? cacheKey;
   final String? asset;
   final String? svgAsset;
   final Size? imageSize;
   final Color? backgroundColor;
   final Color? imageColor;
   final Border? border;
+  final BaseCacheManager? cacheManager;
   final String? packageName;
   final List<BoxShadow> shaddow;
   final BorderRadius borderRadius;
@@ -94,8 +99,10 @@ class CustomImage extends StatelessWidget {
                   fit: fit,
                   url: url!,
                   headers: headers,
+                  cacheKey: cacheKey,
                   imageSize: imageSize,
                   errorBuilder: errorBuilder,
+                  cacheManager: cacheManager,
                   maxWidthDiskCache: maxWidthDiskCache,
                   maxHeightDiskCache: maxHeightDiskCache,
                 );

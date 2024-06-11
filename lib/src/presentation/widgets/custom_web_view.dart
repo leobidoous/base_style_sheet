@@ -16,19 +16,21 @@ class CustomWebView extends StatefulWidget {
     this.onProgress,
     this.onUrlChange,
     this.onNavigationRequest,
+    this.onJavaScriptChannels,
   });
 
   final String url;
   final void Function(int)? onProgress;
   final void Function(UrlChange)? onUrlChange;
+  final Map<String, void Function(JavaScriptMessage)?>? onJavaScriptChannels;
   final FutureOr<NavigationDecision> Function(NavigationRequest)?
       onNavigationRequest;
 
   @override
-  _CustomWebViewState createState() => _CustomWebViewState();
+  CustomWebViewState createState() => CustomWebViewState();
 }
 
-class _CustomWebViewState extends State<CustomWebView> {
+class CustomWebViewState extends State<CustomWebView> {
   late final WebViewController webViewController;
   int progress = 0;
   bool isLoading = false;
@@ -85,15 +87,13 @@ class _CustomWebViewState extends State<CustomWebView> {
           onUrlChange: widget.onUrlChange,
         ),
       )
-      ..addJavaScriptChannel(
-        'Toaster',
-        onMessageReceived: (JavaScriptMessage message) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(message.message)),
-          );
-        },
-      )
       ..loadRequest(Uri.parse(widget.url));
+    widget.onJavaScriptChannels?.entries.forEach((e) {
+      controller.addJavaScriptChannel(
+        e.key,
+        onMessageReceived: e.value as void Function(JavaScriptMessage),
+      );
+    });
 
     if (controller.platform is AndroidWebViewController) {
       AndroidWebViewController.enableDebugging(true);
@@ -119,7 +119,7 @@ class _CustomWebViewState extends State<CustomWebView> {
           } else if (hasError) {
             return Center(
               child: CustomRequestError(
-                padding: EdgeInsets.all(const Spacing(3).value),
+                padding: EdgeInsets.all(Spacing.sm.value),
               ),
             );
           }
@@ -132,9 +132,11 @@ class _CustomWebViewState extends State<CustomWebView> {
       ),
       bottomNavigationBar: Visibility(
         visible: progress != 0 && progress != 100,
-        child: LinearProgressIndicator(
-          minHeight: 2.5,
-          value: progress / 100,
+        child: SafeArea(
+          child: LinearProgressIndicator(
+            minHeight: 2.5,
+            value: progress / 100,
+          ),
         ),
       ),
     );

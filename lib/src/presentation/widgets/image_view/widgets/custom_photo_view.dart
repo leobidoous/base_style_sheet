@@ -126,15 +126,6 @@ class _CustomPhotoViewState extends State<CustomPhotoView>
                     Icons.close_rounded,
                     color: context.theme.iconTheme.color,
                   ),
-                  // actions: [
-                  //   widget.url != null && widget.token != null
-                  //       ? ShareButton(
-                  //           url: widget.url!,
-                  //           token: widget.token!,
-                  //           matrixFileType: MatrixFileType.image,
-                  //         )
-                  //       : const SizedBox(),
-                  // ],
                 ),
               ),
             );

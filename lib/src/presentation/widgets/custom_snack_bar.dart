@@ -80,10 +80,9 @@ class CustomSnackBar {
           },
           child: CustomCard(
             color: switch (type) {
-              SnackBarType.error => errorColor ?? context.colorScheme.error,
-              SnackBarType.info => infoColor ?? context.colorScheme.secondary,
-              SnackBarType.success =>
-                successColor ?? context.colorScheme.primary,
+              SnackBarType.error => errorColor ?? Colors.red,
+              SnackBarType.info => infoColor ?? Colors.orange,
+              SnackBarType.success => successColor ?? Colors.green,
             },
             borderRadius: context.theme.borderRadiusSM,
             padding: EdgeInsets.all(Spacing.sm.value),
@@ -97,12 +96,8 @@ class CustomSnackBar {
                   },
                   color: style?.color ??
                       switch (type) {
-                        SnackBarType.info =>
-                          context.theme.scaffoldBackgroundColor,
-                        SnackBarType.success =>
-                          context.textTheme.bodyMedium?.color,
-                        SnackBarType.error =>
-                          context.theme.scaffoldBackgroundColor,
+                        SnackBarType.info => Colors.black,
+                        SnackBarType() => Colors.white,
                       },
                 ),
                 Spacing.sm.horizontal,
@@ -112,12 +107,8 @@ class CustomSnackBar {
                     style: style ??
                         context.textTheme.bodyMedium?.copyWith(
                           color: switch (type) {
-                            SnackBarType.info =>
-                              context.theme.scaffoldBackgroundColor,
-                            SnackBarType.success =>
-                              context.textTheme.bodyMedium?.color,
-                            SnackBarType.error =>
-                              context.theme.scaffoldBackgroundColor,
+                            SnackBarType.info => Colors.black,
+                            SnackBarType() => Colors.white,
                           },
                         ),
                   ),

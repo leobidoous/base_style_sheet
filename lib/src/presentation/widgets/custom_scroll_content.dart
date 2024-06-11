@@ -41,11 +41,7 @@ class CustomScrollContent extends StatelessWidget {
       },
       child: SingleChildScrollView(
         physics: physics ??
-            BouncingScrollPhysics(
-              parent: alwaysScrollable
-                  ? const AlwaysScrollableScrollPhysics()
-                  : null,
-            ),
+            (alwaysScrollable ? const AlwaysScrollableScrollPhysics() : null),
         scrollDirection: scrollDirection,
         controller: scrollController,
         clipBehavior: clipBehavior,
@@ -67,8 +63,8 @@ class CustomScrollContent extends StatelessWidget {
         );
         if (onRefresh != null) {
           return CustomRefreshIndicator(
-            onRefresh: onRefresh!,
             refreshLogo: refreshLogo,
+            onRefresh: onRefresh!,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [Expanded(child: scroll)],
