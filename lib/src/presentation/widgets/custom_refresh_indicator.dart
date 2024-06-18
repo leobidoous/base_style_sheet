@@ -26,7 +26,6 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
   late final AnimationController animationController;
   final duration = const Duration(seconds: 1);
   late final Animation<double> animation;
-  cri.IndicatorState? _indicatorState;
   double get _offsetToArmed => 40;
 
   @override
@@ -57,12 +56,6 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
           case cri.IndicatorState.complete:
             animationController.stop();
             return;
-          case cri.IndicatorState.armed:
-            _indicatorState = change.currentState;
-            return;
-          case cri.IndicatorState.settling:
-            _indicatorState = change.currentState;
-            return;
           default:
             break;
         }
@@ -70,7 +63,7 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
       builder: (context, child, controller) {
         return AnimatedBuilder(
           animation: controller,
-          builder: (context, child) {
+          builder: (context, _) {
             return Stack(
               children: <Widget>[
                 ConstrainedBox(
@@ -88,6 +81,7 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
                                 svgAsset: widget.refreshLogo,
                                 border: context.theme.borderNone,
                                 backgroundColor: Colors.transparent,
+                                borderRadius: context.theme.borderRadiusNone,
                                 imageSize: Size.fromHeight(_offsetToArmed * .4),
                               )
                             : CustomLoading(
@@ -99,7 +93,6 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
                   ),
                 ),
                 Transform.translate(
-                  key: ObjectKey(_indicatorState),
                   offset: Offset(0.0, _offsetToArmed * controller.value),
                   child: child,
                 ),

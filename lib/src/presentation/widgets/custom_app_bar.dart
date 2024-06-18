@@ -105,8 +105,8 @@ class _CustomAppBarState extends State<CustomAppBar> {
                     )
                   : null,
               automaticallyImplyLeading: widget.automaticallyImplyLeading,
-              backgroundColor: widget.backgroundColor ??
-                  context.theme.scaffoldBackgroundColor,
+              backgroundColor:
+                  widget.backgroundColor ?? context.colorScheme.surface,
               title: Padding(
                 padding: widget.titlePadding,
                 child: widget.titleWidget ??

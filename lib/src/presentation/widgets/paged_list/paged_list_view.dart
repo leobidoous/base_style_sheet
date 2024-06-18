@@ -191,37 +191,35 @@ class _PagedListViewState<E, S> extends State<PagedListView<E, S>> {
   }
 
   Widget _listItem(List<S> items, int index) {
-    return RepaintBoundary(
-      child: SafeArea(
-        top: false,
-        bottom: (controller.reverse
-                ? items.first == items[index]
-                : items.last == items[index]) &&
-            widget.safeAreaLastItem,
-        child: switch (widget.scrollDirection) {
-          Axis.horizontal => Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                if (controller.reverse)
-                  if (items.last == items[index]) ..._errorAndLoading(index),
-                widget.itemBuilder(context, items[index], index),
-                if (!controller.reverse)
-                  if (items.last == items[index]) ..._errorAndLoading(index),
-              ],
-            ),
-          Axis() => Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                if (controller.reverse)
-                  if (items.last == items[index]) ..._errorAndLoading(index),
-                widget.itemBuilder(context, items[index], index),
-                if (!controller.reverse)
-                  if (items.last == items[index]) ..._errorAndLoading(index),
-              ],
-            ),
-        },
-      ),
+    return SafeArea(
+      top: false,
+      bottom: (controller.reverse
+              ? items.first == items[index]
+              : items.last == items[index]) &&
+          widget.safeAreaLastItem,
+      child: switch (widget.scrollDirection) {
+        Axis.horizontal => Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (controller.reverse)
+                if (items.last == items[index]) ..._errorAndLoading(index),
+              widget.itemBuilder(context, items[index], index),
+              if (!controller.reverse)
+                if (items.last == items[index]) ..._errorAndLoading(index),
+            ],
+          ),
+        Axis() => Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              if (controller.reverse)
+                if (items.last == items[index]) ..._errorAndLoading(index),
+              widget.itemBuilder(context, items[index], index),
+              if (!controller.reverse)
+                if (items.last == items[index]) ..._errorAndLoading(index),
+            ],
+          ),
+      },
     );
   }
 

@@ -123,10 +123,8 @@ class CustomWebViewState extends State<CustomWebView> {
               ),
             );
           }
-          return RepaintBoundary(
-            child: SafeArea(
-              child: WebViewWidget(controller: webViewController),
-            ),
+          return SafeArea(
+            child: WebViewWidget(controller: webViewController),
           );
         },
       ),

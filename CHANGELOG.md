@@ -1,3 +1,7 @@
+## 1.2.3
+
+* Add button alignment
+
 ## 1.2.2
 
 * Add cache manager

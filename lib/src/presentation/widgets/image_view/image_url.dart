@@ -14,8 +14,11 @@ class ImageUrl extends StatelessWidget {
     required this.headers,
     required this.cacheKey,
     required this.imageSize,
+    required this.placeholder,
     required this.cacheManager,
     required this.errorBuilder,
+    required this.memCacheWidth,
+    required this.memCacheHeight,
     required this.maxWidthDiskCache,
     required this.maxHeightDiskCache,
   });
@@ -24,27 +27,34 @@ class ImageUrl extends StatelessWidget {
   final String url;
   final String? cacheKey;
   final Size? imageSize;
+  final int? memCacheWidth;
+  final int? memCacheHeight;
   final int? maxWidthDiskCache;
   final int? maxHeightDiskCache;
   final Map<String, String>? headers;
   final BaseCacheManager? cacheManager;
   final Widget Function(String)? errorBuilder;
+  final Widget Function(BuildContext, String)? placeholder;
 
   @override
   Widget build(BuildContext context) {
     return CachedNetworkImage(
+      key: key,
       imageUrl: url,
-      placeholder: (context, url) => Center(
-        child: CustomShimmer(
-          width: imageSize?.width ?? 32,
-          height: imageSize?.height ?? 32,
-        ),
-      ),
       cacheKey: cacheKey,
-      cacheManager: cacheManager,
-      maxHeightDiskCache: maxHeightDiskCache,
-      maxWidthDiskCache: maxWidthDiskCache,
       httpHeaders: headers,
+      cacheManager: cacheManager,
+      memCacheWidth: memCacheWidth,
+      memCacheHeight: memCacheHeight,
+      maxWidthDiskCache: maxWidthDiskCache,
+      maxHeightDiskCache: maxHeightDiskCache,
+      placeholder: placeholder ??
+          (context, url) => Center(
+                child: CustomShimmer(
+                  width: imageSize?.width ?? 32,
+                  height: imageSize?.height ?? 32,
+                ),
+              ),
       imageBuilder: (context, image) {
         return Semantics(
           button: true,

@@ -218,7 +218,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
   }
 
   bool get isEnabled {
-    return widget.items.isNotEmpty && !widget.isLoading && widget.isEnabled;
+    return !widget.isLoading && widget.isEnabled;
   }
 
   @override
@@ -282,20 +282,26 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          if (widget.prefixIcon != null)
-            SizedBox(
-              width: switch (widget.heightType) {
-                DropdownHeightType.normal => AppThemeBase.buttonHeightMD,
-                DropdownHeightType.small => AppThemeBase.buttonHeightSM,
-              },
-              height: switch (widget.heightType) {
-                DropdownHeightType.normal => AppThemeBase.buttonHeightMD,
-                DropdownHeightType.small => AppThemeBase.buttonHeightSM,
-              },
-              child: widget.prefixIcon,
+          Flexible(
+            child: Row(
+              children: [
+                if (widget.prefixIcon != null)
+                  SizedBox(
+                    width: switch (widget.heightType) {
+                      DropdownHeightType.normal => AppThemeBase.buttonHeightMD,
+                      DropdownHeightType.small => AppThemeBase.buttonHeightSM,
+                    },
+                    height: switch (widget.heightType) {
+                      DropdownHeightType.normal => AppThemeBase.buttonHeightMD,
+                      DropdownHeightType.small => AppThemeBase.buttonHeightSM,
+                    },
+                    child: widget.prefixIcon,
+                  ),
+                if (widget.isExpanded) Expanded(child: _textValue),
+                if (!widget.isExpanded) Flexible(child: _textValue),
+              ],
             ),
-          if (widget.isExpanded) Expanded(child: _textValue),
-          if (!widget.isExpanded) Flexible(child: _textValue),
+          ),
           Spacing.xxs.horizontal,
           if (widget.isLoading)
             CustomShimmer(

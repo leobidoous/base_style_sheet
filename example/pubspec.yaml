@@ -15,7 +15,7 @@ dependencies:
   base_style_sheet:
     path: ../
 
-  cupertino_icons: ^1.0.6
+  cupertino_icons: ^1.0.8
 
 dev_dependencies:
   flutter_test:

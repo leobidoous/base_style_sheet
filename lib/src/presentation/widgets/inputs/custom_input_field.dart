@@ -30,6 +30,7 @@ class CustomInputField extends StatefulWidget {
     this.onChanged,
     this.focusNode,
     this.maxLength,
+    this.errorStyle,
     this.maxLines = 1,
     this.minLines,
     this.autofocus = false,
@@ -73,6 +74,7 @@ class CustomInputField extends StatefulWidget {
   final String? hintText;
   final String? prefix;
   final TextAlign textAlign;
+  final TextStyle? errorStyle;
   final String? Function(String?)? validator;
   final FocusNode? focusNode;
   final int? maxLength;
@@ -156,7 +158,7 @@ class _CustomInputFieldState extends State<CustomInputField> {
           Spacing.xxxs.vertical,
         ],
         Opacity(
-          opacity: widget.enabled ? 1 : 0.5,
+          opacity: widget.enabled ? 1 : .5,
           child: TextFormField(
             key: widget.key,
             onTap: widget.onTap,
@@ -223,9 +225,8 @@ class _CustomInputFieldState extends State<CustomInputField> {
               helperStyle: context.textTheme.labelSmall,
               suffixIcon: widget.suffixIcon ?? SizedBox(width: _fontSize),
               prefixIcon: widget.prefixIcon ?? SizedBox(width: _fontSize),
-              errorStyle: context.textTheme.labelSmall?.copyWith(
-                color: Colors.red,
-              ),
+              errorStyle: widget.errorStyle ??
+                  context.textTheme.labelSmall?.copyWith(color: Colors.red),
               contentPadding: widget.contentPadding ??
                   EdgeInsets.symmetric(
                     horizontal: _fontSize,

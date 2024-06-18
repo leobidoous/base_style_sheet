@@ -13,6 +13,7 @@ class CustomButton extends StatefulWidget {
     ButtonHeightType heightType = ButtonHeightType.normal,
     Function()? onPressed,
     required String text,
+    Alignment? alignment,
     bool isEnabled = true,
     bool isLoading = false,
     bool isSafe = false,
@@ -22,6 +23,7 @@ class CustomButton extends StatefulWidget {
   }) {
     return CustomButton(
       type: type,
+      alignment: alignment,
       borderRadius: borderRadius,
       onPressed: onPressed,
       heightType: heightType,
@@ -46,6 +48,7 @@ class CustomButton extends StatefulWidget {
     ButtonHeightType heightType = ButtonHeightType.normal,
     Function()? onPressed,
     required IconData icon,
+    Alignment? alignment,
     Color? iconColor,
     bool isEnabled = true,
     bool isLoading = false,
@@ -56,6 +59,7 @@ class CustomButton extends StatefulWidget {
   }) {
     return CustomButton(
       type: type,
+      alignment: alignment,
       borderRadius: borderRadius,
       onPressed: onPressed,
       heightType: heightType,
@@ -77,6 +81,7 @@ class CustomButton extends StatefulWidget {
     ButtonType type = ButtonType.primary,
     ButtonHeightType heightType = ButtonHeightType.normal,
     Function()? onPressed,
+    Alignment? alignment,
     required Widget child,
     bool isEnabled = true,
     bool isLoading = false,
@@ -87,6 +92,7 @@ class CustomButton extends StatefulWidget {
   }) {
     return CustomButton(
       type: type,
+      alignment: alignment,
       borderRadius: borderRadius,
       onPressed: onPressed,
       heightType: heightType,
@@ -103,6 +109,7 @@ class CustomButton extends StatefulWidget {
     ButtonType type = ButtonType.primary,
     ButtonHeightType heightType = ButtonHeightType.normal,
     TextStyle? textStyle,
+    Alignment? alignment,
     Color? iconColor,
     Function()? onPressed,
     required IconData icon,
@@ -116,6 +123,7 @@ class CustomButton extends StatefulWidget {
   }) {
     return CustomButton(
       type: type,
+      alignment: alignment,
       borderRadius: borderRadius,
       onPressed: onPressed,
       heightType: heightType,
@@ -153,6 +161,7 @@ class CustomButton extends StatefulWidget {
     ButtonHeightType heightType = ButtonHeightType.normal,
     TextStyle? textStyle,
     Color? iconColor,
+    Alignment? alignment,
     Function()? onPressed,
     required IconData icon,
     required String text,
@@ -165,6 +174,7 @@ class CustomButton extends StatefulWidget {
   }) {
     return CustomButton(
       type: type,
+      alignment: alignment,
       borderRadius: borderRadius,
       onPressed: onPressed,
       heightType: heightType,
@@ -206,6 +216,7 @@ class CustomButton extends StatefulWidget {
     this.isLoading = false,
     this.isSafe = false,
     this.color,
+    this.alignment,
     this.borderRadius,
     this.type = ButtonType.primary,
     this.heightType = ButtonHeightType.normal,
@@ -213,6 +224,8 @@ class CustomButton extends StatefulWidget {
           color != null && type == ButtonType.background || color == null,
           '[type] must be background',
         );
+
+  final Alignment? alignment;
   final Color? color;
   final ButtonType type;
   final ButtonHeightType heightType;
@@ -366,19 +379,28 @@ class _CustomButtonState extends State<CustomButton> {
                 minHeight: _minimumSize.height,
                 minWidth: _minimumSize.width,
               ),
-              child: AnimatedSwitcher(
-                duration: const Duration(milliseconds: 500),
-                child: widget.isLoading
-                    ? CustomLoading(
-                        height: const Spacing(1).value,
-                        width: const Spacing(1).value,
-                      )
-                    : widget.child,
-              ),
+              child: widget.alignment == null
+                  ? _child
+                  : Align(
+                      alignment: widget.alignment!,
+                      child: _child,
+                    ),
             ),
           ),
         ),
       ),
+    );
+  }
+
+  Widget get _child {
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 500),
+      child: widget.isLoading
+          ? CustomLoading(
+              height: const Spacing(1).value,
+              width: const Spacing(1).value,
+            )
+          : widget.child,
     );
   }
 

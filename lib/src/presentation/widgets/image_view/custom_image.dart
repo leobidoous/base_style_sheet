@@ -52,6 +52,9 @@ class CustomImage extends StatelessWidget {
     this.headers,
     this.cacheManager,
     this.cacheKey,
+    this.placeholder,
+    this.memCacheWidth,
+    this.memCacheHeight,
     this.maxHeightDiskCache,
     this.maxWidthDiskCache,
     this.errorBuilder,
@@ -74,11 +77,13 @@ class CustomImage extends StatelessWidget {
   final BorderRadius borderRadius;
   final bool enableGestures;
   final Function()? onTap;
+  final int? memCacheWidth;
+  final int? memCacheHeight;
   final int? maxWidthDiskCache;
   final int? maxHeightDiskCache;
   final Map<String, String>? headers;
   final Widget Function(String)? errorBuilder;
-
+  final Widget Function(BuildContext, String)? placeholder;
   @override
   Widget build(BuildContext context) {
     return CustomCard(
@@ -97,26 +102,29 @@ class CustomImage extends StatelessWidget {
               if (url != null && url!.isNotEmpty) {
                 return ImageUrl(
                   fit: fit,
+                  key: key,
                   url: url!,
                   headers: headers,
                   cacheKey: cacheKey,
                   imageSize: imageSize,
+                  placeholder: placeholder,
                   errorBuilder: errorBuilder,
                   cacheManager: cacheManager,
+                  memCacheWidth: memCacheWidth,
+                  memCacheHeight: memCacheHeight,
                   maxWidthDiskCache: maxWidthDiskCache,
                   maxHeightDiskCache: maxHeightDiskCache,
                 );
               } else if (urlSvg != null && urlSvg!.isNotEmpty) {
                 return SvgPicture.network(
-                  urlSvg!,
                   fit: fit,
+                  urlSvg!,
+                  headers: headers,
                   width: imageSize?.width,
                   height: imageSize?.height,
                   colorFilter: (imageColor != null)
                       ? ColorFilter.mode(imageColor!, BlendMode.srcIn)
                       : null,
-                  headers: headers,
-                  allowDrawingOutsideViewBox: true,
                   placeholderBuilder: (context) => Center(
                     child: CustomShimmer(
                       width: imageSize?.width ?? 32,
