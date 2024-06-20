@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
 import '../containers/custom_shimmer.dart';
-import 'widgets/custom_photo_view.dart';
 import 'widgets/image_error.dart';
 
 class ImageUrl extends StatelessWidget {
@@ -39,10 +38,13 @@ class ImageUrl extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CachedNetworkImage(
+      fit: fit,
       key: key,
       imageUrl: url,
       cacheKey: cacheKey,
       httpHeaders: headers,
+      width: imageSize?.width,
+      height: imageSize?.height,
       cacheManager: cacheManager,
       memCacheWidth: memCacheWidth,
       memCacheHeight: memCacheHeight,
@@ -55,15 +57,6 @@ class ImageUrl extends StatelessWidget {
                   height: imageSize?.height ?? 32,
                 ),
               ),
-      imageBuilder: (context, image) {
-        return Semantics(
-          button: true,
-          child: InkWell(
-            onTap: () => CustomPhotoView(image: image).show(context),
-            child: Image(image: image, fit: fit),
-          ),
-        );
-      },
       errorWidget: (context, url, error) =>
           errorBuilder?.call(error.toString()) ??
           ImageError(error: error.toString()),

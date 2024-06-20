@@ -1,3 +1,7 @@
+## 1.2.4
+
+* Fix cached image view
+
 ## 1.2.3
 
 * Add button alignment

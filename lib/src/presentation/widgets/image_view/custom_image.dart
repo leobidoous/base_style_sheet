@@ -9,7 +9,6 @@ import 'package:flutter/material.dart'
         BoxFit,
         BoxShadow,
         BuildContext,
-        Builder,
         Center,
         Color,
         ColorFilter,
@@ -86,6 +85,92 @@ class CustomImage extends StatelessWidget {
   final Widget Function(BuildContext, String)? placeholder;
   @override
   Widget build(BuildContext context) {
+    late final Widget child;
+    if (url != null && url!.isNotEmpty) {
+      child = ImageUrl(
+        fit: fit,
+        url: url!,
+        headers: headers,
+        cacheKey: cacheKey,
+        imageSize: imageSize,
+        placeholder: placeholder,
+        errorBuilder: errorBuilder,
+        cacheManager: cacheManager,
+        memCacheWidth: memCacheWidth,
+        memCacheHeight: memCacheHeight,
+        maxWidthDiskCache: maxWidthDiskCache,
+        maxHeightDiskCache: maxHeightDiskCache,
+      );
+    } else if (urlSvg != null && urlSvg!.isNotEmpty) {
+      child = SvgPicture.network(
+        fit: fit,
+        urlSvg!,
+        headers: headers,
+        width: imageSize?.width,
+        height: imageSize?.height,
+        colorFilter: (imageColor != null)
+            ? ColorFilter.mode(imageColor!, BlendMode.srcIn)
+            : null,
+        placeholderBuilder: (context) => Center(
+          child: CustomShimmer(
+            width: imageSize?.width ?? 32,
+            height: imageSize?.height ?? 32,
+          ),
+        ),
+      );
+    } else if (asset != null && asset!.isNotEmpty) {
+      child = Semantics(
+        button: true,
+        child: InkWell(
+          onTap: () => CustomPhotoView(
+            image: AssetImage(asset!, package: packageName),
+          ).show(context),
+          child: Image.asset(
+            asset!,
+            fit: fit,
+            width: imageSize?.width,
+            height: imageSize?.height,
+            package: packageName,
+            color: imageColor,
+          ),
+        ),
+      );
+    } else if (svgAsset != null && svgAsset!.isNotEmpty) {
+      child = SvgPicture.asset(
+        svgAsset!,
+        fit: fit,
+        width: imageSize?.width,
+        height: imageSize?.height,
+        package: packageName,
+        colorFilter: (imageColor != null)
+            ? ColorFilter.mode(imageColor!, BlendMode.srcIn)
+            : null,
+      );
+    } else if (file != null) {
+      child = Semantics(
+        button: true,
+        child: InkWell(
+          onTap: () => CustomPhotoView(image: FileImage(file!)).show(
+            context,
+          ),
+          child: Image.file(
+            file!,
+            fit: fit,
+            width: imageSize?.width,
+            height: imageSize?.height,
+            color: imageColor,
+            errorBuilder: (context, error, stackTrace) =>
+                errorBuilder?.call(error.toString()) ??
+                ImageError(
+                  error: error.toString(),
+                ),
+          ),
+        ),
+      );
+    } else {
+      child = errorBuilder?.call('Nenhuma imagem fornecida') ??
+          const ImageError(error: 'Nenhuma imagem fornecida');
+    }
     return CustomCard(
       onTap: onTap,
       border: border,
@@ -95,98 +180,7 @@ class CustomImage extends StatelessWidget {
       child: SizedBox(
         width: imageSize?.width,
         height: imageSize?.height,
-        child: IgnorePointer(
-          ignoring: !enableGestures,
-          child: Builder(
-            builder: (_) {
-              if (url != null && url!.isNotEmpty) {
-                return ImageUrl(
-                  fit: fit,
-                  key: key,
-                  url: url!,
-                  headers: headers,
-                  cacheKey: cacheKey,
-                  imageSize: imageSize,
-                  placeholder: placeholder,
-                  errorBuilder: errorBuilder,
-                  cacheManager: cacheManager,
-                  memCacheWidth: memCacheWidth,
-                  memCacheHeight: memCacheHeight,
-                  maxWidthDiskCache: maxWidthDiskCache,
-                  maxHeightDiskCache: maxHeightDiskCache,
-                );
-              } else if (urlSvg != null && urlSvg!.isNotEmpty) {
-                return SvgPicture.network(
-                  fit: fit,
-                  urlSvg!,
-                  headers: headers,
-                  width: imageSize?.width,
-                  height: imageSize?.height,
-                  colorFilter: (imageColor != null)
-                      ? ColorFilter.mode(imageColor!, BlendMode.srcIn)
-                      : null,
-                  placeholderBuilder: (context) => Center(
-                    child: CustomShimmer(
-                      width: imageSize?.width ?? 32,
-                      height: imageSize?.height ?? 32,
-                    ),
-                  ),
-                );
-              } else if (asset != null && asset!.isNotEmpty) {
-                return Semantics(
-                  button: true,
-                  child: InkWell(
-                    onTap: () => CustomPhotoView(
-                      image: AssetImage(asset!, package: packageName),
-                    ).show(context),
-                    child: Image.asset(
-                      asset!,
-                      fit: fit,
-                      width: imageSize?.width,
-                      height: imageSize?.height,
-                      package: packageName,
-                      color: imageColor,
-                    ),
-                  ),
-                );
-              } else if (svgAsset != null && svgAsset!.isNotEmpty) {
-                return SvgPicture.asset(
-                  svgAsset!,
-                  fit: fit,
-                  width: imageSize?.width,
-                  height: imageSize?.height,
-                  package: packageName,
-                  colorFilter: (imageColor != null)
-                      ? ColorFilter.mode(imageColor!, BlendMode.srcIn)
-                      : null,
-                );
-              } else if (file != null) {
-                return Semantics(
-                  button: true,
-                  child: InkWell(
-                    onTap: () => CustomPhotoView(image: FileImage(file!)).show(
-                      context,
-                    ),
-                    child: Image.file(
-                      file!,
-                      fit: fit,
-                      width: imageSize?.width,
-                      height: imageSize?.height,
-                      color: imageColor,
-                      errorBuilder: (context, error, stackTrace) =>
-                          errorBuilder?.call(error.toString()) ??
-                          ImageError(
-                            error: error.toString(),
-                          ),
-                    ),
-                  ),
-                );
-              }
-              return errorBuilder?.call('Nenhuma imagem fornecida') ??
-                  const ImageError(error: 'Nenhuma imagem fornecida');
-            },
-          ),
-        ),
+        child: IgnorePointer(ignoring: !enableGestures, child: child),
       ),
     );
   }
