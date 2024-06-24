@@ -24,6 +24,7 @@ import 'package:flutter/material.dart'
         StatelessWidget,
         Widget,
         showGeneralDialog;
+import 'package:flutter/widgets.dart';
 
 import '../../core/themes/app_theme_factory.dart';
 import '../../core/themes/spacing/spacing.dart';
@@ -35,14 +36,18 @@ class CustomDialog {
   static Future<bool> show(
     BuildContext context,
     Widget child, {
-    bool showClose = true,
     EdgeInsets? padding,
+    bool showClose = true,
     BoxConstraints? constraints,
+    bool useRootNavigator = true,
+    String routeName = '/custom_dialog/',
   }) async {
     return await showGeneralDialog<bool>(
       context: context,
       barrierDismissible: false,
+      useRootNavigator: useRootNavigator,
       barrierColor: Colors.black.withOpacity(0.8),
+      routeSettings: RouteSettings(name: routeName),
       transitionDuration: const Duration(milliseconds: 250),
       barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
       pageBuilder: (_, animation, secondaryAnimation) {

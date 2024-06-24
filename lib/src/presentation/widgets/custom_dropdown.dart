@@ -57,6 +57,7 @@ class CustomDropdown<T> extends StatefulWidget {
     this.isLoading = false,
     this.isExpanded = false,
     this.useSafeArea = true,
+    this.useParendRenderBox = true,
     this.heightType = DropdownHeightType.normal,
   });
 
@@ -73,6 +74,7 @@ class CustomDropdown<T> extends StatefulWidget {
   final TextStyle? itemStyle;
   final BuildContext context;
   final Function(T)? onChange;
+  final bool useParendRenderBox;
   final EdgeInsets? listPadding;
   final EdgeInsets? childPadding;
   final TextStyle? itemSelectedStyle;
@@ -92,8 +94,8 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
   late final Animation<double> _opacityAnimation;
   late final Animation<double> _rotateAnimation;
   final _scrollController = ScrollController();
+  Offset _parentContextOffset = Offset.zero;
   CustomDropdownItem<T>? _valueSelected;
-  late Offset _parentContextOffset;
   final _key = GlobalKey();
   bool _showClear = false;
   late double _maxHeight;
@@ -127,9 +129,12 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
   void _getWidgetInfos() {
     final renderBox = _key.currentContext?.findRenderObject() as RenderBox;
     _size = renderBox.size;
+    RenderBox? parendRenderBox;
 
-    final parendRenderBox = widget.context.findRenderObject() as RenderBox;
-    _parentContextOffset = parendRenderBox.localToGlobal(Offset.zero);
+    if (widget.useParendRenderBox) {
+      parendRenderBox = widget.context.findRenderObject() as RenderBox;
+      _parentContextOffset = parendRenderBox.localToGlobal(Offset.zero);
+    }
 
     _offset = renderBox.localToGlobal(Offset.zero, ancestor: parendRenderBox);
   }
@@ -191,6 +196,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
             barrierColor: Colors.transparent,
             transitionDuration: const Duration(milliseconds: 150),
             reverseTransitionDuration: const Duration(milliseconds: 150),
+            settings: RouteSettings(name: '/custom_dropdown/$T'),
             transitionsBuilder: (_, animation, __, child) {
               return FadeTransition(
                 opacity: animation,

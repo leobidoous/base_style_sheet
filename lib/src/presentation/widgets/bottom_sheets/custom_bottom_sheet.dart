@@ -10,31 +10,34 @@ class CustomBottomSheet {
   static Future<bool> show(
     BuildContext context,
     Widget child, {
+    EdgeInsets? padding,
+    Color? backgroundColor,
     bool showClose = false,
     bool useSafeArea = true,
     bool isDismissible = true,
+    BoxConstraints? constraints,
+    bool useRootNavigator = true,
     bool allowDismissOnTap = true,
     bool isScrollControlled = true,
-    BoxConstraints? constraints,
-    Color? backgroundColor,
-    EdgeInsets? padding,
+    String routeName = '/custom_bottom_sheet/',
   }) async {
     return await showModalBottomSheet<bool>(
+      elevation: 0,
+      context: context,
+      constraints: constraints,
+      enableDrag: isDismissible,
+      isDismissible: isDismissible,
+      useRootNavigator: useRootNavigator,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: isScrollControlled,
+      barrierColor: Colors.black.withOpacity(0.8),
+      routeSettings: RouteSettings(name: routeName),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
           topLeft: context.theme.borderRadiusMD.topLeft,
           topRight: context.theme.borderRadiusMD.topRight,
         ),
       ),
-      elevation: 0,
-      context: context,
-      useRootNavigator: true,
-      constraints: constraints,
-      enableDrag: isDismissible,
-      isDismissible: isDismissible,
-      backgroundColor: Colors.transparent,
-      isScrollControlled: isScrollControlled,
-      barrierColor: Colors.black.withOpacity(0.8),
       builder: (context) {
         return PopScope(
           canPop: false,

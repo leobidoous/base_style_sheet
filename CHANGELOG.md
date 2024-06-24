@@ -1,3 +1,8 @@
+## 1.2.5
+
+* Update CustomDropdown
+* Update dialog and bottom sheet route names
+
 ## 1.2.4
 
 * Fix cached image view

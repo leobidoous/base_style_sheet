@@ -51,7 +51,10 @@ class CustomCard extends StatelessWidget {
                   Border.all(
                     color: isSelected
                         ? context.colorScheme.primary
-                        : color ?? Colors.grey.shade200,
+                        : color ??
+                            context.colorScheme.onSurface.withOpacity(
+                              .05,
+                            ),
                     width: context.textTheme.lineHeightRegular,
                   ),
               boxShadow: shaddow == null

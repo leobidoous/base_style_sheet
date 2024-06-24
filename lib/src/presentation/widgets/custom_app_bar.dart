@@ -99,7 +99,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
               shape: widget.enableShadow
                   ? UnderlineInputBorder(
                       borderSide: BorderSide(
-                        color: Colors.grey.shade300,
+                        color: context.colorScheme.onSurface.withOpacity(.1),
                         width: .1,
                       ),
                     )
