@@ -1,3 +1,7 @@
+## 1.2.6
+
+* Update custom card widget 
+
 ## 1.2.5
 
 * Update CustomDropdown

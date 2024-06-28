@@ -63,7 +63,7 @@ class CustomCard extends StatelessWidget {
                       ? null
                       : shaddow,
             ),
-            clipBehavior: Clip.antiAliasWithSaveLayer,
+            clipBehavior: Clip.hardEdge,
             child: ClipRRect(
               borderRadius: borderRadius ?? context.theme.borderRadiusMD,
               child: Padding(
