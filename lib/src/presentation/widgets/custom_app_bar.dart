@@ -135,7 +135,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
                   ? Align(
                       child: CustomButton.child(
                         onPressed: widget.onBackTap ??
-                            () => Navigator.of(context).pop(context),
+                            () => Navigator.of(context).pop(),
                         type: ButtonType.noShape,
                         padding: EdgeInsets.zero,
                         heightType: ButtonHeightType.small,

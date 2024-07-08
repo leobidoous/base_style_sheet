@@ -1,3 +1,7 @@
+## 1.2.7
+
+* Update custom app bar widget 
+
 ## 1.2.6
 
 * Update custom card widget 
