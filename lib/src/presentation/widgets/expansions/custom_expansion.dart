@@ -9,7 +9,11 @@ class CustomExpansion<T> extends StatefulWidget {
     super.key,
     this.body,
     this.onTap,
+    this.onForward,
+    this.onReverse,
     required this.title,
+    this.isEnabled = true,
+    this.allowExpand = true,
     this.isSelected = false,
     this.showTrailing = true,
     this.padding = EdgeInsets.zero,
@@ -20,10 +24,14 @@ class CustomExpansion<T> extends StatefulWidget {
 
   final Widget title;
   final Widget? body;
+  final bool isEnabled;
   final bool isSelected;
+  final bool allowExpand;
   final bool showTrailing;
   final EdgeInsets padding;
   final Function()? onTap;
+  final Function()? onForward;
+  final Function()? onReverse;
   final bool allowDismissOnBody;
   final ExpansionState initialState;
   final CrossAxisAlignment crossAxisAlignment;
@@ -76,18 +84,25 @@ class CustomExpansionState<T> extends State<CustomExpansion<T>>
     super.dispose();
   }
 
+  void _onChangeExpansion() {
+    if (!widget.allowExpand) return;
+
+    if (_animationController.isCompleted) {
+      widget.onReverse?.call();
+      _animationController.reverse();
+    } else {
+      widget.onForward?.call();
+      _animationController.forward();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Semantics(
       button: true,
       child: InkWell(
         onTap: () {
-          if (_animationController.isCompleted) {
-            _animationController.reverse();
-          } else {
-            widget.onTap?.call();
-            _animationController.forward();
-          }
+          widget.onTap != null ? widget.onTap!() : _onChangeExpansion();
         },
         focusColor: Colors.transparent,
         hoverColor: Colors.transparent,
@@ -117,14 +132,7 @@ class CustomExpansionState<T> extends State<CustomExpansion<T>>
                         RotationTransition(
                           turns: _rotateAnimation,
                           child: CustomButton.icon(
-                            onPressed: () {
-                              if (_animationController.isCompleted) {
-                                _animationController.reverse();
-                              } else {
-                                widget.onTap?.call();
-                                _animationController.forward();
-                              }
-                            },
+                            onPressed: _onChangeExpansion,
                             heightType: ButtonHeightType.small,
                             type: ButtonType.noShape,
                             icon: switch (widget.initialState) {

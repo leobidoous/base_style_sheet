@@ -1,6 +1,7 @@
 ## 1.2.7
 
 * Update custom app bar widget 
+* Change custom expansion
 
 ## 1.2.6
 

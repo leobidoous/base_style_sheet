@@ -12,6 +12,7 @@ class CustomRadioTile<T> extends StatelessWidget {
     required this.value,
     this.isSelected = false,
     this.padding = EdgeInsets.zero,
+    this.crossAxisAlignment = CrossAxisAlignment.center,
     this.controlAffinity = ListTileControlAffinity.leading,
   });
 
@@ -21,6 +22,7 @@ class CustomRadioTile<T> extends StatelessWidget {
   final Widget? subtitle;
   final Function(T)? onChanged;
   final EdgeInsetsGeometry padding;
+  final CrossAxisAlignment crossAxisAlignment;
   final ListTileControlAffinity controlAffinity;
 
   @override
@@ -35,6 +37,7 @@ class CustomRadioTile<T> extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Row(
+                crossAxisAlignment: crossAxisAlignment,
                 children: [
                   if (controlAffinity == ListTileControlAffinity.leading) ...[
                     _radioCheck(context),
