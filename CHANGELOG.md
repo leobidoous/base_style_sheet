@@ -1,3 +1,7 @@
+## 1.2.8
+
+* Upgrade dependencies
+
 ## 1.2.7
 
 * Update custom app bar widget 
