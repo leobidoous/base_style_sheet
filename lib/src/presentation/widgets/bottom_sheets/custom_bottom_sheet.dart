@@ -20,7 +20,10 @@ class CustomBottomSheet {
     bool allowDismissOnTap = true,
     bool isScrollControlled = true,
     String routeName = '/custom_bottom_sheet/',
+    void Function()? onClose,
+    void Function()? onOpen,
   }) async {
+    onOpen?.call();
     return await showModalBottomSheet<bool>(
       elevation: 0,
       context: context,
@@ -51,7 +54,10 @@ class CustomBottomSheet {
           ),
         );
       },
-    ).then((value) => value == true);
+    ).then((value) {
+      onClose?.call();
+      return value == true;
+    });
   }
 }
 
@@ -78,9 +84,7 @@ class _CustomBottomSheet extends StatelessWidget {
       children: [
         Positioned.fill(
           child: GestureDetector(
-            onTap: allowDismissOnTap
-                ? () => Navigator.of(context).pop(false)
-                : null,
+            onTap: allowDismissOnTap ? () => Navigator.of(context).pop(false) : null,
             child: const ColoredBox(color: Colors.transparent),
           ),
         ),
@@ -134,14 +138,11 @@ class _CustomBottomSheet extends StatelessWidget {
                               children: [
                                 SizedBox(width: AppThemeBase.buttonHeightMD),
                                 Padding(
-                                  padding:
-                                      EdgeInsets.only(top: Spacing.xs.value),
+                                  padding: EdgeInsets.only(top: Spacing.xs.value),
                                   child: DecoratedBox(
                                     decoration: BoxDecoration(
-                                      color:
-                                          context.colorScheme.primaryContainer,
-                                      borderRadius:
-                                          context.theme.borderRadiusMD,
+                                      color: context.colorScheme.primaryContainer,
+                                      borderRadius: context.theme.borderRadiusMD,
                                     ),
                                     child: SizedBox(
                                       height: Spacing.xxs.value,
@@ -167,8 +168,7 @@ class _CustomBottomSheet extends StatelessWidget {
                           ),
                           Flexible(
                             child: Padding(
-                              padding:
-                                  padding ?? EdgeInsets.all(Spacing.md.value),
+                              padding: padding ?? EdgeInsets.all(Spacing.md.value),
                               child: child,
                             ),
                           ),
