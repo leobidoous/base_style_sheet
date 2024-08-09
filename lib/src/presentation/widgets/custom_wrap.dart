@@ -36,8 +36,10 @@ class CustomWrap<T> extends StatelessWidget {
             children: items.map((item) {
               return SizedBox(
                 width: nCols != null
-                    ? (constrains.maxWidth / nCols!) -
-                        ((spacing * (nCols! - 1)) / nCols!).ceil()
+                    ? ((constrains.maxWidth / nCols!) -
+                            ((spacing * (nCols! - 1)) / nCols!))
+                        .floor()
+                        .toDouble()
                     : null,
                 child: item,
               );

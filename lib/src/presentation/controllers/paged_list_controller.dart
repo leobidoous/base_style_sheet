@@ -64,37 +64,45 @@ class PagedListController<E, S> extends ValueNotifier<List<S>> {
     );
   }
 
+  bool _wasDisposed = false;
   final ValueNotifier<E?> _error = ValueNotifier(null);
   final ValueNotifier<bool> _loading = ValueNotifier(false);
+
+  bool get wasDisposed => _wasDisposed;
 
   E? get error => _error.value;
   bool get hasError => _error.value != null;
   void setError(E value) {
-    _loading.value = false;
-    _error.value = value;
-    notifyListeners();
-  }
-
-  void clearError({bool update = false}) {
-    _error.value = null;
-    if (update) {
+    if (!_wasDisposed) {
+      _loading.value = false;
+      _error.value = value;
       notifyListeners();
     }
   }
 
+  void clearError({bool update = false}) {
+    if (_error.value == null) return;
+    _error.value = null;
+    if (update) notifyListeners();
+  }
+
   bool get isLoading => _loading.value;
-  void setLoading(bool value) {
-    _loading.value = value;
-    notifyListeners();
+  void setLoading(bool value, {bool update = true}) {
+    if (!_wasDisposed) {
+      _loading.value = value;
+      if (update) notifyListeners();
+    }
   }
 
   List<S> get state => value;
   void update(List<S> state, {force = false}) {
-    clearError();
-    _loading.value = false;
-    if (value != state || force) {
-      value = state;
-      notifyListeners();
+    if (!_wasDisposed) {
+      clearError();
+      setLoading(false, update: false);
+      if (value != state || force) {
+        value = state;
+        notifyListeners();
+      }
     }
   }
 
@@ -151,5 +159,23 @@ class PagedListController<E, S> extends ValueNotifier<List<S>> {
     }).catchError((error) {
       setError(error);
     }).whenComplete(() => setLoading(false));
+  }
+
+
+  @override
+  void dispose() {
+    try {
+      if (_wasDisposed) {
+        debugPrint('$runtimeType already disposed');
+        return;
+      }
+      debugPrint('$runtimeType has been disposed');
+      _error.dispose();
+      _loading.dispose();
+      _wasDisposed = true;
+    } catch (exception) {
+      debugPrint('$runtimeType already disposed');
+    }
+    super.dispose();
   }
 }

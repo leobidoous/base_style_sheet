@@ -1,3 +1,8 @@
+## 1.2.9
+
+* Fix disposable paged list controller
+* Fix custom wrap
+
 ## 1.2.8
 
 * Upgrade dependencies
