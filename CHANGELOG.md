@@ -1,3 +1,7 @@
+## 1.3.0
+
+* Upgrade version
+
 ## 1.2.9
 
 * Fix disposable paged list controller
