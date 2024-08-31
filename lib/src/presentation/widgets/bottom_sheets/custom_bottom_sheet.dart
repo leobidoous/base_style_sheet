@@ -11,6 +11,7 @@ class CustomBottomSheet {
     BuildContext context,
     Widget child, {
     EdgeInsets? padding,
+    Function()? onClose,
     Color? backgroundColor,
     bool showClose = false,
     bool useSafeArea = true,
@@ -47,6 +48,7 @@ class CustomBottomSheet {
             useSafeArea: useSafeArea,
             showClose: showClose,
             padding: padding,
+            onClose: onClose,
             child: child,
           ),
         );
@@ -59,6 +61,7 @@ class _CustomBottomSheet extends StatelessWidget {
   const _CustomBottomSheet({
     required this.showClose,
     required this.child,
+    this.onClose,
     this.padding,
     this.backgroundColor,
     this.useSafeArea = true,
@@ -68,8 +71,14 @@ class _CustomBottomSheet extends StatelessWidget {
   final bool showClose;
   final bool useSafeArea;
   final EdgeInsets? padding;
+  final Function()? onClose;
   final Color? backgroundColor;
   final bool allowDismissOnTap;
+
+  void _onClose(BuildContext context) {
+    onClose?.call();
+    Navigator.of(context).pop(false);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,9 +87,7 @@ class _CustomBottomSheet extends StatelessWidget {
       children: [
         Positioned.fill(
           child: GestureDetector(
-            onTap: allowDismissOnTap
-                ? () => Navigator.of(context).pop(false)
-                : null,
+            onTap: allowDismissOnTap ? () => _onClose(context) : null,
             child: const ColoredBox(color: Colors.transparent),
           ),
         ),
@@ -158,9 +165,7 @@ class _CustomBottomSheet extends StatelessWidget {
                                     type: ButtonType.noShape,
                                     icon: Icons.close_rounded,
                                     heightType: ButtonHeightType.small,
-                                    onPressed: () => Navigator.of(context).pop(
-                                      false,
-                                    ),
+                                    onPressed: () => _onClose(context),
                                   ),
                               ],
                             ),

@@ -1,3 +1,8 @@
+## 1.3.1
+
+* Add onClose into CustomBottomSheet
+* Add onClose into CustomDialog
+
 ## 1.3.0
 
 * Upgrade version

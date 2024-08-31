@@ -36,10 +36,12 @@ class CustomDialog {
   static Future<bool> show(
     BuildContext context,
     Widget child, {
+    Function()? onClose,
     EdgeInsets? padding,
     bool showClose = true,
     BoxConstraints? constraints,
     bool useRootNavigator = true,
+    bool allowDismissOnTap = true,
     String routeName = '/custom_dialog/',
   }) async {
     return await showGeneralDialog<bool>(
@@ -54,9 +56,11 @@ class CustomDialog {
         return PopScope(
           canPop: false,
           child: _CustomDialog(
-            showClose: showClose,
-            padding: padding,
+            allowDismissOnTap: allowDismissOnTap,
             constraints: constraints,
+            showClose: showClose,
+            onClose: onClose,
+            padding: padding,
             child: child,
           ),
         );
@@ -89,70 +93,91 @@ class CustomDialog {
 
 class _CustomDialog extends StatelessWidget {
   const _CustomDialog({
+    this.allowDismissOnTap = true,
     required this.showClose,
     required this.child,
     this.constraints,
     this.padding,
+    this.onClose,
   });
-  final bool showClose;
   final Widget child;
+  final bool showClose;
+  final Function()? onClose;
   final EdgeInsets? padding;
+  final bool allowDismissOnTap;
   final BoxConstraints? constraints;
+
+  void _onClose(BuildContext context) {
+    onClose?.call();
+    Navigator.of(context).pop(false);
+  }
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Flexible(
-            child: Material(
-              color: Colors.transparent,
-              child: Container(
-                constraints: constraints,
-                decoration: BoxDecoration(
-                  borderRadius: context.theme.borderRadiusMD,
-                  border: Border.all(
-                    color: context.colorScheme.surface,
-                    width: 2,
-                  ),
-                  color: context.colorScheme.surface,
-                  boxShadow: [
-                    BoxShadow(
-                      blurRadius: 5,
-                      spreadRadius: -5,
-                      color: context.colorScheme.surface.withOpacity(0.5),
-                    ),
-                  ],
-                ),
-                padding: padding ?? EdgeInsets.all(const Spacing(2).value),
-                margin: EdgeInsets.all(Spacing.md.value),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    if (showClose)
-                      Align(
-                        alignment: Alignment.topRight,
-                        child: Padding(
-                          padding: EdgeInsets.only(bottom: Spacing.sm.value),
-                          child: CustomButton.icon(
-                            icon: Icons.close_rounded,
-                            type: ButtonType.noShape,
-                            heightType: ButtonHeightType.small,
-                            onPressed: () => Navigator.of(context).pop(false),
-                          ),
-                        ),
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        Positioned.fill(
+          child: GestureDetector(
+            onTap: allowDismissOnTap ? () => _onClose(context) : null,
+            child: const ColoredBox(color: Colors.transparent),
+          ),
+        ),
+        SafeArea(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Flexible(
+                child: Material(
+                  color: Colors.transparent,
+                  child: Container(
+                    constraints: constraints,
+                    decoration: BoxDecoration(
+                      borderRadius: context.theme.borderRadiusMD,
+                      border: Border.all(
+                        color: context.colorScheme.surface,
+                        width: 2,
                       ),
-                    Flexible(child: child),
-                  ],
+                      color: context.colorScheme.surface,
+                      boxShadow: [
+                        BoxShadow(
+                          blurRadius: 5,
+                          spreadRadius: -5,
+                          color: context.colorScheme.surface.withOpacity(0.5),
+                        ),
+                      ],
+                    ),
+                    padding: padding ?? EdgeInsets.all(const Spacing(2).value),
+                    margin: EdgeInsets.all(Spacing.md.value),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        if (showClose)
+                          Align(
+                            alignment: Alignment.topRight,
+                            child: Padding(
+                              padding:
+                                  EdgeInsets.only(bottom: Spacing.sm.value),
+                              child: CustomButton.icon(
+                                icon: Icons.close_rounded,
+                                type: ButtonType.noShape,
+                                onPressed: () => _onClose(context),
+                                heightType: ButtonHeightType.small,
+                              ),
+                            ),
+                          ),
+                        Flexible(child: child),
+                      ],
+                    ),
+                  ),
                 ),
               ),
-            ),
+            ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
