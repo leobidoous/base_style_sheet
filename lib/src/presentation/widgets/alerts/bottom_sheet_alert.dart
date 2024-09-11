@@ -10,7 +10,7 @@ import '../image_view/custom_image.dart';
 class BottomSheetAlert extends StatelessWidget {
   const BottomSheetAlert({
     super.key,
-    required this.title,
+    this.title,
     this.titleStyle,
     this.svgAsset,
     this.asset,
@@ -33,7 +33,7 @@ class BottomSheetAlert extends StatelessWidget {
   final String? asset;
   final Widget? header;
   final String? packageName;
-  final String title;
+  final String? title;
   final TextStyle? titleStyle;
   final String? subtitle;
   final String? content;
@@ -81,11 +81,13 @@ class BottomSheetAlert extends StatelessWidget {
             ),
             Spacing.md.vertical,
           ],
-          Text(
-            title,
-            textAlign: TextAlign.center,
-            style: titleStyle ?? context.textTheme.titleMedium,
-          ),
+          if (title != null) ...[
+            Text(
+              title ?? '',
+              textAlign: TextAlign.center,
+              style: titleStyle ?? context.textTheme.titleMedium,
+            ),
+          ],
           if (subtitle != null) ...[
             Spacing.md.vertical,
             Text(
@@ -102,7 +104,10 @@ class BottomSheetAlert extends StatelessWidget {
               style: context.textTheme.bodyMedium,
             ),
           ],
-          if (contentWidget != null) ...[Spacing.md.vertical, contentWidget!],
+          if (contentWidget != null) ...[
+            Spacing.md.vertical,
+            contentWidget!
+          ],
           if (onCancel != null || onConfirm != null) Spacing.md.vertical,
           switch (buttonsDirection) {
             Axis.horizontal => Row(

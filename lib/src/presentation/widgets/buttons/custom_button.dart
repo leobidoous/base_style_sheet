@@ -2,9 +2,19 @@ import 'package:flutter/material.dart';
 
 import '../../../../base_style_sheet.dart';
 
-enum ButtonType { primary, secondary, tertiary, background, noShape }
+enum ButtonType {
+  primary,
+  secondary,
+  tertiary,
+  background,
+  noShape
+}
 
-enum ButtonHeightType { normal, small }
+enum ButtonHeightType {
+  normal,
+  small,
+  large
+}
 
 class CustomButton extends StatefulWidget {
   factory CustomButton.text({
@@ -34,6 +44,7 @@ class CustomButton extends StatefulWidget {
       isSafe: isSafe,
       child: CustomTooltip(
         verticalOffset: switch (heightType) {
+          ButtonHeightType.large => Spacing.md.value,
           ButtonHeightType.normal => Spacing.md.value,
           ButtonHeightType.small => Spacing.sm.value,
         },
@@ -134,6 +145,7 @@ class CustomButton extends StatefulWidget {
       isSafe: isSafe,
       child: CustomTooltip(
         verticalOffset: switch (heightType) {
+          ButtonHeightType.large => Spacing.md.value,
           ButtonHeightType.normal => Spacing.md.value,
           ButtonHeightType.small => Spacing.sm.value,
         },
@@ -185,6 +197,7 @@ class CustomButton extends StatefulWidget {
       isSafe: isSafe,
       child: CustomTooltip(
         verticalOffset: switch (heightType) {
+          ButtonHeightType.large => Spacing.md.value,
           ButtonHeightType.normal => Spacing.md.value,
           ButtonHeightType.small => Spacing.sm.value,
         },
@@ -251,6 +264,7 @@ class CustomButton extends StatefulWidget {
         return Icon(
           iconData,
           size: switch (heightType) {
+            ButtonHeightType.large => AppFontSize.iconButton.value,
             ButtonHeightType.normal => AppFontSize.iconButton.value,
             ButtonHeightType.small => AppFontSize.iconButton.value * .9,
           },
@@ -288,16 +302,15 @@ class CustomButton extends StatefulWidget {
                   context.textTheme.bodyMedium?.copyWith(
                     fontWeight: AppFontWeight.bold.value,
                     fontSize: switch (heightType) {
+                      ButtonHeightType.large => AppFontSize.bodySmall.value,
                       ButtonHeightType.small => AppFontSize.bodySmall.value,
                       ButtonHeightType.normal => AppFontSize.bodyMedium.value,
                     },
                     color: (context.isDarkMode
                         ? context.colorScheme.onSurface
                         : switch (type) {
-                            ButtonType.secondary =>
-                              context.colorScheme.onSecondary,
-                            ButtonType.tertiary =>
-                              context.colorScheme.onTertiary,
+                            ButtonType.secondary => context.colorScheme.onSecondary,
+                            ButtonType.tertiary => context.colorScheme.onTertiary,
                             ButtonType.primary => context.colorScheme.onPrimary,
                             ButtonType() => context.textTheme.bodyMedium?.color,
                           }),
@@ -323,6 +336,11 @@ class _CustomButtonState extends State<CustomButton> {
           AppThemeBase.buttonHeightSM,
           AppThemeBase.buttonHeightSM,
         );
+      case ButtonHeightType.large:
+        return Size(
+          AppThemeBase.buttonHeightLG,
+          AppThemeBase.buttonHeightLG,
+        );
     }
   }
 
@@ -338,20 +356,10 @@ class _CustomButtonState extends State<CustomButton> {
             shape: WidgetStateProperty.all(
               RoundedRectangleBorder(
                 borderRadius: BorderRadius.only(
-                  topLeft:
-                      (widget.borderRadius ?? context.theme.borderRadiusXLG)
-                          .topLeft,
-                  topRight:
-                      (widget.borderRadius ?? context.theme.borderRadiusXLG)
-                          .topRight,
-                  bottomLeft: widget.isSafe
-                      ? Radius.zero
-                      : (widget.borderRadius ?? context.theme.borderRadiusXLG)
-                          .bottomLeft,
-                  bottomRight: widget.isSafe
-                      ? Radius.zero
-                      : (widget.borderRadius ?? context.theme.borderRadiusXLG)
-                          .bottomRight,
+                  topLeft: (widget.borderRadius ?? context.theme.borderRadiusXLG).topLeft,
+                  topRight: (widget.borderRadius ?? context.theme.borderRadiusXLG).topRight,
+                  bottomLeft: widget.isSafe ? Radius.zero : (widget.borderRadius ?? context.theme.borderRadiusXLG).bottomLeft,
+                  bottomRight: widget.isSafe ? Radius.zero : (widget.borderRadius ?? context.theme.borderRadiusXLG).bottomRight,
                 ),
               ),
             ),
