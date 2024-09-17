@@ -47,6 +47,7 @@ class CustomInputField extends StatefulWidget {
     this.onTap,
     this.fillColor,
     this.buildCounter,
+    this.counterText = '',
     this.readOnly = false,
     this.heightType = InputHeightType.normal,
     this.floatingLabelBehavior = FloatingLabelBehavior.always,
@@ -66,6 +67,7 @@ class CustomInputField extends StatefulWidget {
   final TextInputAction? textInputAction;
   final Function(String)? onChanged;
   final String? initialValue;
+  final String? counterText;
   final String? labelText;
   final Color? fillColor;
   final String? errorText;
@@ -157,94 +159,97 @@ class _CustomInputFieldState extends State<CustomInputField> {
           widget.labelWidget!,
           Spacing.xxxs.vertical,
         ],
-        Opacity(
-          opacity: widget.enabled ? 1 : .5,
-          child: TextFormField(
-            key: widget.key,
-            onTap: widget.onTap,
-            enabled: widget.enabled,
-            maxLines: widget.maxLines,
-            minLines: widget.minLines,
-            readOnly: widget.readOnly,
-            maxLength: widget.maxLength,
-            textAlign: widget.textAlign,
-            focusNode: widget.focusNode,
-            controller: widget.controller,
-            autocorrect: widget.autocorrect,
-            keyboardType: widget.keyboardType,
-            autofillHints: widget.autofillHints,
-            initialValue: widget.initialValue,
-            buildCounter: widget.buildCounter,
-            inputFormatters: widget.inputFormatters,
-            smartDashesType: SmartDashesType.enabled,
-            autovalidateMode: widget.autovalidateMode,
-            onFieldSubmitted: widget.onFieldSubmitted,
-            textAlignVertical: TextAlignVertical.center,
-            enableSuggestions: widget.enableSuggestions,
-            onEditingComplete: widget.onEditingComplete,
-            textCapitalization: widget.textCapitalization,
-            enableInteractiveSelection: widget.enableinteractiveSelection,
-            textInputAction: widget.textInputAction ?? TextInputAction.done,
-            style: context.textTheme.bodyMedium?.copyWith(
-              fontWeight: AppFontWeight.normal.value,
-              fontSize: _fontSize,
-            ),
-            obscureText: widget.obscureText,
-            decoration: InputDecoration(
-              isDense: true,
-              isCollapsed: true,
-              filled: widget.fillColor != null,
-              fillColor: widget.enabled
-                  ? widget.fillColor ?? context.theme.scaffoldBackgroundColor
-                  : (widget.fillColor ?? context.theme.scaffoldBackgroundColor)
-                      .withOpacity(.75),
-              hintStyle: context.textTheme.bodyMedium?.copyWith(
+        Flexible(
+          child: Opacity(
+            opacity: widget.enabled ? 1 : .5,
+            child: TextFormField(
+              key: widget.key,
+              onTap: widget.onTap,
+              enabled: widget.enabled,
+              maxLines: widget.maxLines,
+              minLines: widget.minLines,
+              readOnly: widget.readOnly,
+              maxLength: widget.maxLength,
+              textAlign: widget.textAlign,
+              focusNode: widget.focusNode,
+              controller: widget.controller,
+              autocorrect: widget.autocorrect,
+              keyboardType: widget.keyboardType,
+              autofillHints: widget.autofillHints,
+              initialValue: widget.initialValue,
+              buildCounter: widget.buildCounter,
+              inputFormatters: widget.inputFormatters,
+              smartDashesType: SmartDashesType.enabled,
+              autovalidateMode: widget.autovalidateMode,
+              onFieldSubmitted: widget.onFieldSubmitted,
+              textAlignVertical: TextAlignVertical.center,
+              enableSuggestions: widget.enableSuggestions,
+              onEditingComplete: widget.onEditingComplete,
+              textCapitalization: widget.textCapitalization,
+              enableInteractiveSelection: widget.enableinteractiveSelection,
+              textInputAction: widget.textInputAction ?? TextInputAction.done,
+              style: context.textTheme.bodyMedium?.copyWith(
                 fontWeight: AppFontWeight.normal.value,
-                color: context.textTheme.bodyMedium?.color?.withOpacity(.75),
                 fontSize: _fontSize,
               ),
-              labelStyle: context.textTheme.titleMedium?.copyWith(
-                fontWeight: AppFontWeight.medium.value,
+              obscureText: widget.obscureText,
+              decoration: InputDecoration(
+                isDense: true,
+                isCollapsed: true,
+                filled: widget.fillColor != null,
+                fillColor: widget.enabled
+                    ? widget.fillColor ?? context.theme.scaffoldBackgroundColor
+                    : (widget.fillColor ??
+                            context.theme.scaffoldBackgroundColor)
+                        .withOpacity(.75),
+                hintStyle: context.textTheme.bodyMedium?.copyWith(
+                  fontWeight: AppFontWeight.normal.value,
+                  color: context.textTheme.bodyMedium?.color?.withOpacity(.75),
+                  fontSize: _fontSize,
+                ),
+                labelStyle: context.textTheme.titleMedium?.copyWith(
+                  fontWeight: AppFontWeight.medium.value,
+                ),
+                errorMaxLines: 2,
+                hintText: widget.hintText,
+                labelText: widget.labelText,
+                constraints: _boxConstraints,
+                counterText: widget.counterText,
+                prefix: Text(widget.prefix ?? ''),
+                suffixIconConstraints: _boxConstraints.copyWith(
+                  minWidth: widget.suffixIcon != null
+                      ? _boxConstraints.minWidth
+                      : widget.contentPadding?.right ?? _fontSize,
+                ),
+                prefixIconConstraints: _boxConstraints.copyWith(
+                  minWidth: widget.prefixIcon != null
+                      ? _boxConstraints.minWidth
+                      : widget.contentPadding?.left ?? _fontSize,
+                ),
+                helperStyle: context.textTheme.labelSmall,
+                suffixIcon: widget.suffixIcon ?? SizedBox(width: _fontSize),
+                prefixIcon: widget.prefixIcon ?? SizedBox(width: _fontSize),
+                errorStyle: widget.errorStyle ??
+                    context.textTheme.labelSmall?.copyWith(color: Colors.red),
+                contentPadding: widget.contentPadding ??
+                    EdgeInsets.symmetric(
+                      horizontal: _fontSize,
+                      vertical: widget.maxLines > 1 ? _fontSize : 0,
+                    ),
+                errorText: widget.errorText == '' ? null : widget.errorText,
+                floatingLabelBehavior: widget.floatingLabelBehavior,
+                focusedErrorBorder: _border(Colors.red),
+                disabledBorder: _border(Colors.grey),
+                enabledBorder: _border(Colors.grey),
+                focusedBorder: _border(Colors.grey),
+                errorBorder: _border(Colors.red),
+                border: _border(Colors.grey),
+                alignLabelWithHint: true,
               ),
-              counterText: '',
-              errorMaxLines: 2,
-              hintText: widget.hintText,
-              labelText: widget.labelText,
-              constraints: _boxConstraints,
-              prefix: Text(widget.prefix ?? ''),
-              suffixIconConstraints: _boxConstraints.copyWith(
-                minWidth: widget.suffixIcon != null
-                    ? _boxConstraints.minWidth
-                    : widget.contentPadding?.right ?? _fontSize,
-              ),
-              prefixIconConstraints: _boxConstraints.copyWith(
-                minWidth: widget.prefixIcon != null
-                    ? _boxConstraints.minWidth
-                    : widget.contentPadding?.left ?? _fontSize,
-              ),
-              helperStyle: context.textTheme.labelSmall,
-              suffixIcon: widget.suffixIcon ?? SizedBox(width: _fontSize),
-              prefixIcon: widget.prefixIcon ?? SizedBox(width: _fontSize),
-              errorStyle: widget.errorStyle ??
-                  context.textTheme.labelSmall?.copyWith(color: Colors.red),
-              contentPadding: widget.contentPadding ??
-                  EdgeInsets.symmetric(
-                    horizontal: _fontSize,
-                    vertical: widget.maxLines > 1 ? _fontSize : 0,
-                  ),
-              errorText: widget.errorText == '' ? null : widget.errorText,
-              floatingLabelBehavior: widget.floatingLabelBehavior,
-              focusedErrorBorder: _border(Colors.red),
-              disabledBorder: _border(Colors.grey),
-              enabledBorder: _border(Colors.grey),
-              focusedBorder: _border(Colors.grey),
-              errorBorder: _border(Colors.red),
-              border: _border(Colors.grey),
-              alignLabelWithHint: true,
+              onChanged: widget.onChanged,
+              autofocus: widget.autofocus,
+              validator: widget.validator ?? _validator,
             ),
-            onChanged: widget.onChanged,
-            autofocus: widget.autofocus,
-            validator: widget.validator ?? _validator,
           ),
         ),
       ],

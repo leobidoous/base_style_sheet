@@ -161,7 +161,6 @@ class PagedListController<E, S> extends ValueNotifier<List<S>> {
     }).whenComplete(() => setLoading(false));
   }
 
-
   @override
   void dispose() {
     try {

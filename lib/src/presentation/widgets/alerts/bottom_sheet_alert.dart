@@ -10,7 +10,7 @@ import '../image_view/custom_image.dart';
 class BottomSheetAlert extends StatelessWidget {
   const BottomSheetAlert({
     super.key,
-    required this.title,
+    this.title,
     this.titleStyle,
     this.svgAsset,
     this.asset,
@@ -26,6 +26,8 @@ class BottomSheetAlert extends StatelessWidget {
     this.buttons = const [],
     this.packageName,
     this.header,
+    this.verticalSpacing = Spacing.md,
+    this.horizontalSpacing = Spacing.sm,
     this.buttonsDirection = Axis.vertical,
   });
 
@@ -33,7 +35,7 @@ class BottomSheetAlert extends StatelessWidget {
   final String? asset;
   final Widget? header;
   final String? packageName;
-  final String title;
+  final String? title;
   final TextStyle? titleStyle;
   final String? subtitle;
   final String? content;
@@ -43,6 +45,8 @@ class BottomSheetAlert extends StatelessWidget {
   final bool cancelIsLoading;
   final bool confirmIsLoading;
   final Axis buttonsDirection;
+  final Spacing verticalSpacing;
+  final Spacing horizontalSpacing;
   final List<Widget> buttons;
   final Function()? onConfirm;
   final Function()? onCancel;
@@ -69,7 +73,7 @@ class BottomSheetAlert extends StatelessWidget {
         children: [
           if (header != null) ...[
             header!,
-            Spacing.md.vertical,
+            verticalSpacing.vertical,
           ],
           if (svgAsset != null || asset != null) ...[
             CustomImage(
@@ -79,52 +83,62 @@ class BottomSheetAlert extends StatelessWidget {
               imageSize: Size(double.infinity, 100.responsiveHeight),
               backgroundColor: Colors.transparent,
             ),
-            Spacing.md.vertical,
+            verticalSpacing.vertical,
           ],
-          Text(
-            title,
-            textAlign: TextAlign.center,
-            style: titleStyle ?? context.textTheme.titleMedium,
-          ),
+          if (title != null) ...[
+            Text(
+              title!,
+              textAlign: TextAlign.center,
+              style: titleStyle ?? context.textTheme.titleMedium,
+            ),
+            verticalSpacing.vertical,
+          ],
           if (subtitle != null) ...[
-            Spacing.md.vertical,
             Text(
               subtitle!,
               textAlign: TextAlign.center,
               style: context.textTheme.bodyLarge,
             ),
+            verticalSpacing.vertical,
           ],
           if (content != null) ...[
-            Spacing.md.vertical,
             SelectableText(
               content!,
               textAlign: TextAlign.center,
               style: context.textTheme.bodyMedium,
             ),
+            verticalSpacing.vertical,
           ],
-          if (contentWidget != null) ...[Spacing.md.vertical, contentWidget!],
-          if (onCancel != null || onConfirm != null) Spacing.md.vertical,
-          switch (buttonsDirection) {
-            Axis.horizontal => Row(
-                children: [
-                  if (onCancel != null) ...[
-                    Expanded(child: _cancelButtom),
-                    Spacing.sm.horizontal,
+          if (contentWidget != null) ...[
+            contentWidget!,
+            verticalSpacing.vertical
+          ],
+          ...switch (buttonsDirection) {
+            Axis.horizontal => [
+                Row(
+                  children: [
+                    if (onCancel != null) ...[
+                      Expanded(child: _cancelButtom),
+                      horizontalSpacing.horizontal,
+                    ],
+                    if (onConfirm != null) Expanded(child: _confirmButtom),
                   ],
-                  if (onConfirm != null) Expanded(child: _confirmButtom),
-                ],
-              ),
-            Axis.vertical => Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  if (onConfirm != null) _confirmButtom,
-                  if (onCancel != null) ...[
-                    Spacing.sm.vertical,
-                    _cancelButtom,
+                ),
+                verticalSpacing.vertical
+              ],
+            Axis.vertical => [
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    if (onConfirm != null) _confirmButtom,
+                    if (onCancel != null && onConfirm != null)
+                      verticalSpacing.vertical,
+                    if (onCancel != null) _cancelButtom
                   ],
-                ],
-              ),
+                ),
+                verticalSpacing.vertical
+              ],
           },
           switch (buttonsDirection) {
             Axis.horizontal => Row(
@@ -133,8 +147,8 @@ class BottomSheetAlert extends StatelessWidget {
                       (e) => Expanded(
                         child: Padding(
                           padding: EdgeInsets.only(
-                            top: Spacing.md.value,
-                            right: buttons.last == e ? 0 : Spacing.sm.value,
+                            right:
+                                buttons.last == e ? 0 : horizontalSpacing.value,
                           ),
                           child: e,
                         ),
@@ -145,14 +159,7 @@ class BottomSheetAlert extends StatelessWidget {
             Axis.vertical => Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: buttons
-                    .map(
-                      (e) => Padding(
-                        padding: EdgeInsets.only(top: Spacing.md.value),
-                        child: e,
-                      ),
-                    )
-                    .toList(),
+                children: buttons.map((e) => e).toList(),
               ),
           },
         ],

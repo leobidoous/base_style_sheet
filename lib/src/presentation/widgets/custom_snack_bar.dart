@@ -54,6 +54,7 @@ class CustomSnackBar {
   static void toastShowMessage({
     required BuildContext context,
     required String message,
+    EdgeInsets? padding,
     SnackBarType type = SnackBarType.info,
     TextStyle? style,
     Color? infoColor,
@@ -72,7 +73,7 @@ class CustomSnackBar {
               right: 0,
               child: SafeArea(
                 child: Padding(
-                  padding: EdgeInsets.all(Spacing.md.value),
+                  padding: padding ?? EdgeInsets.all(Spacing.md.value),
                   child: child,
                 ),
               ),

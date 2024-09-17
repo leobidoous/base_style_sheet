@@ -50,11 +50,17 @@ class Spacing {
   /// The scaling factor for gutters and margins
   final int factor;
 
+  /// The scaling factor for gutters and margins
+  static keyboardHeigth(BuildContext context) =>
+      context.mediaQuery.viewInsets.bottom;
+
+  /// The scaling factor for gutters and margins
+  static keyboardIsOpened(BuildContext context) =>
+      context.mediaQuery.viewInsets.bottom != 0;
+
   /// Default Spacing or keyboard padding
   static double orKeyboardPadding(BuildContext context, double value) =>
-      context.mediaQuery.viewInsets.bottom == 0
-          ? value
-          : context.mediaQuery.viewInsets.bottom + value;
+      keyboardIsOpened(context) ? value : keyboardHeigth(context) + value;
 
   /// Binary subtraction operator.
   Spacing operator -(Spacing other) => Spacing(value - other.value);
