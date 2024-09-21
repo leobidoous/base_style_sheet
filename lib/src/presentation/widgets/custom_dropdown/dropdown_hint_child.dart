@@ -1,22 +1,6 @@
 part of 'custom_dropdown.dart';
 
 class _DropdownHintChild<T> extends StatelessWidget {
-  final Widget? icon;
-  final bool readOnly;
-  final bool isLoading;
-  final bool isEnabled;
-  final bool showClear;
-  final bool isExpanded;
-  final Widget? prefixIcon;
-  final String placeholder;
-  final Function() onClear;
-  final TextStyle? itemStyle;
-  final EdgeInsets? childPadding;
-  final DropdownHeightType heightType;
-  final BoxConstraints? boxConstraints;
-  final Animation<double> rotateAnimation;
-  final CustomDropdownItem<T>? itemSelected;
-
   const _DropdownHintChild({
     this.itemStyle,
     this.icon,
@@ -34,6 +18,21 @@ class _DropdownHintChild<T> extends StatelessWidget {
     required this.placeholder,
     required this.rotateAnimation,
   });
+  final Widget? icon;
+  final bool readOnly;
+  final bool isLoading;
+  final bool isEnabled;
+  final bool showClear;
+  final bool isExpanded;
+  final Widget? prefixIcon;
+  final String placeholder;
+  final Function() onClear;
+  final TextStyle? itemStyle;
+  final EdgeInsets? childPadding;
+  final DropdownHeightType heightType;
+  final BoxConstraints? boxConstraints;
+  final Animation<double> rotateAnimation;
+  final CustomDropdownItem<T>? itemSelected;
 
   @override
   Widget build(BuildContext context) {

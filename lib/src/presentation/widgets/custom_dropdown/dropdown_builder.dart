@@ -1,21 +1,6 @@
 part of 'custom_dropdown.dart';
 
 class _DropdownBuilder<T> extends StatelessWidget {
-  final bool isOnTop;
-  final double? width;
-  final Widget hintChild;
-  final EdgeInsets? padding;
-  final String? placeholder;
-  final TextStyle? itemStyle;
-  final EdgeInsets? listPadding;
-  final BoxDecoration? boxDecoration;
-  final TextStyle? itemSelectedStyle;
-  final DropdownHeightType heightType;
-  final ScrollController scrollController;
-  final List<CustomDropdownItem<T>> items;
-  final CustomDropdownItem<T>? itemSelected;
-  final Function(CustomDropdownItem<T>) onChanged;
-
   const _DropdownBuilder({
     super.key,
     this.width,
@@ -33,6 +18,20 @@ class _DropdownBuilder<T> extends StatelessWidget {
     required this.heightType,
     required this.scrollController,
   });
+  final bool isOnTop;
+  final double? width;
+  final Widget hintChild;
+  final EdgeInsets? padding;
+  final String? placeholder;
+  final TextStyle? itemStyle;
+  final EdgeInsets? listPadding;
+  final BoxDecoration? boxDecoration;
+  final TextStyle? itemSelectedStyle;
+  final DropdownHeightType heightType;
+  final ScrollController scrollController;
+  final List<CustomDropdownItem<T>> items;
+  final CustomDropdownItem<T>? itemSelected;
+  final Function(CustomDropdownItem<T>) onChanged;
 
   @override
   Widget build(BuildContext context) {

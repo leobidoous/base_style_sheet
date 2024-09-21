@@ -111,7 +111,7 @@ class BottomSheetAlert extends StatelessWidget {
           ],
           if (contentWidget != null) ...[
             contentWidget!,
-            verticalSpacing.vertical
+            verticalSpacing.vertical,
           ],
           ...switch (buttonsDirection) {
             Axis.horizontal => [
@@ -124,7 +124,8 @@ class BottomSheetAlert extends StatelessWidget {
                     if (onConfirm != null) Expanded(child: _confirmButtom),
                   ],
                 ),
-                verticalSpacing.vertical
+                if (onCancel != null && onConfirm != null)
+                  verticalSpacing.vertical,
               ],
             Axis.vertical => [
                 Column(
@@ -134,10 +135,11 @@ class BottomSheetAlert extends StatelessWidget {
                     if (onConfirm != null) _confirmButtom,
                     if (onCancel != null && onConfirm != null)
                       verticalSpacing.vertical,
-                    if (onCancel != null) _cancelButtom
+                    if (onCancel != null) _cancelButtom,
                   ],
                 ),
-                verticalSpacing.vertical
+                if (onCancel != null && onConfirm != null)
+                  verticalSpacing.vertical,
               ],
           },
           switch (buttonsDirection) {

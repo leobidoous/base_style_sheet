@@ -1,3 +1,15 @@
+## 1.3.7
+
+* Upgrade dependencies
+
+## 1.3.6
+
+* Update BottomSheetAlert
+
+## 1.3.5
+
+* Update BottomSheetAlert
+
 ## 1.3.4
 
 * Update BottomSheetAlert
