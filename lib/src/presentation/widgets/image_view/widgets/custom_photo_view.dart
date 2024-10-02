@@ -42,15 +42,22 @@ import '../../custom_app_bar.dart';
 import '../../errors/custom_request_error.dart';
 
 class CustomPhotoView extends StatefulWidget {
-  const CustomPhotoView({super.key, required this.image, this.url});
-  final ImageProvider image;
+  const CustomPhotoView({
+    super.key,
+    this.url,
+    required this.image,
+    this.actions = const [],
+  });
+
   final String? url;
+  final ImageProvider image;
+  final List<Widget> actions;
 
   @override
   State<CustomPhotoView> createState() => _CustomPhotoViewState();
 
   Future<void> show(BuildContext context) async {
-    Navigator.of(context).push(
+    await Navigator.of(context).push(
       PageRouteBuilder(
         opaque: false,
         barrierDismissible: true,
@@ -74,7 +81,11 @@ class CustomPhotoView extends StatefulWidget {
           );
         },
         pageBuilder: (context, animation, secondaryAnimation) {
-          return CustomPhotoView(image: image, url: url);
+          return CustomPhotoView(
+            actions: actions,
+            image: image,
+            url: url,
+          );
         },
       ),
     );
@@ -83,7 +94,6 @@ class CustomPhotoView extends StatefulWidget {
 
 class _CustomPhotoViewState extends State<CustomPhotoView>
     with SingleTickerProviderStateMixin {
-  _CustomPhotoViewState();
   late final Animation<double> animation;
   late final AnimationController controller;
   final photoController = PhotoViewController();
@@ -122,10 +132,8 @@ class _CustomPhotoViewState extends State<CustomPhotoView>
               child: SizeTransition(
                 sizeFactor: animation,
                 child: CustomAppBar(
-                  leadingIcon: Icon(
-                    Icons.close_rounded,
-                    color: context.theme.iconTheme.color,
-                  ),
+                  actions: widget.actions,
+                  leadingIcon: const Icon(Icons.close_rounded),
                 ),
               ),
             );

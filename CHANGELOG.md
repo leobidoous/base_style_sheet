@@ -1,3 +1,9 @@
+## 1.3.8
+
+* Add CustomPhotoView show
+* Update CustomPdfView show
+* Change default CustomSnackBar padding
+
 ## 1.3.7
 
 * Upgrade dependencies

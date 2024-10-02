@@ -73,7 +73,7 @@ class CustomSnackBar {
               right: 0,
               child: SafeArea(
                 child: Padding(
-                  padding: padding ?? EdgeInsets.all(Spacing.md.value),
+                  padding: padding ?? EdgeInsets.all(Spacing.sm.value),
                   child: child,
                 ),
               ),
