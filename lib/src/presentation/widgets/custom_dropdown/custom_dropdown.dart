@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../base_style_sheet.dart';
 import '../../../core/themes/app_theme_base.dart';
 import '../../../core/themes/app_theme_factory.dart';
 import '../../../core/themes/spacing/spacing.dart';
@@ -62,6 +63,7 @@ class CustomDropdown<T> extends StatefulWidget {
     this.readOnly = false,
     this.itemSelectedStyle,
     this.isLoading = false,
+    this.canSearch = false,
     this.isExpanded = false,
     this.useSafeArea = true,
     this.useParendRenderBox = true,
@@ -71,6 +73,7 @@ class CustomDropdown<T> extends StatefulWidget {
   final bool readOnly;
   final bool isLoading;
   final bool isEnabled;
+  final bool canSearch;
   final bool isExpanded;
   final bool useSafeArea;
   final double? maxHeight;
@@ -217,11 +220,11 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
             },
             pageBuilder: (context, animation, secondaryAnimation) {
               return Material(
+                borderOnForeground: false,
                 color: Colors.transparent,
-                child: InkWell(
-                  onTap: Navigator.of(widget.context).pop,
-                  child: _dropdownBuilder,
-                ),
+                shadowColor: Colors.transparent,
+                surfaceTintColor: Colors.transparent,
+                child: _dropdownBuilder,
               );
             },
           ),
@@ -274,7 +277,17 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
               child: ClipRRect(
                 borderRadius: widget.boxDecoration?.borderRadius ??
                     context.theme.borderRadiusLG,
-                child: _hintChild,
+                child: _hintChild(
+                  () {
+                    setState(() {
+                      if (_valueSelected != null) {
+                        widget.onClear?.call(_valueSelected!.value);
+                      }
+                      _valueSelected = null;
+                      _showClear = false;
+                    });
+                  },
+                ),
               ),
             ),
           ),
@@ -294,6 +307,14 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
           child: Stack(
             fit: StackFit.expand,
             children: [
+              Positioned.fill(
+                child: InkWell(
+                  onTap: Navigator.of(widget.context).pop,
+                  child: Container(
+                    color: Colors.transparent,
+                  ),
+                ),
+              ),
               Positioned(
                 left: _getLeftPosition,
                 top: _getTopPosition(constraints),
@@ -307,7 +328,6 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
                       : MainAxisAlignment.end,
                   children: [
                     Flexible(
-                      key: UniqueKey(),
                       child: Container(
                         decoration: widget.boxDecoration ??
                             BoxDecoration(
@@ -322,6 +342,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
                           child: _DropdownBuilder(
                             width: _size.width,
                             items: widget.items,
+                            canSearch: widget.canSearch,
                             isOnTop: _isOnTop(constraints),
                             boxDecoration: widget.boxDecoration,
                             onChanged: (item) {
@@ -332,7 +353,18 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
                               });
                               Navigator.of(context).pop();
                             },
-                            hintChild: _hintChild,
+                            hintChild: _hintChild(
+                              () {
+                                setState(() {
+                                  if (_valueSelected != null) {
+                                    widget.onClear?.call(_valueSelected!.value);
+                                  }
+                                  _valueSelected = null;
+                                  _showClear = false;
+                                });
+                                Navigator.of(context).pop();
+                              },
+                            ),
                             padding: widget.listPadding,
                             itemStyle: widget.itemStyle,
                             itemSelected: _valueSelected,
@@ -354,17 +386,9 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
     );
   }
 
-  Widget get _hintChild {
+  Widget _hintChild(Function() onClear) {
     return _DropdownHintChild(
-      onClear: () {
-        setState(() {
-          if (_valueSelected != null) {
-            widget.onClear?.call(_valueSelected!.value);
-          }
-          _valueSelected = null;
-          _showClear = false;
-        });
-      },
+      onClear: onClear,
       icon: widget.icon,
       isEnabled: _isEnabled,
       showClear: _showClear,

@@ -1,4 +1,4 @@
-library base_style_sheet;
+library;
 
 export 'package:auto_size_text/auto_size_text.dart';
 export 'package:base_style_sheet/src/core/themes/app_theme_base.dart';

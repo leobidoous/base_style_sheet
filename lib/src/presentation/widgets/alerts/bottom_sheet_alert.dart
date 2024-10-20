@@ -161,7 +161,17 @@ class BottomSheetAlert extends StatelessWidget {
             Axis.vertical => Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: buttons.map((e) => e).toList(),
+                children: buttons
+                    .map(
+                      (b) => Padding(
+                        padding: EdgeInsets.only(
+                          bottom:
+                              buttons.last == b ? 0 : horizontalSpacing.value,
+                        ),
+                        child: b,
+                      ),
+                    )
+                    .toList(),
               ),
           },
         ],

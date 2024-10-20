@@ -1,3 +1,8 @@
+## 1.3.9
+
+* Fix BottomSheetAlert
+* Update CustomDropdown
+
 ## 1.3.8
 
 * Add CustomPhotoView show
