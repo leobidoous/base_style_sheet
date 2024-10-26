@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../base_style_sheet.dart';
 import '../../../core/themes/app_theme_base.dart';
 import '../../../core/themes/app_theme_factory.dart';
 import '../../../core/themes/spacing/spacing.dart';
@@ -11,6 +10,7 @@ import '../buttons/custom_button.dart';
 import '../containers/custom_shimmer.dart';
 import '../custom_scroll_content.dart';
 import '../dividers/custom_divider.dart';
+import '../empties/list_empty.dart';
 import '../inputs/custom_input_field.dart';
 import '../inputs/input_label.dart';
 
@@ -277,17 +277,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
               child: ClipRRect(
                 borderRadius: widget.boxDecoration?.borderRadius ??
                     context.theme.borderRadiusLG,
-                child: _hintChild(
-                  () {
-                    setState(() {
-                      if (_valueSelected != null) {
-                        widget.onClear?.call(_valueSelected!.value);
-                      }
-                      _valueSelected = null;
-                      _showClear = false;
-                    });
-                  },
-                ),
+                child: _hintChild,
               ),
             ),
           ),
@@ -310,9 +300,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
               Positioned.fill(
                 child: InkWell(
                   onTap: Navigator.of(widget.context).pop,
-                  child: Container(
-                    color: Colors.transparent,
-                  ),
+                  child: Container(color: Colors.transparent),
                 ),
               ),
               Positioned(
@@ -353,18 +341,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
                               });
                               Navigator.of(context).pop();
                             },
-                            hintChild: _hintChild(
-                              () {
-                                setState(() {
-                                  if (_valueSelected != null) {
-                                    widget.onClear?.call(_valueSelected!.value);
-                                  }
-                                  _valueSelected = null;
-                                  _showClear = false;
-                                });
-                                Navigator.of(context).pop();
-                              },
-                            ),
+                            hintChild: _hintChild,
                             padding: widget.listPadding,
                             itemStyle: widget.itemStyle,
                             itemSelected: _valueSelected,
@@ -386,23 +363,43 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
     );
   }
 
-  Widget _hintChild(Function() onClear) {
-    return _DropdownHintChild(
-      onClear: onClear,
-      icon: widget.icon,
-      isEnabled: _isEnabled,
-      showClear: _showClear,
-      readOnly: widget.readOnly,
-      itemStyle: widget.itemStyle,
-      prefixIcon: widget.prefixIcon,
-      isLoading: widget.isLoading,
-      itemSelected: _valueSelected,
-      heightType: widget.heightType,
-      isExpanded: widget.isExpanded,
-      placeholder: widget.placeholder,
-      rotateAnimation: _rotateAnimation,
-      childPadding: widget.childPadding,
-      boxConstraints: widget.boxConstraints,
+  Widget get _hintChild {
+    return InkWell(
+      onTap: !_animationController.isForwardOrCompleted
+          ? null
+          : () {
+              if (_animationController.isForwardOrCompleted) {
+                Navigator.of(context).pop();
+              }
+            },
+      child: _DropdownHintChild(
+        onClear: () {
+          setState(() {
+            if (_valueSelected != null) {
+              widget.onClear?.call(_valueSelected!.value);
+            }
+            _valueSelected = null;
+            _showClear = false;
+          });
+          if (_animationController.isForwardOrCompleted) {
+            Navigator.of(context).pop();
+          }
+        },
+        icon: widget.icon,
+        isEnabled: _isEnabled,
+        showClear: _showClear,
+        readOnly: widget.readOnly,
+        itemStyle: widget.itemStyle,
+        prefixIcon: widget.prefixIcon,
+        isLoading: widget.isLoading,
+        itemSelected: _valueSelected,
+        heightType: widget.heightType,
+        isExpanded: widget.isExpanded,
+        placeholder: widget.placeholder,
+        rotateAnimation: _rotateAnimation,
+        childPadding: widget.childPadding,
+        boxConstraints: widget.boxConstraints,
+      ),
     );
   }
 }

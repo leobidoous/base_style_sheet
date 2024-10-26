@@ -1,3 +1,12 @@
+## 1.3.11
+
+* Add attr to CustomInputField
+
+## 1.3.10
+
+* Update CustomDropdown
+* Add enabled attr to CustomRadioTile
+
 ## 1.3.9
 
 * Fix BottomSheetAlert

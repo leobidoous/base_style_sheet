@@ -8,6 +8,7 @@ class CustomRadioTile<T> extends StatelessWidget {
     super.key,
     this.subtitle,
     this.onChanged,
+    this.enabled = true,
     required this.title,
     required this.value,
     this.isSelected = false,
@@ -17,6 +18,7 @@ class CustomRadioTile<T> extends StatelessWidget {
   });
 
   final T value;
+  final bool enabled;
   final Widget title;
   final bool isSelected;
   final Widget? subtitle;
@@ -27,31 +29,35 @@ class CustomRadioTile<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Semantics(
-      button: true,
-      child: InkWell(
-        onTap: () => onChanged?.call(value),
-        child: Padding(
-          padding: padding,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Row(
-                crossAxisAlignment: crossAxisAlignment,
-                children: [
-                  if (controlAffinity == ListTileControlAffinity.leading) ...[
-                    _radioCheck(context),
-                    Spacing.xs.horizontal,
+    return Opacity(
+      opacity: enabled ? 1 : .5,
+      child: Semantics(
+        button: true,
+        child: InkWell(
+          onTap: enabled ? () => onChanged?.call(value) : null,
+          child: Padding(
+            padding: padding,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Row(
+                  crossAxisAlignment: crossAxisAlignment,
+                  children: [
+                    if (controlAffinity == ListTileControlAffinity.leading) ...[
+                      _radioCheck(context),
+                      Spacing.xs.horizontal,
+                    ],
+                    Expanded(child: title),
+                    if (controlAffinity ==
+                        ListTileControlAffinity.trailing) ...[
+                      Spacing.xs.horizontal,
+                      _radioCheck(context),
+                    ],
                   ],
-                  Expanded(child: title),
-                  if (controlAffinity == ListTileControlAffinity.trailing) ...[
-                    Spacing.xs.horizontal,
-                    _radioCheck(context),
-                  ],
-                ],
-              ),
-              if (subtitle != null) ...[Spacing.xxs.vertical, subtitle!],
-            ],
+                ),
+                if (subtitle != null) ...[Spacing.xxs.vertical, subtitle!],
+              ],
+            ),
           ),
         ),
       ),
