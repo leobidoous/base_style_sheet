@@ -30,7 +30,6 @@ class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
     this.titleColor,
     this.titleWidget,
     this.leadingIcon,
-    this.bottomChild,
     this.titleSpacing,
     this.leadingWidth,
     this.toolbarHeight,
@@ -48,7 +47,6 @@ class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
   final bool centerTitle;
   final Color? titleColor;
   final bool enableShadow;
-  final Widget? bottomChild;
   final Widget? titleWidget;
   final Widget? leadingIcon;
   final double? titleSpacing;

@@ -92,9 +92,11 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
                     ),
                   ),
                 ),
-                Transform.translate(
-                  offset: Offset(0.0, _offsetToArmed * controller.value),
-                  child: child,
+                ClipRRect(
+                  child: Transform.translate(
+                    offset: Offset(0.0, _offsetToArmed * controller.value),
+                    child: child,
+                  ),
                 ),
               ],
             );

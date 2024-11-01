@@ -6,12 +6,13 @@ class _DropdownBuilder<T> extends StatefulWidget {
     this.width,
     this.padding,
     this.itemStyle,
+    this.value = '',
     this.listPadding,
     this.placeholder,
-    this.itemSelected,
     this.boxDecoration,
     required this.items,
     required this.isOnTop,
+    required this.fontSize,
     this.canSearch = false,
     this.itemSelectedStyle,
     required this.hintChild,
@@ -20,8 +21,10 @@ class _DropdownBuilder<T> extends StatefulWidget {
     required this.scrollController,
   });
   final bool isOnTop;
+  final String value;
   final double? width;
   final bool canSearch;
+  final double fontSize;
   final Widget hintChild;
   final EdgeInsets? padding;
   final String? placeholder;
@@ -32,7 +35,6 @@ class _DropdownBuilder<T> extends StatefulWidget {
   final DropdownHeightType heightType;
   final ScrollController scrollController;
   final List<CustomDropdownItem<T>> items;
-  final CustomDropdownItem<T>? itemSelected;
   final Function(CustomDropdownItem<T>) onChanged;
 
   @override
@@ -64,52 +66,21 @@ class _DropdownBuilderState<T> extends State<_DropdownBuilder<T>> {
         if (widget.isOnTop) ...[
           widget.hintChild,
           const CustomDivider(height: 0),
+          _searchField,
         ],
-        if (widget.canSearch)
-          Padding(
-            padding: widget.padding ?? EdgeInsets.all(Spacing.xs.value),
-            child: CustomInputField(
-              controller: _textController,
-              hintText: widget.placeholder,
-              onChanged: (p0) {
-                setState(() {});
-              },
-              suffixIcon: AnimatedScale(
-                scale: _textController.text.isNotEmpty ? 1 : 0,
-                duration: const Duration(milliseconds: 250),
-                child: SizedBox(
-                  width: AppThemeBase.buttonHeightMD,
-                  child: Center(
-                    child: CustomButton.icon(
-                      onPressed: () => setState(() {
-                        _textController.clear();
-                      }),
-                      type: ButtonType.noShape,
-                      icon: Icons.close_rounded,
-                      heightType: ButtonHeightType.small,
-                    ),
-                  ),
-                ),
-              ),
-              heightType: InputHeightType.small,
-              borderRadius: widget.boxDecoration?.borderRadius
-                      ?.resolve(TextDirection.ltr) ??
-                  context.theme.borderRadiusSM,
-            ),
-          ),
-        const CustomDivider(height: 0),
         Flexible(
           child: SizedBox(
             width: widget.width,
             child: _filteredItems.isEmpty
                 ? ListEmpty(message: 'Nenhum item encontrado.')
                 : _DropdownList(
+                    value: widget.value,
                     items: _filteredItems,
+                    fontSize: widget.fontSize,
                     onChanged: widget.onChanged,
                     padding: widget.listPadding,
                     itemStyle: widget.itemStyle,
                     heightType: widget.heightType,
-                    itemSelected: widget.itemSelected,
                     scrollController: widget.scrollController,
                     itemSelectedStyle: widget.itemSelectedStyle,
                   ),
@@ -117,9 +88,45 @@ class _DropdownBuilderState<T> extends State<_DropdownBuilder<T>> {
         ),
         if (!widget.isOnTop) ...[
           const CustomDivider(height: 0),
+          _searchField,
+          const CustomDivider(height: 0),
           widget.hintChild,
         ],
       ],
+    );
+  }
+
+  Widget get _searchField {
+    return Padding(
+      padding: widget.padding ?? EdgeInsets.all(Spacing.xs.value),
+      child: CustomInputField(
+        controller: _textController,
+        hintText: widget.placeholder,
+        onChanged: (input) {
+          setState(() {});
+        },
+        suffixIcon: AnimatedScale(
+          scale: _textController.text.isNotEmpty ? 1 : 0,
+          duration: const Duration(milliseconds: 250),
+          child: SizedBox(
+            width: AppThemeBase.buttonHeightMD,
+            child: Center(
+              child: CustomButton.icon(
+                onPressed: () => setState(() {
+                  _textController.clear();
+                }),
+                type: ButtonType.noShape,
+                icon: Icons.close_rounded,
+                heightType: ButtonHeightType.small,
+              ),
+            ),
+          ),
+        ),
+        heightType: InputHeightType.small,
+        borderRadius:
+            widget.boxDecoration?.borderRadius?.resolve(TextDirection.ltr) ??
+                context.theme.borderRadiusSM,
+      ),
     );
   }
 }

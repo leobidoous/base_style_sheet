@@ -1,3 +1,16 @@
+## 1.3.14
+
+* Add padding in CustomDropdown
+
+## 1.3.13
+
+* Fix CustomRefreshIndicator clipBehavior
+
+## 1.3.12
+
+* Add validator in CustomDropdown
+* Add duration attr to CustomSnackBar
+
 ## 1.3.11
 
 * Add attr to CustomInputField

@@ -60,7 +60,7 @@ class Spacing {
 
   /// Default Spacing or keyboard padding
   static double orKeyboardPadding(BuildContext context, double value) =>
-      keyboardIsOpened(context) ? value : keyboardHeigth(context) + value;
+      !keyboardIsOpened(context) ? value : keyboardHeigth(context) + value;
 
   /// Binary subtraction operator.
   Spacing operator -(Spacing other) => Spacing(value - other.value);

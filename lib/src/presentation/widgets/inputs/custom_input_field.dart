@@ -60,9 +60,11 @@ class CustomInputField extends StatefulWidget {
     this.autovalidateMode = AutovalidateMode.onUserInteraction,
   });
 
+  final List<String? Function(String?)>? validators;
+  final Function(PointerDownEvent)? onTapOutside;
   final List<TextInputFormatter>? inputFormatters;
   final TextCapitalization textCapitalization;
-  final List<String? Function(String?)>? validators;
+  final String? Function(String?)? validator;
   final TextEditingController? controller;
   final TextInputType? keyboardType;
   final TextInputAction? textInputAction;
@@ -78,8 +80,6 @@ class CustomInputField extends StatefulWidget {
   final String? prefix;
   final TextAlign textAlign;
   final TextStyle? errorStyle;
-  final String? Function(String?)? validator;
-  final Function(PointerDownEvent)? onTapOutside;
   final FocusNode? focusNode;
   final int? maxLength;
   final int? minLines;
@@ -132,7 +132,7 @@ class _CustomInputFieldState extends State<CustomInputField> {
   }
 
   String? _validator(String? input) {
-    String? error;
+    String? error = widget.validator?.call(input);
     widget.validators?.forEach((val) {
       if (error == null) {
         error = val(input);
@@ -251,7 +251,7 @@ class _CustomInputFieldState extends State<CustomInputField> {
               ),
               onChanged: widget.onChanged,
               autofocus: widget.autofocus,
-              validator: widget.validator ?? _validator,
+              validator: _validator,
             ),
           ),
         ),

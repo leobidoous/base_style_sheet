@@ -20,10 +20,10 @@ import '../custom_scroll_content.dart';
 class ListEmpty extends StatelessWidget {
   const ListEmpty({
     super.key,
-    required this.message,
     this.content,
     this.onPressed,
     this.header,
+    required this.message,
     this.padding = const EdgeInsets.symmetric(vertical: 16),
     this.btnLabel = '',
   });
@@ -67,7 +67,7 @@ class ListEmpty extends StatelessWidget {
               ),
             ),
           ],
-          if (onPressed != null) ...[
+          if (onPressed != null && btnLabel.isNotEmpty) ...[
             Spacing.sm.vertical,
             CustomButton.text(
               onPressed: onPressed,

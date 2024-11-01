@@ -2,23 +2,26 @@ part of 'custom_dropdown.dart';
 
 class _DropdownList<T> extends StatelessWidget {
   const _DropdownList({
+    required this.value,
     required this.items,
     required this.padding,
+    required this.fontSize,
     required this.onChanged,
     required this.itemStyle,
     required this.heightType,
-    required this.itemSelected,
     required this.scrollController,
     required this.itemSelectedStyle,
   });
+  final String value;
+  final double fontSize;
   final EdgeInsets? padding;
   final TextStyle? itemStyle;
   final TextStyle? itemSelectedStyle;
   final DropdownHeightType heightType;
   final ScrollController scrollController;
   final List<CustomDropdownItem<T>> items;
-  final CustomDropdownItem<T>? itemSelected;
   final Function(CustomDropdownItem<T>) onChanged;
+
 
   @override
   Widget build(BuildContext context) {
@@ -57,16 +60,17 @@ class _DropdownList<T> extends StatelessWidget {
                 child: items[index].item ??
                     Padding(
                       padding: padding ??
-                          EdgeInsets.symmetric(horizontal: Spacing.xs.value),
+                          EdgeInsets.symmetric(horizontal: fontSize),
                       child: CustomScrollContent(
                         scrollDirection: Axis.horizontal,
                         child: Text(
                           items[index].label,
-                          style: items[index].value == itemSelected?.value
+                          style: items[index].value == value
                               ? itemSelectedStyle ??
                                   context.textTheme.bodyMedium?.copyWith(
-                                    fontWeight: AppFontWeight.bold.value,
+                                    fontSize: fontSize,
                                     color: context.colorScheme.primary,
+                                    fontWeight: AppFontWeight.bold.value,
                                   )
                               : itemStyle ?? context.textTheme.bodyMedium,
                         ),

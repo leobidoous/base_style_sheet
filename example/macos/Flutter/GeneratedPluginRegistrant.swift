@@ -8,7 +8,7 @@ import Foundation
 import device_info_plus
 import file_selector_macos
 import path_provider_foundation
-import sqflite
+import sqflite_darwin
 import syncfusion_pdfviewer_macos
 import url_launcher_macos
 import webview_flutter_wkwebview

@@ -10,6 +10,7 @@ class CustomSnackBar {
     required BuildContext context,
     required String message,
     SnackBarType type = SnackBarType.info,
+    Duration? duration,
   }) {
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(
@@ -42,7 +43,7 @@ class CustomSnackBar {
           SnackBarType.info => context.colorScheme.secondary,
           SnackBarType.success => context.colorScheme.primary,
         },
-        duration: const Duration(seconds: 5),
+        duration: duration ?? const Duration(seconds: 5),
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(
           borderRadius: context.theme.borderRadiusMD,
@@ -60,12 +61,13 @@ class CustomSnackBar {
     Color? infoColor,
     Color? errorColor,
     Color? successColor,
+    Duration? duration,
   }) {
     FToast().removeQueuedCustomToasts();
     FToast().init(context).showToast(
           isDismissable: true,
           gravity: ToastGravity.TOP,
-          toastDuration: const Duration(seconds: 5),
+          toastDuration: duration ?? const Duration(seconds: 5),
           positionedToastBuilder: (context, child) {
             return Positioned(
               top: 0,

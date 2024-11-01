@@ -49,14 +49,17 @@ class CustomDropdown<T> extends StatefulWidget {
     this.onChange,
     this.prefixIcon,
     this.itemStyle,
-    this.labelWidget,
     this.maxHeight,
+    this.validator,
+    this.value = '',
+    this.validators,
+    this.labelWidget,
     this.listPadding,
     this.childPadding,
     this.boxDecoration,
-    this.initialValue,
     this.boxConstraints,
     required this.items,
+    this.verticalSpacing,
     required this.context,
     this.placeholder = '',
     this.isEnabled = true,
@@ -70,6 +73,7 @@ class CustomDropdown<T> extends StatefulWidget {
     this.heightType = DropdownHeightType.normal,
   });
   final Widget? icon;
+  final String value;
   final bool readOnly;
   final bool isLoading;
   final bool isEnabled;
@@ -86,13 +90,15 @@ class CustomDropdown<T> extends StatefulWidget {
   final InputLabel? labelWidget;
   final bool useParendRenderBox;
   final EdgeInsets? listPadding;
+  final double? verticalSpacing;
   final EdgeInsets? childPadding;
   final TextStyle? itemSelectedStyle;
   final BoxDecoration? boxDecoration;
   final DropdownHeightType heightType;
   final BoxConstraints? boxConstraints;
   final List<CustomDropdownItem<T>> items;
-  final CustomDropdownItem<T>? initialValue;
+  final String? Function(String?)? validator;
+  final List<String? Function(String?)>? validators;
 
   @override
   State<CustomDropdown<T>> createState() => _CustomDropdownState<T>();
@@ -105,18 +111,18 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
   late final Animation<double> _rotateAnimation;
   final _scrollController = ScrollController();
   Offset _parentContextOffset = Offset.zero;
-  CustomDropdownItem<T>? _valueSelected;
   final _key = GlobalKey();
   bool _showClear = false;
   late double _maxHeight;
   late Offset _offset;
+  String _value = '';
   late Size _size;
 
   @override
   void initState() {
     super.initState();
-    _valueSelected = widget.initialValue;
-    _showClear = _valueSelected != null && widget.onClear != null;
+    _value = widget.value;
+    _showClear = _value.isNotEmpty && widget.onClear != null;
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 150),
@@ -134,6 +140,17 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
     _animationController.dispose();
     _scrollController.dispose();
     super.dispose();
+  }
+
+  String? _validator(String? input) {
+    String? error = widget.validator?.call(input);
+    widget.validators?.forEach((val) {
+      if (error == null) {
+        error = val(input);
+        return;
+      }
+    });
+    return error;
   }
 
   void _getWidgetInfos() {
@@ -155,7 +172,9 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
 
   double _getTopPosition(BoxConstraints constraints) {
     late double dy;
-    dy = _isOnTop(constraints) ? _offset.dy : 0;
+    dy = _isOnTop(constraints)
+        ? _offset.dy
+        : (widget.verticalSpacing ?? Spacing.sm.value);
     return dy + (widget.useSafeArea ? _parentContextOffset.dy : 0);
   }
 
@@ -165,7 +184,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
         ? Spacing.keyboardHeigth(context)
         : constraints.maxHeight - _offset.dy - _size.height;
     return (_isOnTop(constraints)
-            ? dy
+            ? dy + (widget.verticalSpacing ?? Spacing.sm.value)
             : Spacing.keyboardHeigth(context) > dy
                 ? Spacing.keyboardHeigth(context)
                 : dy) -
@@ -234,6 +253,15 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
 
   bool get _isEnabled => !widget.isLoading && widget.isEnabled;
 
+  double get _fontSize {
+    switch (widget.heightType) {
+      case DropdownHeightType.normal:
+        return AppFontSize.bodyMedium.value;
+      case DropdownHeightType.small:
+        return AppFontSize.bodySmall.value;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
@@ -257,31 +285,49 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
           ],
         );
       },
-      child: Semantics(
-        key: _key,
-        button: true,
-        child: Opacity(
-          opacity: !_isEnabled ? .5 : 1,
-          child: InkWell(
-            onTap: widget.readOnly || !_isEnabled ? null : _showDropdown,
-            hoverColor: Colors.transparent,
-            splashColor: Colors.transparent,
-            highlightColor: Colors.transparent,
-            child: Container(
-              decoration: widget.boxDecoration ??
-                  BoxDecoration(
-                    color: context.colorScheme.surface,
-                    borderRadius: context.theme.borderRadiusLG,
-                    border: Border.all(color: Colors.grey, width: .5),
+      child: FormField<String>(
+        enabled: _isEnabled,
+        initialValue: _value,
+        key: ValueKey(_value),
+        validator: _validator,
+        forceErrorText: _validator(_value),
+        builder: (context) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Semantics(
+                key: _key,
+                button: true,
+                child: Opacity(
+                  opacity: !_isEnabled ? .5 : 1,
+                  child: InkWell(
+                    onTap:
+                        widget.readOnly || !_isEnabled ? null : _showDropdown,
+                    hoverColor: Colors.transparent,
+                    splashColor: Colors.transparent,
+                    highlightColor: Colors.transparent,
+                    child: _container(child: _hintChild),
                   ),
-              child: ClipRRect(
-                borderRadius: widget.boxDecoration?.borderRadius ??
-                    context.theme.borderRadiusLG,
-                child: _hintChild,
+                ),
               ),
-            ),
-          ),
-        ),
+              if (context.hasError) ...[
+                Padding(
+                  padding: EdgeInsets.only(
+                    top: Spacing.xxs.value,
+                    left: widget.childPadding?.left ?? Spacing.xs.value,
+                    right: widget.childPadding?.right ?? Spacing.xs.value,
+                  ),
+                  child: Text(
+                    context.errorText ?? '',
+                    style: context.context.textTheme.labelSmall?.copyWith(
+                      color: Colors.red,
+                    ),
+                  ),
+                ),
+              ],
+            ],
+          );
+        },
       ),
     );
   }
@@ -316,40 +362,39 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
                       : MainAxisAlignment.end,
                   children: [
                     Flexible(
-                      child: Container(
-                        decoration: widget.boxDecoration ??
-                            BoxDecoration(
-                              color: context.colorScheme.surface,
-                              borderRadius: context.theme.borderRadiusLG,
-                              border: Border.all(color: Colors.grey, width: .5),
-                            ),
-                        constraints: BoxConstraints(maxHeight: _maxHeight),
-                        child: ClipRRect(
-                          borderRadius: widget.boxDecoration?.borderRadius ??
-                              context.theme.borderRadiusLG,
-                          child: _DropdownBuilder(
-                            width: _size.width,
-                            items: widget.items,
-                            canSearch: widget.canSearch,
-                            isOnTop: _isOnTop(constraints),
-                            boxDecoration: widget.boxDecoration,
-                            onChanged: (item) {
-                              setState(() {
-                                _valueSelected = item;
-                                widget.onChange?.call(item.value);
-                                if (widget.onClear != null) _showClear = true;
-                              });
-                              Navigator.of(context).pop();
-                            },
-                            hintChild: _hintChild,
-                            padding: widget.listPadding,
-                            itemStyle: widget.itemStyle,
-                            itemSelected: _valueSelected,
-                            heightType: widget.heightType,
-                            placeholder: widget.placeholder,
-                            scrollController: _scrollController,
-                            itemSelectedStyle: widget.itemSelectedStyle,
-                          ),
+                      child: _container(
+                        maxHeight: _maxHeight,
+                        child: _DropdownBuilder(
+                          value: _value,
+                          width: _size.width,
+                          items: widget.items,
+                          fontSize: _fontSize,
+                          canSearch: widget.canSearch,
+                          isOnTop: _isOnTop(constraints),
+                          boxDecoration: widget.boxDecoration ??
+                              BoxDecoration(
+                                color: context.colorScheme.surface,
+                                borderRadius: context.theme.borderRadiusLG,
+                                border: Border.all(
+                                  color: Colors.grey,
+                                  width: .5,
+                                ),
+                              ),
+                          onChanged: (item) {
+                            setState(() {
+                              _value = item.label;
+                              widget.onChange?.call(item.value);
+                              if (widget.onClear != null) _showClear = true;
+                            });
+                            Navigator.of(context).pop();
+                          },
+                          hintChild: _hintChild,
+                          padding: widget.listPadding,
+                          itemStyle: widget.itemStyle,
+                          heightType: widget.heightType,
+                          placeholder: widget.placeholder,
+                          scrollController: _scrollController,
+                          itemSelectedStyle: widget.itemSelectedStyle,
                         ),
                       ),
                     ),
@@ -360,6 +405,28 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
           ),
         );
       },
+    );
+  }
+
+  Widget _container({
+    required Widget child,
+    double? maxHeight,
+  }) {
+    return Container(
+      decoration: widget.boxDecoration ??
+          BoxDecoration(
+            color: context.colorScheme.surface,
+            borderRadius: context.theme.borderRadiusLG,
+            border: Border.all(color: Colors.grey, width: .5),
+          ),
+      constraints: BoxConstraints(
+        maxHeight: maxHeight ?? AppThemeBase.buttonHeightMD,
+      ),
+      child: ClipRRect(
+        borderRadius:
+            widget.boxDecoration?.borderRadius ?? context.theme.borderRadiusLG,
+        child: child,
+      ),
     );
   }
 
@@ -375,24 +442,22 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
       child: _DropdownHintChild(
         onClear: () {
           setState(() {
-            if (_valueSelected != null) {
-              widget.onClear?.call(_valueSelected!.value);
-            }
-            _valueSelected = null;
             _showClear = false;
+            _value = '';
           });
           if (_animationController.isForwardOrCompleted) {
             Navigator.of(context).pop();
           }
         },
+        value: _value,
         icon: widget.icon,
+        fontSize: _fontSize,
         isEnabled: _isEnabled,
         showClear: _showClear,
         readOnly: widget.readOnly,
         itemStyle: widget.itemStyle,
         prefixIcon: widget.prefixIcon,
         isLoading: widget.isLoading,
-        itemSelected: _valueSelected,
         heightType: widget.heightType,
         isExpanded: widget.isExpanded,
         placeholder: widget.placeholder,

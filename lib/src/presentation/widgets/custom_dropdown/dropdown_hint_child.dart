@@ -2,13 +2,14 @@ part of 'custom_dropdown.dart';
 
 class _DropdownHintChild<T> extends StatelessWidget {
   const _DropdownHintChild({
-    this.itemStyle,
     this.icon,
+    this.itemStyle,
     this.prefixIcon,
+    this.value = '',
     this.childPadding,
-    this.itemSelected,
     this.boxConstraints,
     required this.onClear,
+    required this.fontSize,
     required this.readOnly,
     required this.showClear,
     required this.isLoading,
@@ -19,10 +20,12 @@ class _DropdownHintChild<T> extends StatelessWidget {
     required this.rotateAnimation,
   });
   final Widget? icon;
+  final String value;
   final bool readOnly;
   final bool isLoading;
   final bool isEnabled;
   final bool showClear;
+  final double fontSize;
   final bool isExpanded;
   final Widget? prefixIcon;
   final String placeholder;
@@ -32,19 +35,18 @@ class _DropdownHintChild<T> extends StatelessWidget {
   final DropdownHeightType heightType;
   final BoxConstraints? boxConstraints;
   final Animation<double> rotateAnimation;
-  final CustomDropdownItem<T>? itemSelected;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: childPadding ?? EdgeInsets.only(left: Spacing.xs.value),
+      padding: childPadding ?? EdgeInsets.only(left: fontSize),
       constraints: boxConstraints ??
           BoxConstraints(
             minHeight: switch (heightType) {
               DropdownHeightType.normal => AppThemeBase.buttonHeightMD,
               DropdownHeightType.small => AppThemeBase.buttonHeightSM,
             },
-            maxHeight: context.kSize.height * .45,
+            maxHeight: AppThemeBase.buttonHeightMD,
           ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -95,11 +97,11 @@ class _DropdownHintChild<T> extends StatelessWidget {
               },
               child: showClear
                   ? CustomButton.icon(
-                      onPressed: readOnly || !isEnabled ? null : onClear,
                       type: ButtonType.noShape,
+                      onPressed: readOnly || !isEnabled ? null : onClear,
                       heightType: switch (heightType) {
-                        DropdownHeightType.normal => ButtonHeightType.normal,
                         DropdownHeightType.small => ButtonHeightType.small,
+                        DropdownHeightType.normal => ButtonHeightType.normal,
                       },
                       icon: Icons.close,
                     )
@@ -135,16 +137,18 @@ class _DropdownHintChild<T> extends StatelessWidget {
         alwaysScrollable: true,
         expanded: true,
         child: Text(
-          itemSelected?.label ?? placeholder,
+          value.isNotEmpty ? value : placeholder,
           textAlign: TextAlign.start,
-          style: itemSelected == null
+          style: value.isEmpty
               ? context.textTheme.bodyMedium?.copyWith(
                   fontWeight: AppFontWeight.medium.value,
                   color: Colors.grey,
+                  fontSize: fontSize,
                 )
               : itemStyle ??
                   context.textTheme.bodyMedium?.copyWith(
                     fontWeight: AppFontWeight.medium.value,
+                    fontSize: fontSize,
                   ),
         ),
       ),
