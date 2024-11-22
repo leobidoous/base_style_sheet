@@ -208,7 +208,7 @@ class _PagedListViewState<E, S> extends State<PagedListView<E, S>> {
                 if (items.last == items[index]) ..._errorAndLoading(index),
             ],
           ),
-        Axis() => Column(
+        Axis.vertical => Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [

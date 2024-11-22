@@ -5,6 +5,7 @@ import '../../../core/themes/app_theme_factory.dart';
 import '../../../core/themes/spacing/spacing.dart';
 import '../../extensions/build_context_extensions.dart';
 import '../buttons/custom_button.dart';
+import 'bottom_sheet_drag_icon.dart';
 
 class CustomBottomSheet {
   static Future<bool> show(
@@ -140,22 +141,7 @@ class _CustomBottomSheet extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 SizedBox(width: AppThemeBase.buttonHeightMD),
-                                Padding(
-                                  padding:
-                                      EdgeInsets.only(top: Spacing.xs.value),
-                                  child: DecoratedBox(
-                                    decoration: BoxDecoration(
-                                      color:
-                                          context.colorScheme.primaryContainer,
-                                      borderRadius:
-                                          context.theme.borderRadiusMD,
-                                    ),
-                                    child: SizedBox(
-                                      height: Spacing.xxs.value,
-                                      width: const Spacing(8).value,
-                                    ),
-                                  ),
-                                ),
+                                BottomSheetDragIcon(),
                                 if (!showClose)
                                   SizedBox(
                                     width: AppThemeBase.buttonHeightMD,

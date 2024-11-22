@@ -71,6 +71,7 @@ class CustomDropdown<T> extends StatefulWidget {
     this.useSafeArea = true,
     this.useParendRenderBox = true,
     this.heightType = DropdownHeightType.normal,
+    this.autovalidateMode = AutovalidateMode.disabled,
   });
   final Widget? icon;
   final String value;
@@ -97,6 +98,7 @@ class CustomDropdown<T> extends StatefulWidget {
   final DropdownHeightType heightType;
   final BoxConstraints? boxConstraints;
   final List<CustomDropdownItem<T>> items;
+  final AutovalidateMode autovalidateMode;
   final String? Function(String?)? validator;
   final List<String? Function(String?)>? validators;
 
@@ -111,6 +113,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
   late final Animation<double> _rotateAnimation;
   final _scrollController = ScrollController();
   Offset _parentContextOffset = Offset.zero;
+  bool _canForceValidator = false;
   final _key = GlobalKey();
   bool _showClear = false;
   late double _maxHeight;
@@ -133,6 +136,15 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
     _rotateAnimation = Tween<double>(begin: 1, end: .5).animate(
       _animationController,
     );
+  }
+
+  @override
+  void didUpdateWidget(covariant CustomDropdown<T> oldWidget) {
+    _value = widget.value;
+    if (widget.autovalidateMode != AutovalidateMode.disabled) {
+      _canForceValidator = _value.isEmpty;
+    }
+    super.didUpdateWidget(oldWidget);
   }
 
   @override
@@ -288,9 +300,10 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
       child: FormField<String>(
         enabled: _isEnabled,
         initialValue: _value,
-        key: ValueKey(_value),
         validator: _validator,
-        forceErrorText: _validator(_value),
+        key: ValueKey(_value),
+        autovalidateMode: widget.autovalidateMode,
+        forceErrorText: _canForceValidator ? _validator(_value) : null,
         builder: (context) {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -408,10 +421,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
     );
   }
 
-  Widget _container({
-    required Widget child,
-    double? maxHeight,
-  }) {
+  Widget _container({required Widget child, double? maxHeight}) {
     return Container(
       decoration: widget.boxDecoration ??
           BoxDecoration(

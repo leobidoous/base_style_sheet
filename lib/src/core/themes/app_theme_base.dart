@@ -37,7 +37,7 @@ class AppThemeBase {
   static double get opacityLevelLight => 0.16;
   static double get opacityLevelSemiTransparent => 0.08;
 
-  static BoxShadow get shadowLightmodeLevel0 => const BoxShadow(
+  static BoxShadow get shadowLightmodeLevel0 => BoxShadow(
         color: Color.fromRGBO(164, 176, 190, 0.1),
         blurRadius: 10,
         spreadRadius: 0,

@@ -35,54 +35,55 @@ class CustomImage extends StatelessWidget {
     super.key,
     this.url,
     this.file,
-    this.urlSvg,
-    this.imageSize,
     this.asset,
-    this.svgAsset,
     this.onTap,
-    this.backgroundColor,
+    this.urlSvg,
     this.border,
+    this.headers,
+    this.shaddow,
+    this.svgAsset,
+    this.cacheKey,
+    this.imageSize,
+    this.imageColor,
     this.packageName,
-    this.shaddow = const [],
+    this.placeholder,
+    this.errorBuilder,
+    this.cacheManager,
+    this.memCacheWidth,
+    this.memCacheHeight,
+    this.backgroundColor,
+    this.maxWidthDiskCache,
+    this.maxHeightDiskCache,
     this.fit = BoxFit.contain,
     this.enableGestures = false,
     this.borderRadius = BorderRadius.zero,
-    this.imageColor,
-    this.headers,
-    this.cacheManager,
-    this.cacheKey,
-    this.placeholder,
-    this.memCacheWidth,
-    this.memCacheHeight,
-    this.maxHeightDiskCache,
-    this.maxWidthDiskCache,
-    this.errorBuilder,
   });
 
   final File? file;
   final BoxFit fit;
   final String? url;
-  final String? urlSvg;
-  final String? cacheKey;
   final String? asset;
-  final String? svgAsset;
-  final Size? imageSize;
-  final Color? backgroundColor;
-  final Color? imageColor;
+  final String? urlSvg;
   final Border? border;
-  final BaseCacheManager? cacheManager;
-  final String? packageName;
-  final List<BoxShadow> shaddow;
-  final BorderRadius borderRadius;
-  final bool enableGestures;
+  final Size? imageSize;
+  final String? cacheKey;
+  final String? svgAsset;
+  final Color? imageColor;
   final Function()? onTap;
   final int? memCacheWidth;
+  final bool enableGestures;
   final int? memCacheHeight;
+  final String? packageName;
+  final Color? backgroundColor;
   final int? maxWidthDiskCache;
   final int? maxHeightDiskCache;
+  final List<BoxShadow>? shaddow;
+  final BorderRadius borderRadius;
   final Map<String, String>? headers;
+  final BaseCacheManager? cacheManager;
   final Widget Function(String)? errorBuilder;
   final Widget Function(BuildContext, String)? placeholder;
+
   @override
   Widget build(BuildContext context) {
     late final Widget child;

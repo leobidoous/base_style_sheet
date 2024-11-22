@@ -66,7 +66,7 @@ class _DropdownBuilderState<T> extends State<_DropdownBuilder<T>> {
         if (widget.isOnTop) ...[
           widget.hintChild,
           const CustomDivider(height: 0),
-          _searchField,
+          if (widget.canSearch) _searchField,
         ],
         Flexible(
           child: SizedBox(
@@ -87,8 +87,10 @@ class _DropdownBuilderState<T> extends State<_DropdownBuilder<T>> {
           ),
         ),
         if (!widget.isOnTop) ...[
-          const CustomDivider(height: 0),
-          _searchField,
+          if (widget.canSearch) ...[
+            const CustomDivider(height: 0),
+            _searchField,
+          ],
           const CustomDivider(height: 0),
           widget.hintChild,
         ],

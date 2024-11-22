@@ -17,6 +17,7 @@ export 'package:base_style_sheet/src/presentation/shapes/inverse_border_shape.da
 export 'package:base_style_sheet/src/presentation/widgets/alerts/bottom_sheet_alert.dart';
 export 'package:base_style_sheet/src/presentation/widgets/alerts/custom_alert.dart';
 export 'package:base_style_sheet/src/presentation/widgets/animated_dot.dart';
+export 'package:base_style_sheet/src/presentation/widgets/bottom_sheets/bottom_sheet_drag_icon.dart';
 export 'package:base_style_sheet/src/presentation/widgets/bottom_sheets/custom_bottom_sheet.dart';
 export 'package:base_style_sheet/src/presentation/widgets/buttons/app_bar_button.dart';
 export 'package:base_style_sheet/src/presentation/widgets/buttons/custom_button.dart';
@@ -58,6 +59,7 @@ export 'package:base_style_sheet/src/presentation/widgets/tab_bar/custom_tab_bar
 export 'package:base_style_sheet/src/presentation/widgets/tab_bar/rating_bar.dart';
 export 'package:base_style_sheet/src/presentation/widgets/tab_bar/tab_bar_item.dart';
 export 'package:base_style_sheet/src/presentation/widgets/text_link.dart';
+export 'package:cached_network_image/cached_network_image.dart';
 export 'package:file_picker/file_picker.dart';
 export 'package:flutter_cache_manager/flutter_cache_manager.dart';
 export 'package:image_picker/image_picker.dart';

@@ -22,7 +22,6 @@ class _DropdownList<T> extends StatelessWidget {
   final List<CustomDropdownItem<T>> items;
   final Function(CustomDropdownItem<T>) onChanged;
 
-
   @override
   Widget build(BuildContext context) {
     return RawScrollbar(
@@ -57,11 +56,11 @@ class _DropdownList<T> extends StatelessWidget {
                     DropdownHeightType.small => AppThemeBase.buttonHeightSM,
                   },
                 ),
-                child: items[index].item ??
-                    Padding(
-                      padding: padding ??
-                          EdgeInsets.symmetric(horizontal: fontSize),
-                      child: CustomScrollContent(
+                child: Padding(
+                  padding:
+                      padding ?? EdgeInsets.symmetric(horizontal: fontSize),
+                  child: items[index].item ??
+                      CustomScrollContent(
                         scrollDirection: Axis.horizontal,
                         child: Text(
                           items[index].label,
@@ -75,7 +74,7 @@ class _DropdownList<T> extends StatelessWidget {
                               : itemStyle ?? context.textTheme.bodyMedium,
                         ),
                       ),
-                    ),
+                ),
               ),
             ),
           );

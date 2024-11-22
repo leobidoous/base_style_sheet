@@ -148,7 +148,7 @@ class CustomButton extends StatefulWidget {
               iconColor: iconColor,
               heightType: heightType,
             ),
-            Spacing.xs.horizontal,
+            Spacing.xxs.horizontal,
             Flexible(child: _textValue(text, type: type, textStyle: textStyle)),
           ],
         ),
@@ -194,7 +194,7 @@ class CustomButton extends StatefulWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Flexible(child: _textValue(text, type: type, textStyle: textStyle)),
-            Spacing.xs.horizontal,
+            Spacing.xxs.horizontal,
             _iconValue(
               icon,
               type: type,
@@ -284,6 +284,7 @@ class CustomButton extends StatefulWidget {
               maxLines: 1,
               textAlign: TextAlign.center,
               overflow: TextOverflow.ellipsis,
+              minFontSize: 8,
               style: textStyle ??
                   context.textTheme.bodyMedium?.copyWith(
                     fontWeight: AppFontWeight.bold.value,
@@ -335,6 +336,15 @@ class _CustomButtonState extends State<CustomButton> {
         child: ElevatedButton(
           onPressed: widget.onPressed,
           style: ButtonStyle(
+            backgroundBuilder: (context, states, child) {
+              return ColoredBox(
+                color: switch (widget.type) {
+                  ButtonType.background => context.colorScheme.surface,
+                  ButtonType() => Colors.transparent
+                },
+                child: ColoredBox(color: _backgroundColor, child: child),
+              );
+            },
             shape: WidgetStateProperty.all(
               RoundedRectangleBorder(
                 borderRadius: BorderRadius.only(
@@ -356,10 +366,7 @@ class _CustomButtonState extends State<CustomButton> {
               ),
             ),
             side: WidgetStateProperty.all(
-              BorderSide(
-                color: _borderColor,
-                width: context.theme.borderWidthXS,
-              ),
+              BorderSide(color: _borderColor, width: .5),
             ),
             elevation: WidgetStateProperty.all(4),
             tapTargetSize: MaterialTapTargetSize.shrinkWrap,

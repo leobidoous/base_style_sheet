@@ -38,7 +38,7 @@ enum AppFontSize {
   headlineSmall(24),
   labelLarge(14),
   labelMedium(12),
-  labelSmall(11),
+  labelSmall(10),
   iconButton(24);
 
   const AppFontSize(this._value);

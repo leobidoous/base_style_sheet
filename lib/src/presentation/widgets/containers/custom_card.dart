@@ -53,9 +53,8 @@ class CustomCard extends StatelessWidget {
                         ? context.colorScheme.primary
                         : color ??
                             context.colorScheme.onSurface.withOpacity(
-                              .05,
+                              .01,
                             ),
-                    width: context.textTheme.lineHeightRegular,
                   ),
               boxShadow: shaddow == null
                   ? [context.theme.shadowLightmodeLevel0]
@@ -63,13 +62,9 @@ class CustomCard extends StatelessWidget {
                       ? null
                       : shaddow,
             ),
-            clipBehavior: Clip.hardEdge,
             child: ClipRRect(
               borderRadius: borderRadius ?? context.theme.borderRadiusMD,
-              child: Padding(
-                padding: padding,
-                child: child,
-              ),
+              child: Padding(padding: padding, child: child),
             ),
           ),
         ),

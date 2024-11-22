@@ -1,3 +1,15 @@
+## 1.3.17
+
+* Upgrade package dependencies
+
+## 1.3.16
+
+* export cached_network_image
+
+## 1.3.15
+
+* Add autovalidateMode attr to CustomDropdown
+
 ## 1.3.14
 
 * Add padding in CustomDropdown
