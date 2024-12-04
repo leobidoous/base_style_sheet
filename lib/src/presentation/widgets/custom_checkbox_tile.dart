@@ -12,6 +12,7 @@ class CustomCheckboxTile<T> extends StatelessWidget {
     this.title,
     this.textTitle,
     this.isSelected = false,
+    this.padding = EdgeInsets.zero,
     this.controlAffinity = ListTileControlAffinity.leading,
   });
 
@@ -19,6 +20,7 @@ class CustomCheckboxTile<T> extends StatelessWidget {
   final String? textTitle;
   final bool isSelected;
   final Widget? subtitle;
+  final EdgeInsets padding;
   final Function(bool)? onChanged;
   final ListTileControlAffinity controlAffinity;
 
@@ -29,30 +31,33 @@ class CustomCheckboxTile<T> extends StatelessWidget {
       child: InkWell(
         focusColor: Colors.transparent,
         onTap: () => onChanged?.call(!isSelected),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Row(
-              children: [
-                if (controlAffinity == ListTileControlAffinity.leading) ...[
-                  _boxCheck(context),
-                  Spacing.sm.horizontal,
+        child: Padding(
+          padding: padding,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Row(
+                children: [
+                  if (controlAffinity == ListTileControlAffinity.leading) ...[
+                    _boxCheck(context),
+                    Spacing.sm.horizontal,
+                  ],
+                  Expanded(
+                    child: title ??
+                        Text(
+                          textTitle ?? '',
+                          style: context.textTheme.bodyMedium,
+                        ),
+                  ),
+                  if (controlAffinity == ListTileControlAffinity.trailing) ...[
+                    Spacing.sm.horizontal,
+                    _boxCheck(context),
+                  ],
                 ],
-                Expanded(
-                  child: title ??
-                      Text(
-                        textTitle ?? '',
-                        style: context.textTheme.bodyMedium,
-                      ),
-                ),
-                if (controlAffinity == ListTileControlAffinity.trailing) ...[
-                  Spacing.sm.horizontal,
-                  _boxCheck(context),
-                ],
-              ],
-            ),
-            if (subtitle != null) ...[Spacing.xxs.vertical, subtitle!],
-          ],
+              ),
+              if (subtitle != null) ...[Spacing.xxs.vertical, subtitle!],
+            ],
+          ),
         ),
       ),
     );

@@ -34,6 +34,7 @@ class CustomPinField extends StatefulWidget {
     this.onFieldSubmitted,
     this.inputFormatters = const [],
     this.onComplete,
+    this.fillColor,
     this.readOnly = false,
   });
 
@@ -60,6 +61,7 @@ class CustomPinField extends StatefulWidget {
   final bool readOnly;
   final Function(String)? onComplete;
   final InputLabel? labelWidget;
+  final Color? fillColor;
 
   @override
   State<CustomPinField> createState() => _CustomPinFieldState();
@@ -93,7 +95,7 @@ class _CustomPinFieldState extends State<CustomPinField> {
         textStyle: pinTextStyle,
         decoration: BoxDecoration(
           borderRadius: context.theme.borderRadiusXSM,
-          color: context.theme.scaffoldBackgroundColor,
+          color: widget.fillColor ?? context.colorScheme.surface,
           border: Border.all(color: Colors.grey.shade300, width: 1),
         ),
       );
@@ -102,8 +104,8 @@ class _CustomPinFieldState extends State<CustomPinField> {
         width: const Spacing(7).value,
         height: const Spacing(7).value,
         decoration: BoxDecoration(
-          color: Colors.white,
           border: Border.all(color: context.colorScheme.primary, width: 1),
+          color: widget.fillColor ?? context.colorScheme.surface,
           borderRadius: context.theme.borderRadiusXSM,
         ),
       );
@@ -114,6 +116,7 @@ class _CustomPinFieldState extends State<CustomPinField> {
         textStyle: pinTextStyle,
         decoration: BoxDecoration(
           border: Border.all(color: context.colorScheme.error, width: 1),
+          color: widget.fillColor ?? context.colorScheme.surface,
           borderRadius: context.theme.borderRadiusXSM,
         ),
       );

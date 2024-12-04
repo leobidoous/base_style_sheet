@@ -52,8 +52,9 @@ class _DropdownBuilderState<T> extends State<_DropdownBuilder<T>> {
 
   List<CustomDropdownItem<T>> get _filteredItems => widget.items
       .where(
-        (e) =>
-            e.label.toLowerCase().contains(_textController.text.toLowerCase()),
+        (e) => e.label.toLowerCase().contains(
+              _textController.text.toLowerCase(),
+            ),
       )
       .toList();
 

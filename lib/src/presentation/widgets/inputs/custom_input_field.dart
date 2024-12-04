@@ -201,9 +201,8 @@ class _CustomInputFieldState extends State<CustomInputField> {
                 isCollapsed: true,
                 filled: widget.fillColor != null,
                 fillColor: widget.enabled
-                    ? widget.fillColor ?? context.theme.scaffoldBackgroundColor
-                    : (widget.fillColor ??
-                            context.theme.scaffoldBackgroundColor)
+                    ? widget.fillColor ?? context.colorScheme.surface
+                    : (widget.fillColor ?? context.colorScheme.surface)
                         .withOpacity(.75),
                 hintStyle: context.textTheme.bodyMedium?.copyWith(
                   fontWeight: AppFontWeight.normal.value,

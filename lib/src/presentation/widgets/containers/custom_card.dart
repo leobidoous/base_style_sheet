@@ -40,31 +40,34 @@ class CustomCard extends StatelessWidget {
           hoverColor: Colors.transparent,
           splashColor: Colors.transparent,
           highlightColor: Colors.transparent,
-          child: Container(
-            constraints: constraints,
-            decoration: BoxDecoration(
-              color: isSelected
-                  ? context.colorScheme.primary
-                  : color ?? context.colorScheme.surface,
-              borderRadius: borderRadius ?? context.theme.borderRadiusMD,
-              border: border ??
-                  Border.all(
-                    color: isSelected
-                        ? context.colorScheme.primary
-                        : color ??
-                            context.colorScheme.onSurface.withOpacity(
-                              .01,
-                            ),
-                  ),
-              boxShadow: shaddow == null
-                  ? [context.theme.shadowLightmodeLevel0]
-                  : (shaddow?.isEmpty ?? false)
-                      ? null
-                      : shaddow,
-            ),
-            child: ClipRRect(
-              borderRadius: borderRadius ?? context.theme.borderRadiusMD,
-              child: Padding(padding: padding, child: child),
+          child: AbsorbPointer(
+            absorbing: !isEnabled,
+            child: Container(
+              constraints: constraints,
+              decoration: BoxDecoration(
+                color: isSelected
+                    ? context.colorScheme.primary
+                    : color ?? context.colorScheme.surface,
+                borderRadius: borderRadius ?? context.theme.borderRadiusMD,
+                border: border ??
+                    Border.all(
+                      color: isSelected
+                          ? context.colorScheme.primary
+                          : color ??
+                              context.colorScheme.onSurface.withOpacity(
+                                .01,
+                              ),
+                    ),
+                boxShadow: shaddow == null
+                    ? [context.theme.shadowLightmodeLevel0]
+                    : (shaddow?.isEmpty ?? false)
+                        ? null
+                        : shaddow,
+              ),
+              child: ClipRRect(
+                borderRadius: borderRadius ?? context.theme.borderRadiusMD,
+                child: Padding(padding: padding, child: child),
+              ),
             ),
           ),
         ),

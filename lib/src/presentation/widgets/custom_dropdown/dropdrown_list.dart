@@ -43,11 +43,11 @@ class _DropdownList<T> extends StatelessWidget {
           return Semantics(
             button: true,
             child: InkWell(
-              onTap: () => onChanged(items[index]),
+              radius: Spacing.md.value,
+              hoverColor: Colors.transparent,
               splashColor: Colors.transparent,
               highlightColor: Colors.transparent,
-              hoverColor: Colors.transparent,
-              radius: Spacing.md.value,
+              onTap: () => onChanged(items[index]),
               child: Container(
                 alignment: Alignment.centerLeft,
                 constraints: BoxConstraints(
@@ -64,7 +64,7 @@ class _DropdownList<T> extends StatelessWidget {
                         scrollDirection: Axis.horizontal,
                         child: Text(
                           items[index].label,
-                          style: items[index].value == value
+                          style: items[index].label == value
                               ? itemSelectedStyle ??
                                   context.textTheme.bodyMedium?.copyWith(
                                     fontSize: fontSize,

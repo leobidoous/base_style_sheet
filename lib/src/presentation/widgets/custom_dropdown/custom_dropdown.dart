@@ -387,7 +387,12 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
                           boxDecoration: widget.boxDecoration ??
                               BoxDecoration(
                                 color: context.colorScheme.surface,
-                                borderRadius: context.theme.borderRadiusLG,
+                                borderRadius: switch (widget.heightType) {
+                                  DropdownHeightType.normal =>
+                                    context.theme.borderRadiusLG,
+                                  DropdownHeightType.small =>
+                                    context.theme.borderRadiusMD,
+                                },
                                 border: Border.all(
                                   color: Colors.grey,
                                   width: .5,
@@ -405,6 +410,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
                           padding: widget.listPadding,
                           itemStyle: widget.itemStyle,
                           heightType: widget.heightType,
+                          listPadding: widget.listPadding,
                           placeholder: widget.placeholder,
                           scrollController: _scrollController,
                           itemSelectedStyle: widget.itemSelectedStyle,
@@ -426,15 +432,21 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
       decoration: widget.boxDecoration ??
           BoxDecoration(
             color: context.colorScheme.surface,
-            borderRadius: context.theme.borderRadiusLG,
+            borderRadius: switch (widget.heightType) {
+              DropdownHeightType.normal => context.theme.borderRadiusLG,
+              DropdownHeightType.small => context.theme.borderRadiusMD,
+            },
             border: Border.all(color: Colors.grey, width: .5),
           ),
       constraints: BoxConstraints(
         maxHeight: maxHeight ?? AppThemeBase.buttonHeightMD,
       ),
       child: ClipRRect(
-        borderRadius:
-            widget.boxDecoration?.borderRadius ?? context.theme.borderRadiusLG,
+        borderRadius: widget.boxDecoration?.borderRadius ??
+            switch (widget.heightType) {
+              DropdownHeightType.normal => context.theme.borderRadiusLG,
+              DropdownHeightType.small => context.theme.borderRadiusMD,
+            },
         child: child,
       ),
     );
