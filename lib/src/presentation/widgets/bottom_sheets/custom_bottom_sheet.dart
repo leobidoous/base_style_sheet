@@ -32,8 +32,8 @@ class CustomBottomSheet {
       useRootNavigator: useRootNavigator,
       backgroundColor: Colors.transparent,
       isScrollControlled: isScrollControlled,
-      barrierColor: Colors.black.withOpacity(0.8),
       routeSettings: RouteSettings(name: routeName),
+      barrierColor: Colors.black.withOpacity(0.8),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
           topLeft: context.theme.borderRadiusMD.topLeft,
@@ -118,7 +118,9 @@ class _CustomBottomSheet extends StatelessWidget {
                         BoxShadow(
                           blurRadius: 5,
                           spreadRadius: -5,
-                          color: context.colorScheme.surface.withOpacity(0.5),
+                          color: context.colorScheme.surface.withValues(
+                            alpha: 0.5,
+                          ),
                         ),
                       ],
                     ),

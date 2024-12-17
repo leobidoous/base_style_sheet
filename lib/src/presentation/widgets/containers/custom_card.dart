@@ -54,8 +54,8 @@ class CustomCard extends StatelessWidget {
                       color: isSelected
                           ? context.colorScheme.primary
                           : color ??
-                              context.colorScheme.onSurface.withOpacity(
-                                .01,
+                              context.colorScheme.onSurface.withValues(
+                                alpha: .01,
                               ),
                     ),
                 boxShadow: shaddow == null

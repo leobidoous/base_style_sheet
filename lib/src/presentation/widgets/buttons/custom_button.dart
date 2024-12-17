@@ -20,6 +20,8 @@ class CustomButton extends StatefulWidget {
     EdgeInsets? padding,
     BorderRadius? borderRadius,
     Color? color,
+    Color? loadingPrimaryColor,
+    Color? loadingSecondaryColor,
   }) {
     return CustomButton(
       type: type,
@@ -32,6 +34,8 @@ class CustomButton extends StatefulWidget {
       padding: padding ?? EdgeInsets.symmetric(horizontal: Spacing.sm.value),
       color: color,
       isSafe: isSafe,
+      loadingPrimaryColor: loadingPrimaryColor,
+      loadingSecondaryColor: loadingSecondaryColor,
       child: CustomTooltip(
         verticalOffset: switch (heightType) {
           ButtonHeightType.normal => Spacing.md.value,
@@ -56,6 +60,8 @@ class CustomButton extends StatefulWidget {
     EdgeInsets? padding = EdgeInsets.zero,
     BorderRadius? borderRadius,
     Color? color,
+    Color? loadingPrimaryColor,
+    Color? loadingSecondaryColor,
   }) {
     return CustomButton(
       type: type,
@@ -68,6 +74,8 @@ class CustomButton extends StatefulWidget {
       padding: padding ?? EdgeInsets.symmetric(horizontal: Spacing.sm.value),
       color: color,
       isSafe: isSafe,
+      loadingPrimaryColor: loadingPrimaryColor,
+      loadingSecondaryColor: loadingSecondaryColor,
       child: _iconValue(
         icon,
         type: type,
@@ -89,6 +97,8 @@ class CustomButton extends StatefulWidget {
     Color? color,
     BorderRadius? borderRadius,
     EdgeInsets? padding = EdgeInsets.zero,
+    Color? loadingPrimaryColor,
+    Color? loadingSecondaryColor,
   }) {
     return CustomButton(
       type: type,
@@ -101,6 +111,8 @@ class CustomButton extends StatefulWidget {
       padding: padding ?? EdgeInsets.symmetric(horizontal: Spacing.sm.value),
       color: color,
       isSafe: isSafe,
+      loadingPrimaryColor: loadingPrimaryColor,
+      loadingSecondaryColor: loadingSecondaryColor,
       child: child,
     );
   }
@@ -120,6 +132,8 @@ class CustomButton extends StatefulWidget {
     EdgeInsets? padding,
     BorderRadius? borderRadius,
     Color? color,
+    Color? loadingPrimaryColor,
+    Color? loadingSecondaryColor,
   }) {
     return CustomButton(
       type: type,
@@ -132,6 +146,8 @@ class CustomButton extends StatefulWidget {
       padding: padding ?? EdgeInsets.symmetric(horizontal: Spacing.sm.value),
       color: color,
       isSafe: isSafe,
+      loadingPrimaryColor: loadingPrimaryColor,
+      loadingSecondaryColor: loadingSecondaryColor,
       child: CustomTooltip(
         verticalOffset: switch (heightType) {
           ButtonHeightType.normal => Spacing.md.value,
@@ -171,6 +187,8 @@ class CustomButton extends StatefulWidget {
     EdgeInsets? padding,
     Color? color,
     BorderRadius? borderRadius,
+    Color? loadingPrimaryColor,
+    Color? loadingSecondaryColor,
   }) {
     return CustomButton(
       type: type,
@@ -180,9 +198,11 @@ class CustomButton extends StatefulWidget {
       heightType: heightType,
       isEnabled: isEnabled,
       isLoading: isLoading,
-      padding: padding ?? EdgeInsets.symmetric(horizontal: Spacing.sm.value),
       color: color,
       isSafe: isSafe,
+      loadingPrimaryColor: loadingPrimaryColor,
+      loadingSecondaryColor: loadingSecondaryColor,
+      padding: padding ?? EdgeInsets.symmetric(horizontal: Spacing.sm.value),
       child: CustomTooltip(
         verticalOffset: switch (heightType) {
           ButtonHeightType.normal => Spacing.md.value,
@@ -209,15 +229,17 @@ class CustomButton extends StatefulWidget {
 
   const CustomButton({
     super.key,
-    required this.child,
-    required this.onPressed,
-    this.isEnabled = true,
-    this.padding = EdgeInsets.zero,
-    this.isLoading = false,
-    this.isSafe = false,
     this.color,
     this.alignment,
     this.borderRadius,
+    required this.child,
+    this.isSafe = false,
+    this.isEnabled = true,
+    this.isLoading = false,
+    required this.onPressed,
+    this.loadingPrimaryColor,
+    this.loadingSecondaryColor,
+    this.padding = EdgeInsets.zero,
     this.type = ButtonType.primary,
     this.heightType = ButtonHeightType.normal,
   }) : assert(
@@ -225,17 +247,19 @@ class CustomButton extends StatefulWidget {
           '[type] must be background',
         );
 
-  final Alignment? alignment;
   final Color? color;
-  final ButtonType type;
-  final ButtonHeightType heightType;
-  final Function()? onPressed;
+  final bool isSafe;
   final Widget child;
   final bool isEnabled;
   final bool isLoading;
-  final bool isSafe;
+  final ButtonType type;
   final EdgeInsets padding;
+  final Alignment? alignment;
+  final Function()? onPressed;
+  final Color? loadingPrimaryColor;
   final BorderRadius? borderRadius;
+  final ButtonHeightType heightType;
+  final Color? loadingSecondaryColor;
 
   @override
   State<CustomButton> createState() => _CustomButtonState();
@@ -404,6 +428,8 @@ class _CustomButtonState extends State<CustomButton> {
       duration: const Duration(milliseconds: 500),
       child: widget.isLoading
           ? CustomLoading(
+              primaryColor: widget.loadingPrimaryColor,
+              secondaryColor: widget.loadingSecondaryColor,
               height: const Spacing(1).value,
               width: const Spacing(1).value,
             )

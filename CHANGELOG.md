@@ -1,3 +1,7 @@
+## 1.3.18
+
+* Upgrade package dependencies
+
 ## 1.3.17
 
 * Upgrade package dependencies

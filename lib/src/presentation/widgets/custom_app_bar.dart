@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../../core/themes/app_theme_base.dart';
 import '../../core/themes/app_theme_factory.dart';
 import '../../core/themes/spacing/spacing.dart';
+import '../../core/themes/typography/typography_constants.dart';
 import '../extensions/build_context_extensions.dart';
 import 'buttons/custom_button.dart';
 
@@ -97,7 +98,9 @@ class _CustomAppBarState extends State<CustomAppBar> {
               shape: widget.enableShadow
                   ? UnderlineInputBorder(
                       borderSide: BorderSide(
-                        color: context.colorScheme.onSurface.withOpacity(.1),
+                        color: context.colorScheme.onSurface.withValues(
+                          alpha: .1,
+                        ),
                         width: .1,
                       ),
                     )
@@ -138,7 +141,10 @@ class _CustomAppBarState extends State<CustomAppBar> {
                         padding: EdgeInsets.zero,
                         heightType: ButtonHeightType.small,
                         child: widget.leadingIcon ??
-                            const Icon(Icons.chevron_left_rounded),
+                            Icon(
+                              Icons.chevron_left_rounded,
+                              size: AppFontSize.iconButton.value,
+                            ),
                       ),
                     )
                   : const SizedBox(),
