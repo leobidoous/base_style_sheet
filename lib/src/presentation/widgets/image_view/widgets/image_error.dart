@@ -48,7 +48,7 @@ class _ImageErrorState extends State<ImageError> {
         },
         child: DecoratedBox(
           decoration: BoxDecoration(
-            color: context.colorScheme.primary.withOpacity(.025),
+            color: context.colorScheme.primary.withValues(alpha: .025),
           ),
           child: Icon(
             Icons.image_not_supported_rounded,

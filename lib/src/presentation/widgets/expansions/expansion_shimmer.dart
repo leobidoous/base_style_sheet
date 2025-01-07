@@ -10,8 +10,8 @@ class ExpansionShimmer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomCard(
-      color: Colors.grey.withOpacity(.1),
       padding: EdgeInsets.all(const Spacing(3).value),
+      color: Colors.grey.withValues(alpha: .1),
       child: Row(
         children: [
           CustomShimmer(

@@ -33,7 +33,7 @@ class CustomBottomSheet {
       backgroundColor: Colors.transparent,
       isScrollControlled: isScrollControlled,
       routeSettings: RouteSettings(name: routeName),
-      barrierColor: Colors.black.withOpacity(0.8),
+      barrierColor: Colors.black.withValues(alpha: 0.8),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
           topLeft: context.theme.borderRadiusMD.topLeft,

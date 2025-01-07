@@ -470,18 +470,18 @@ class _CustomButtonState extends State<CustomButton> {
   }
 
   Color get _overlayColor {
-    if (widget.color != null) return widget.color!.withOpacity(.1);
+    if (widget.color != null) return widget.color!.withValues(alpha: .1);
     switch (widget.type) {
       case ButtonType.primary:
-        return context.colorScheme.onPrimary.withOpacity(.1);
+        return context.colorScheme.onPrimary.withValues(alpha: .1);
       case ButtonType.secondary:
-        return context.colorScheme.onSecondary.withOpacity(.1);
+        return context.colorScheme.onSecondary.withValues(alpha: .1);
       case ButtonType.background:
-        return context.colorScheme.onSurface.withOpacity(.1);
+        return context.colorScheme.onSurface.withValues(alpha: .1);
       case ButtonType.noShape:
-        return Colors.transparent.withOpacity(.1);
+        return Colors.transparent.withValues(alpha: .1);
       case ButtonType.tertiary:
-        return context.colorScheme.tertiary.withOpacity(.1);
+        return context.colorScheme.tertiary.withValues(alpha: .1);
     }
   }
 

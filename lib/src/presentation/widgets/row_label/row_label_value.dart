@@ -74,7 +74,9 @@ class RowLabelValue extends StatelessWidget {
                   onTap: onTapTooltip,
                   child: Icon(
                     tooltipIcon ?? Icons.info_outline_rounded,
-                    size: labelStyle?.fontSize ?? defaultStyle?.fontSize,
+                    size: labelStyle?.fontSize ??
+                        defaultStyle?.fontSize ??
+                        AppFontSize.iconButton.value,
                     color: tooltipIconColor ??
                         style?.color ??
                         defaultStyleBold?.color,

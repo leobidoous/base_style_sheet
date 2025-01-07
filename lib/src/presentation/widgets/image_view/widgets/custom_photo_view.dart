@@ -37,6 +37,7 @@ import 'package:photo_view/photo_view.dart';
 
 import '../../../../core/themes/app_theme_factory.dart';
 import '../../../../core/themes/spacing/spacing.dart';
+import '../../../../core/themes/typography/typography_constants.dart';
 import '../../../extensions/build_context_extensions.dart';
 import '../../custom_app_bar.dart';
 import '../../errors/custom_request_error.dart';
@@ -133,7 +134,10 @@ class _CustomPhotoViewState extends State<CustomPhotoView>
                 sizeFactor: animation,
                 child: CustomAppBar(
                   actions: widget.actions,
-                  leadingIcon: const Icon(Icons.close_rounded),
+                  leadingIcon: Icon(
+                    Icons.close_rounded,
+                    size: AppFontSize.iconButton.value,
+                  ),
                 ),
               ),
             );

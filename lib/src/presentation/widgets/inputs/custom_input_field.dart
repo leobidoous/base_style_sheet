@@ -203,10 +203,11 @@ class _CustomInputFieldState extends State<CustomInputField> {
                 fillColor: widget.enabled
                     ? widget.fillColor ?? context.colorScheme.surface
                     : (widget.fillColor ?? context.colorScheme.surface)
-                        .withOpacity(.75),
+                        .withValues(alpha: .75),
                 hintStyle: context.textTheme.bodyMedium?.copyWith(
                   fontWeight: AppFontWeight.normal.value,
-                  color: context.textTheme.bodyMedium?.color?.withOpacity(.75),
+                  color: context.textTheme.bodyMedium?.color
+                      ?.withValues(alpha: .75),
                   fontSize: _fontSize,
                 ),
                 labelStyle: context.textTheme.titleMedium?.copyWith(

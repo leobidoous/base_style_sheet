@@ -24,6 +24,7 @@ class CustomSnackBar {
                 SnackBarType.error => Icons.error,
               },
               color: Theme.of(context).colorScheme.surface,
+              size: AppFontSize.iconButton.value,
             ),
             Spacing.sm.horizontal,
             Expanded(
@@ -97,6 +98,7 @@ class CustomSnackBar {
                     SnackBarType.info => Icons.info_rounded,
                     SnackBarType.success => Icons.check_circle_outline_rounded,
                   },
+                  size: AppFontSize.iconButton.value,
                   color: style?.color ??
                       switch (type) {
                         SnackBarType.info => Colors.black,

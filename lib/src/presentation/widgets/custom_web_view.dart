@@ -15,13 +15,19 @@ class CustomWebView extends StatefulWidget {
     required this.url,
     this.onProgress,
     this.onUrlChange,
+    this.onPageStarted,
+    this.onPageFinished,
+    this.onWebResourceError,
     this.onNavigationRequest,
     this.onJavaScriptChannels,
   });
 
   final String url;
   final void Function(int)? onProgress;
+  final void Function(String)? onPageStarted;
   final void Function(UrlChange)? onUrlChange;
+  final void Function(String)? onPageFinished;
+  final void Function(WebResourceError)? onWebResourceError;
   final Map<String, void Function(JavaScriptMessage)?>? onJavaScriptChannels;
   final FutureOr<NavigationDecision> Function(NavigationRequest)?
       onNavigationRequest;
@@ -68,23 +74,29 @@ class CustomWebViewState extends State<CustomWebView> {
             }
             widget.onProgress?.call(progress);
           },
-          onPageStarted: (String url) {
-            debugPrint('Page started loading: $url');
-          },
-          onPageFinished: (String url) async {
-            debugPrint('Page finished loading: $url');
-          },
-          onWebResourceError: (WebResourceError error) {
-            debugPrint('''
+          onPageStarted: widget.onPageStarted ??
+              (String url) {
+                debugPrint('Page started loading: $url');
+              },
+          onPageFinished: widget.onPageFinished ??
+              (String url) {
+                debugPrint('Page finished loading: $url');
+              },
+          onWebResourceError: widget.onWebResourceError ??
+              (WebResourceError error) {
+                debugPrint('''
               Page resource error:
               code: ${error.errorCode}
               description: ${error.description}
               errorType: ${error.errorType}
               isForMainFrame: ${error.isForMainFrame}
           ''');
-          },
+              },
           onNavigationRequest: widget.onNavigationRequest,
-          onUrlChange: widget.onUrlChange,
+          onUrlChange: widget.onUrlChange ??
+              (UrlChange change) {
+                debugPrint('Url changed: ${change.url}');
+              },
         ),
       )
       ..loadRequest(Uri.parse(widget.url));

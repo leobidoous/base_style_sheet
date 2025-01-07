@@ -7,9 +7,9 @@ import '../../extensions/build_context_extensions.dart';
 class CustomShimmer extends StatelessWidget {
   const CustomShimmer({
     super.key,
-    this.width = double.infinity,
-    required this.height,
     this.borderRadius,
+    required this.height,
+    this.width = double.infinity,
   });
 
   final double width;
@@ -20,7 +20,7 @@ class CustomShimmer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Shimmer.fromColors(
       highlightColor: context.theme.cardColor,
-      baseColor: context.theme.cardColor.withOpacity(.5),
+      baseColor: context.theme.cardColor.withValues(alpha: .5),
       child: Container(
         decoration: BoxDecoration(
           color: context.colorScheme.surface,

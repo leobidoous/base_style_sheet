@@ -48,7 +48,7 @@ class CustomDialog {
       context: context,
       barrierDismissible: false,
       useRootNavigator: useRootNavigator,
-      barrierColor: Colors.black.withOpacity(0.8),
+      barrierColor: Colors.black.withValues(alpha: 0.8),
       routeSettings: RouteSettings(name: routeName),
       transitionDuration: const Duration(milliseconds: 250),
       barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
@@ -144,7 +144,8 @@ class _CustomDialog extends StatelessWidget {
                         BoxShadow(
                           blurRadius: 5,
                           spreadRadius: -5,
-                          color: context.colorScheme.surface.withOpacity(0.5),
+                          color: context.colorScheme.surface
+                              .withValues(alpha: 0.5),
                         ),
                       ],
                     ),

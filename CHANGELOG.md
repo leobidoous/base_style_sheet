@@ -1,3 +1,8 @@
+## 1.3.19
+
+* Update icon size
+* Add paged list mode
+
 ## 1.3.18
 
 * Upgrade package dependencies

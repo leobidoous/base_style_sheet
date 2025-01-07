@@ -82,6 +82,16 @@ class _CustomAppBarState extends State<CustomAppBar> {
           child: DecoratedBox(
             decoration: BoxDecoration(
               color: Colors.transparent,
+              border: widget.enableShadow
+                  ? Border(
+                      bottom: BorderSide(
+                        width: .1,
+                        color: context.colorScheme.onSurface.withValues(
+                          alpha: .1,
+                        ),
+                      ),
+                    )
+                  : null,
               boxShadow: widget.enableShadow
                   ? [context.theme.shadowLightmodeLevel1]
                   : null,

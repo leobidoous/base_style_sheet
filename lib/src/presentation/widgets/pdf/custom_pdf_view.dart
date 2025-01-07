@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 import '../../../core/themes/app_theme_factory.dart';
+import '../../../core/themes/typography/typography_constants.dart';
 import '../../extensions/build_context_extensions.dart';
 import '../custom_app_bar.dart';
 import '../custom_dialog.dart';
@@ -108,7 +109,10 @@ class _CustomPdfViewState extends State<CustomPdfView>
                 sizeFactor: _animation,
                 child: CustomAppBar(
                   actions: widget.actions,
-                  leadingIcon: const Icon(Icons.close_rounded),
+                  leadingIcon: Icon(
+                    Icons.close_rounded,
+                    size: AppFontSize.iconButton.value,
+                  ),
                 ),
               ),
             );

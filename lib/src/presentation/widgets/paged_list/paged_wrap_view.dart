@@ -9,16 +9,12 @@ import '../../controllers/paged_list_controller.dart';
 import '../../extensions/build_context_extensions.dart';
 import '../custom_loading.dart';
 import '../custom_refresh_indicator.dart';
-import '../custom_wrap.dart';
 import '../empties/list_empty.dart';
 import '../errors/custom_request_error.dart';
 
-enum PagedListMode { normal, wrap }
-
-class PagedListView<E, S> extends StatefulWidget {
-  const PagedListView({
+class PagedWrapView<E, S> extends StatefulWidget {
+  const PagedWrapView({
     super.key,
-    this.nCols = 1,
     this.thickness,
     this.refreshLogo,
     this.scrollController,
@@ -30,7 +26,6 @@ class PagedListView<E, S> extends StatefulWidget {
     this.safeAreaLastItem = true,
     this.padding = EdgeInsets.zero,
     required this.separatorBuilder,
-    this.mode = PagedListMode.normal,
     this.noItemsFoundIndicatorBuilder,
     this.newPageErrorIndicatorBuilder,
     this.firstPageErrorIndicatorBuilder,
@@ -39,10 +34,8 @@ class PagedListView<E, S> extends StatefulWidget {
     this.firstPageProgressIndicatorBuilder,
   });
 
-  final int nCols;
   final bool shrinkWrap;
   final double? thickness;
-  final PagedListMode mode;
   final EdgeInsets padding;
   final String? refreshLogo;
   final bool initWithRequest;
@@ -68,10 +61,10 @@ class PagedListView<E, S> extends StatefulWidget {
   final Widget Function(BuildContext)? firstPageProgressIndicatorBuilder;
 
   @override
-  State<PagedListView<E, S>> createState() => _PagedListViewState<E, S>();
+  State<PagedWrapView<E, S>> createState() => _PagedListViewState<E, S>();
 }
 
-class _PagedListViewState<E, S> extends State<PagedListView<E, S>> {
+class _PagedListViewState<E, S> extends State<PagedWrapView<E, S>> {
   late final ScrollController scrollController;
   late final PagedListController<E, S> controller;
 
@@ -173,40 +166,28 @@ class _PagedListViewState<E, S> extends State<PagedListView<E, S>> {
             thickness: widget.thickness ?? (kIsWeb ? 0 : null),
             controller:
                 widget.parentScrollController == null ? scrollController : null,
-            child: _scrollChild(state),
+            child: ListView.separated(
+              padding: widget.padding,
+              itemCount: state.length,
+              reverse: controller.reverse,
+              addAutomaticKeepAlives: false,
+              separatorBuilder: widget.separatorBuilder,
+              controller: widget.parentScrollController == null
+                  ? scrollController
+                  : null,
+              shrinkWrap: widget.shrinkWrap,
+              scrollDirection: widget.scrollDirection,
+              physics: widget.shrinkWrap
+                  ? const NeverScrollableScrollPhysics()
+                  : const BouncingScrollPhysics(
+                      parent: AlwaysScrollableScrollPhysics(),
+                    ),
+              itemBuilder: (_, index) => _listItem(state, index),
+            ),
           ),
         );
       },
     );
-  }
-
-  Widget _scrollChild(List<S> state) {
-    switch (widget.mode) {
-      case PagedListMode.normal:
-        return ListView.separated(
-          padding: widget.padding,
-          itemCount: state.length,
-          reverse: controller.reverse,
-          addAutomaticKeepAlives: false,
-          separatorBuilder: widget.separatorBuilder,
-          controller:
-              widget.parentScrollController == null ? scrollController : null,
-          shrinkWrap: widget.shrinkWrap,
-          scrollDirection: widget.scrollDirection,
-          physics: widget.shrinkWrap
-              ? const NeverScrollableScrollPhysics()
-              : const BouncingScrollPhysics(
-                  parent: AlwaysScrollableScrollPhysics(),
-                ),
-          itemBuilder: (_, index) => _listItem(state, index),
-        );
-      case PagedListMode.wrap:
-        return CustomWrap(
-          nCols: widget.nCols,
-          padding: widget.padding,
-          items: state.map((i) => _listItem(state, state.indexOf(i))).toList(),
-        );
-    }
   }
 
   Widget _listItem(List<S> items, int index) {

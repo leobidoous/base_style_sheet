@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/themes/spacing/spacing.dart';
+import '../../../core/themes/typography/typography_constants.dart';
 import '../../extensions/build_context_extensions.dart';
 import '../buttons/custom_button.dart';
 import '../custom_scroll_content.dart';
@@ -53,7 +54,7 @@ class CustomRequestError extends StatelessWidget {
                       DecoratedBox(
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Colors.red.withOpacity(.25),
+                          color: Colors.red.withValues(alpha: .25),
                         ),
                         child: Padding(
                           padding: EdgeInsets.all(Spacing.xxs.value),
@@ -67,6 +68,7 @@ class CustomRequestError extends StatelessWidget {
                               child: Icon(
                                 Icons.error_outline_rounded,
                                 color: context.colorScheme.surface,
+                                size: AppFontSize.iconButton.value,
                               ),
                             ),
                           ),

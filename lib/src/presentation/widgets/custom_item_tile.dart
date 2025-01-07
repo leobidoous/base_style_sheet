@@ -25,7 +25,10 @@ class CustomItemTile extends StatelessWidget {
       padding: EdgeInsets.all(const Spacing(2).value),
       child: Row(
         children: [
-          Icon(icon),
+          Icon(
+            icon,
+            size: AppFontSize.iconButton.value,
+          ),
           Spacing.sm.horizontal,
           Expanded(
             child: Text(
@@ -39,7 +42,10 @@ class CustomItemTile extends StatelessWidget {
           ),
           if (icon != null) ...[
             Spacing.sm.horizontal,
-            const Icon(Icons.chevron_right_rounded),
+            Icon(
+              Icons.chevron_right_rounded,
+              size: AppFontSize.iconButton.value,
+            ),
           ],
         ],
       ),

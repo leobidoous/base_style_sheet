@@ -44,7 +44,7 @@ class AppBarButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(
-        right: isLastButtom ? (padding ?? Spacing.md.value) : 0,
+        right: isLastButtom ? (padding ?? Spacing.sm.value) : 0,
       ),
       child: CustomButton.child(
         isEnabled: isEnabled,
