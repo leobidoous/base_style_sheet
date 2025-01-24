@@ -15,7 +15,7 @@ extension BuildContextExt on BuildContext {
   /// Get [MediaQueryData] from current context
   ///
   Size get kSize {
-    return MediaQuery.of(this).size;
+    return MediaQuery.sizeOf(this);
   }
 
   ///

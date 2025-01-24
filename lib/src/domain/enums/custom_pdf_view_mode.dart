@@ -1,0 +1,1 @@
+enum CustomPdfViewMode { page, view }

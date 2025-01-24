@@ -1,3 +1,7 @@
+## 1.3.20
+
+* Update pdf viewer
+
 ## 1.3.19
 
 * Update icon size

@@ -21,13 +21,12 @@ class CustomShimmer extends StatelessWidget {
     return Shimmer.fromColors(
       highlightColor: context.theme.cardColor,
       baseColor: context.theme.cardColor.withValues(alpha: .5),
-      child: Container(
+      child: DecoratedBox(
         decoration: BoxDecoration(
           color: context.colorScheme.surface,
           borderRadius: borderRadius ?? AppThemeBase.borderRadiusXSM,
         ),
-        width: width,
-        height: height,
+        child: SizedBox(width: width, height: height),
       ),
     );
   }

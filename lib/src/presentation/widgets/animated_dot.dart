@@ -8,10 +8,18 @@ import '../extensions/build_context_extensions.dart';
 enum DotState { opened, closed }
 
 class AnimatedDot extends StatefulWidget {
-  const AnimatedDot({super.key, this.onTap, this.selected = false});
+  const AnimatedDot({
+    super.key,
+    this.onTap,
+    this.dotSize,
+    this.dotSizeSelected,
+    this.selected = false,
+  });
 
   final bool selected;
   final Function()? onTap;
+  final Size? dotSize;
+  final Size? dotSizeSelected;
 
   @override
   _AnimatedDotState createState() => _AnimatedDotState();
@@ -70,10 +78,12 @@ class _AnimatedDotState extends State<AnimatedDot>
             curve: Curves.easeIn,
             duration: duration,
             child: SizedBox(
-              height: const Spacing(1).value,
+              height: widget.selected
+                  ? widget.dotSizeSelected?.height ?? const Spacing(1).value
+                  : widget.dotSize?.height ?? const Spacing(1).value,
               width: widget.selected
-                  ? const Spacing(2).value
-                  : const Spacing(1).value,
+                  ? widget.dotSizeSelected?.width ?? const Spacing(2).value
+                  : widget.dotSize?.width ?? const Spacing(1).value,
             ),
           ),
         ),

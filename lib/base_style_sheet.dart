@@ -10,6 +10,8 @@ export 'package:base_style_sheet/src/core/themes/theme_factory.dart';
 export 'package:base_style_sheet/src/core/themes/typography/typography_builder.dart';
 export 'package:base_style_sheet/src/core/themes/typography/typography_constants.dart';
 export 'package:base_style_sheet/src/core/themes/typography/typography_extension.dart';
+export 'package:base_style_sheet/src/domain/enums/custom_pdf_view_mode.dart';
+export 'package:base_style_sheet/src/domain/enums/screen_size_type.dart';
 export 'package:base_style_sheet/src/presentation/controllers/paged_list_controller.dart';
 export 'package:base_style_sheet/src/presentation/extensions/build_context_extensions.dart';
 export 'package:base_style_sheet/src/presentation/shapes/coupom_border_painter.dart';

@@ -18,7 +18,7 @@ class ColumnLabelValue extends StatelessWidget {
     this.labelStyle,
     this.valueStyle,
     this.tooltipIcon,
-    this.spacing = 1,
+    this.spacing,
     this.onTapTooltip,
     this.tooltipIconColor,
     this.crossAxisAlignment = CrossAxisAlignment.start,
@@ -26,8 +26,8 @@ class ColumnLabelValue extends StatelessWidget {
 
   final String label;
   final String value;
-  final double spacing;
   final bool isAllBold;
+  final Spacing? spacing;
   final bool isLabelBold;
   final bool isValueBold;
   final bool showTooltip;
@@ -79,7 +79,7 @@ class ColumnLabelValue extends StatelessWidget {
             ],
           ],
         ),
-        Spacing(spacing).vertical,
+        spacing?.vertical ?? Spacing.xs.vertical,
         Text(
           value,
           style: valueStyle ??

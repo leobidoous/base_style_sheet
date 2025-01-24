@@ -6,6 +6,7 @@ import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 import '../../../core/themes/app_theme_factory.dart';
 import '../../../core/themes/typography/typography_constants.dart';
+import '../../../domain/enums/custom_pdf_view_mode.dart';
 import '../../extensions/build_context_extensions.dart';
 import '../custom_app_bar.dart';
 import '../custom_dialog.dart';
@@ -18,12 +19,14 @@ class CustomPdfView extends StatefulWidget {
     this.file,
     this.headers,
     this.actions = const [],
+    this.viewMode = CustomPdfViewMode.page,
   });
 
   final File? file;
   final String? url;
   final String? asset;
   final List<Widget> actions;
+  final CustomPdfViewMode viewMode;
   final Map<String, String>? headers;
 
   @override
@@ -95,65 +98,76 @@ class _CustomPdfViewState extends State<CustomPdfView>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size(
-          double.infinity,
-          context.theme.appBarTheme.appBarHeight,
-        ),
-        child: AnimatedBuilder(
-          animation: _animationController,
-          builder: (_, child) {
-            return FadeTransition(
-              opacity: _animation,
-              child: SizeTransition(
-                sizeFactor: _animation,
-                child: CustomAppBar(
-                  actions: widget.actions,
-                  leadingIcon: Icon(
-                    Icons.close_rounded,
-                    size: AppFontSize.iconButton.value,
+      appBar: switch (widget.viewMode) {
+        CustomPdfViewMode.page => PreferredSize(
+            preferredSize: Size(
+              double.infinity,
+              context.theme.appBarTheme.appBarHeight,
+            ),
+            child: AnimatedBuilder(
+              animation: _animationController,
+              builder: (_, child) {
+                return FadeTransition(
+                  opacity: _animation,
+                  child: SizeTransition(
+                    sizeFactor: _animation,
+                    child: CustomAppBar(
+                      actions: widget.actions,
+                      leadingIcon: Icon(
+                        Icons.close_rounded,
+                        size: AppFontSize.iconButton.value,
+                      ),
+                    ),
                   ),
-                ),
-              ),
-            );
-          },
-        ),
-      ),
+                );
+              },
+            ),
+          ),
+        CustomPdfViewMode.view => null
+      },
       body: Semantics(
         button: true,
         child: InkWell(
-          onTap: () {
-            if (_animationController.isDismissed) {
-              _animationController.forward();
-              SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
-            } else {
-              _animationController.reverse();
-              SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-            }
+          onTap: switch (widget.viewMode) {
+            CustomPdfViewMode.page => () {
+                if (_animationController.isDismissed) {
+                  _animationController.forward();
+                  SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
+                } else {
+                  _animationController.reverse();
+                  SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+                }
+              },
+            CustomPdfViewMode.view => null,
           },
-          child: Builder(
-            builder: (context) {
-              if (widget.url != null) {
-                return SfPdfViewer.network(
-                  widget.url!,
-                  headers: widget.headers,
-                  controller: _pdfController,
-                  pageLayoutMode: PdfPageLayoutMode.continuous,
-                  onDocumentLoadFailed: (details) async {
-                    await CustomDialog.error(
-                      context,
-                      message: details.description,
-                    ).then((value) => Navigator.of(context).pop());
-                  },
-                );
-              } else if (widget.asset != null) {
-                return SfPdfViewer.asset(widget.asset!);
-              } else if (widget.file != null) {
-                return SfPdfViewer.file(widget.file!);
-              } else {
-                return const SizedBox();
-              }
-            },
+          child: SafeArea(
+            child: Theme(
+              data: context.theme.copyWith(),
+              child: Builder(
+                builder: (context) {
+                  if (widget.url != null) {
+                    return SfPdfViewer.network(
+                      widget.url!,
+                      headers: widget.headers,
+                      controller: _pdfController,
+                      pageLayoutMode: PdfPageLayoutMode.continuous,
+                      onDocumentLoadFailed: (details) async {
+                        await CustomDialog.error(
+                          context,
+                          message: details.description,
+                        ).then((value) => Navigator.of(context).pop());
+                      },
+                    );
+                  } else if (widget.asset != null) {
+                    return SfPdfViewer.asset(widget.asset!);
+                  } else if (widget.file != null) {
+                    return SfPdfViewer.file(widget.file!);
+                  } else {
+                    return const SizedBox();
+                  }
+                },
+              ),
+            ),
           ),
         ),
       ),

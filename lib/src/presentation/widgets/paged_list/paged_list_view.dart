@@ -18,7 +18,7 @@ enum PagedListMode { normal, wrap }
 class PagedListView<E, S> extends StatefulWidget {
   const PagedListView({
     super.key,
-    this.nCols = 1,
+    this.nCols,
     this.thickness,
     this.refreshLogo,
     this.scrollController,
@@ -39,7 +39,7 @@ class PagedListView<E, S> extends StatefulWidget {
     this.firstPageProgressIndicatorBuilder,
   });
 
-  final int nCols;
+  final int? nCols;
   final bool shrinkWrap;
   final double? thickness;
   final PagedListMode mode;
@@ -201,10 +201,17 @@ class _PagedListViewState<E, S> extends State<PagedListView<E, S>> {
           itemBuilder: (_, index) => _listItem(state, index),
         );
       case PagedListMode.wrap:
-        return CustomWrap(
-          nCols: widget.nCols,
-          padding: widget.padding,
-          items: state.map((i) => _listItem(state, state.indexOf(i))).toList(),
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            CustomWrap(
+              nCols: widget.nCols,
+              padding: widget.padding,
+              alignment: WrapAlignment.center,
+              items:
+                  state.map((i) => _listItem(state, state.indexOf(i))).toList(),
+            ),
+          ],
         );
     }
   }
@@ -229,7 +236,10 @@ class _PagedListViewState<E, S> extends State<PagedListView<E, S>> {
           ),
         Axis.vertical => Column(
             mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+            crossAxisAlignment: switch (widget.mode) {
+              PagedListMode.wrap => CrossAxisAlignment.center,
+              PagedListMode.normal => CrossAxisAlignment.stretch,
+            },
             children: [
               if (controller.reverse)
                 if (items.last == items[index]) ..._errorAndLoading(index),

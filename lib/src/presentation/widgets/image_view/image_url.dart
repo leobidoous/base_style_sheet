@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cached_network_image_platform_interface/cached_network_image_platform_interface.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
@@ -50,6 +51,7 @@ class ImageUrl extends StatelessWidget {
       memCacheHeight: memCacheHeight,
       maxWidthDiskCache: maxWidthDiskCache,
       maxHeightDiskCache: maxHeightDiskCache,
+      imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
       placeholder: placeholder ??
           (context, url) => Center(
                 child: CustomShimmer(

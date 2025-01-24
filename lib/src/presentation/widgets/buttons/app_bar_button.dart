@@ -16,17 +16,17 @@ class AppBarButton extends StatelessWidget {
     this.isLastButtom = true,
   });
 
-  final Function()? onTap;
   final Widget child;
   final bool isEnabled;
-  final bool isLastButtom;
   final double? padding;
+  final Function()? onTap;
+  final bool isLastButtom;
   final BorderRadius? borderRadius;
 
   static Widget shimmer({isLastButtom = true, double? padding}) {
     return Padding(
       padding: EdgeInsets.only(
-        right: isLastButtom ? (padding ?? Spacing.md.value) : 0,
+        right: isLastButtom ? (padding ?? Spacing.sm.value) : 0,
       ),
       child: CustomButton.child(
         padding: EdgeInsets.zero,
