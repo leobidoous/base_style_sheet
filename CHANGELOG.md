@@ -1,3 +1,7 @@
+## 1.3.22
+
+* Fix webview_flutter_wkwebview version to fix iOS crash
+
 ## 1.3.21
 
 * Upgrade dependencies
