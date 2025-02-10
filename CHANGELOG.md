@@ -1,3 +1,7 @@
+## 1.3.21
+
+* Upgrade dependencies
+
 ## 1.3.20
 
 * Update pdf viewer
