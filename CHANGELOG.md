@@ -1,3 +1,17 @@
+## 1.3.25
+
+* Update CustomBottomSheet
+  * Add: CustomBottomSheetCloseMode
+
+## 1.3.24
+
+* Fix webview_flutter_wkwebview version to fix iOS crash
+
+## 1.3.23
+
+* Upgrade webview_flutter_wkwebview version
+* Add headers param to web_view plugin 
+
 ## 1.3.22
 
 * Fix webview_flutter_wkwebview version to fix iOS crash

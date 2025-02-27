@@ -7,6 +7,8 @@ import '../../extensions/build_context_extensions.dart';
 import '../buttons/custom_button.dart';
 import 'bottom_sheet_drag_icon.dart';
 
+enum CustomBottomSheetCloseMode { inside, outside }
+
 class CustomBottomSheet {
   static Future<bool> show(
     BuildContext context,
@@ -22,6 +24,7 @@ class CustomBottomSheet {
     bool allowDismissOnTap = true,
     bool isScrollControlled = true,
     String routeName = '/custom_bottom_sheet/',
+    CustomBottomSheetCloseMode closeMode = CustomBottomSheetCloseMode.outside,
   }) async {
     return await showModalBottomSheet<bool>(
       elevation: 0,
@@ -48,6 +51,7 @@ class CustomBottomSheet {
             backgroundColor: backgroundColor,
             useSafeArea: useSafeArea,
             showClose: showClose,
+            closeMode: closeMode,
             padding: padding,
             onClose: onClose,
             child: child,
@@ -58,13 +62,14 @@ class CustomBottomSheet {
   }
 }
 
-class _CustomBottomSheet extends StatelessWidget {
+class _CustomBottomSheet extends StatefulWidget {
   const _CustomBottomSheet({
-    required this.showClose,
-    required this.child,
     this.onClose,
     this.padding,
     this.backgroundColor,
+    required this.child,
+    required this.closeMode,
+    required this.showClose,
     this.useSafeArea = true,
     this.allowDismissOnTap = true,
   });
@@ -75,11 +80,32 @@ class _CustomBottomSheet extends StatelessWidget {
   final Function()? onClose;
   final Color? backgroundColor;
   final bool allowDismissOnTap;
+  final CustomBottomSheetCloseMode closeMode;
 
-  void _onClose(BuildContext context) {
-    onClose?.call();
+  @override
+  State<_CustomBottomSheet> createState() => _CustomBottomSheetState();
+}
+
+class _CustomBottomSheetState extends State<_CustomBottomSheet> {
+  void _onClose() {
+    widget.onClose?.call();
     Navigator.of(context).pop(false);
   }
+
+  BoxDecoration get _decoration => BoxDecoration(
+        borderRadius: BorderRadius.only(
+          topLeft: context.theme.borderRadiusMD.topLeft,
+          topRight: context.theme.borderRadiusMD.topRight,
+        ),
+        color: widget.backgroundColor ?? context.colorScheme.surface,
+        boxShadow: [
+          BoxShadow(
+            blurRadius: 5,
+            spreadRadius: -5,
+            color: context.colorScheme.surface.withValues(alpha: 0.5),
+          ),
+        ],
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -88,81 +114,58 @@ class _CustomBottomSheet extends StatelessWidget {
       children: [
         Positioned.fill(
           child: GestureDetector(
-            onTap: allowDismissOnTap ? () => _onClose(context) : null,
+            onTap: widget.allowDismissOnTap ? _onClose : null,
             child: const ColoredBox(color: Colors.transparent),
           ),
         ),
-        Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Flexible(
-              child: Padding(
-                padding: EdgeInsets.only(
-                  top: useSafeArea ? context.theme.appBarTheme.appBarHeight : 0,
-                ),
-                child: Material(
-                  color: Colors.transparent,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                        topLeft: context.theme.borderRadiusMD.topLeft,
-                        topRight: context.theme.borderRadiusMD.topRight,
-                      ),
-                      border: Border.all(
-                        color: context.colorScheme.surface,
-                        width: 2,
-                      ),
-                      color: backgroundColor ?? context.colorScheme.surface,
-                      boxShadow: [
-                        BoxShadow(
-                          blurRadius: 5,
-                          spreadRadius: -5,
-                          color: context.colorScheme.surface.withValues(
-                            alpha: 0.5,
-                          ),
+        SafeArea(
+          bottom: false,
+          child: Padding(
+            padding: EdgeInsets.only(
+              top: context.theme.appBarTheme.appBarHeight,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                if (widget.closeMode == CustomBottomSheetCloseMode.outside)
+                  if (widget.showClose)
+                    Padding(
+                      padding: EdgeInsets.all(Spacing.xs.value),
+                      child: Align(
+                        alignment: Alignment.bottomRight,
+                        child: CustomButton.icon(
+                          onPressed: _onClose,
+                          icon: Icons.close_rounded,
+                          type: ButtonType.background,
+                          heightType: ButtonHeightType.small,
                         ),
-                      ],
+                      ),
                     ),
+                Flexible(
+                  child: DecoratedBox(
+                    decoration: _decoration,
                     child: SafeArea(
-                      top: useSafeArea,
-                      bottom: useSafeArea,
+                      bottom: widget.useSafeArea,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Padding(
-                            padding: EdgeInsets.fromLTRB(
-                              Spacing.xs.value,
-                              Spacing.xxxs.value,
-                              Spacing.xs.value,
-                              0,
-                            ),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                SizedBox(width: AppThemeBase.buttonHeightMD),
-                                BottomSheetDragIcon(),
-                                if (!showClose)
-                                  SizedBox(
-                                    width: AppThemeBase.buttonHeightMD,
-                                  ),
-                                if (showClose)
-                                  CustomButton.icon(
-                                    type: ButtonType.noShape,
-                                    icon: Icons.close_rounded,
-                                    heightType: ButtonHeightType.small,
-                                    onPressed: () => _onClose(context),
-                                  ),
-                              ],
-                            ),
+                            padding: EdgeInsets.only(top: Spacing.xxxs.value),
+                            child: _header,
                           ),
                           Flexible(
                             child: Padding(
-                              padding:
-                                  padding ?? EdgeInsets.all(Spacing.md.value),
-                              child: child,
+                              padding: widget.padding ??
+                                  EdgeInsets.fromLTRB(
+                                    Spacing.sm.value,
+                                    Spacing.xs.value,
+                                    Spacing.sm.value,
+                                    Spacing.sm.value,
+                                  ),
+                              child: widget.child,
                             ),
                           ),
                         ],
@@ -170,11 +173,36 @@ class _CustomBottomSheet extends StatelessWidget {
                     ),
                   ),
                 ),
-              ),
+              ],
             ),
-          ],
+          ),
         ),
       ],
     );
+  }
+
+  Widget get _header {
+    switch (widget.closeMode) {
+      case CustomBottomSheetCloseMode.inside:
+        return Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            SizedBox(width: AppThemeBase.buttonHeightMD),
+            BottomSheetDragIcon(),
+            if (widget.showClose)
+              CustomButton.icon(
+                onPressed: _onClose,
+                type: ButtonType.noShape,
+                icon: Icons.close_rounded,
+                heightType: ButtonHeightType.small,
+              )
+            else
+              SizedBox(width: AppThemeBase.buttonHeightMD),
+          ],
+        );
+      case CustomBottomSheetCloseMode.outside:
+        return BottomSheetDragIcon();
+    }
   }
 }

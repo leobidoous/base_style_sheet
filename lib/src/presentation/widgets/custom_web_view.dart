@@ -12,17 +12,19 @@ import 'errors/custom_request_error.dart';
 class CustomWebView extends StatefulWidget {
   const CustomWebView({
     super.key,
-    required this.url,
     this.onProgress,
     this.onUrlChange,
+    required this.url,
     this.onPageStarted,
     this.onPageFinished,
+    this.headers = const {},
     this.onWebResourceError,
     this.onNavigationRequest,
     this.onJavaScriptChannels,
   });
 
   final String url;
+  final Map<String, String> headers;
   final void Function(int)? onProgress;
   final void Function(String)? onPageStarted;
   final void Function(UrlChange)? onUrlChange;
@@ -99,7 +101,7 @@ class CustomWebViewState extends State<CustomWebView> {
               },
         ),
       )
-      ..loadRequest(Uri.parse(widget.url));
+      ..loadRequest(Uri.parse(widget.url), headers: widget.headers);
     widget.onJavaScriptChannels?.entries.forEach((e) {
       controller.addJavaScriptChannel(
         e.key,
