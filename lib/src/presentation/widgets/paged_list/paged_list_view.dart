@@ -19,6 +19,7 @@ class PagedListView<E, S> extends StatefulWidget {
   const PagedListView({
     super.key,
     this.nCols,
+    this.physics,
     this.thickness,
     this.refreshLogo,
     this.scrollController,
@@ -48,6 +49,7 @@ class PagedListView<E, S> extends StatefulWidget {
   final bool initWithRequest;
   final Axis scrollDirection;
   final bool safeAreaLastItem;
+  final ScrollPhysics? physics;
   final ScrollController? scrollController;
   final ScrollController? parentScrollController;
   final PagedListController<E, S> listController;
@@ -72,26 +74,26 @@ class PagedListView<E, S> extends StatefulWidget {
 }
 
 class _PagedListViewState<E, S> extends State<PagedListView<E, S>> {
-  late final ScrollController scrollController;
-  late final PagedListController<E, S> controller;
+  late final ScrollController _scrollController;
+  late final PagedListController<E, S> _listController;
 
   @override
   void initState() {
     super.initState();
-    controller = widget.listController;
-    scrollController = widget.scrollController ??
+    _listController = widget.listController;
+    _scrollController = widget.scrollController ??
         widget.parentScrollController ??
         ScrollController();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      if (widget.initWithRequest) controller.refresh();
+      if (widget.initWithRequest) _listController.refresh();
     });
-    scrollController.addListener(() {
-      final max = scrollController.position.maxScrollExtent;
+    _scrollController.addListener(() {
+      final max = _scrollController.position.maxScrollExtent;
 
       if (max == 0 ||
-          controller.searchPercent <=
-              (scrollController.offset / max * 100).ceil()) {
-        if (controller.isLoading || controller.hasError) return;
+          _listController.searchPercent <=
+              (_scrollController.offset / max * 100).ceil()) {
+        if (_listController.isLoading || _listController.hasError) return;
 
         _fetchItemsAndScroll();
       }
@@ -99,14 +101,14 @@ class _PagedListViewState<E, S> extends State<PagedListView<E, S>> {
   }
 
   Future<void> _fetchItemsAndScroll() async {
-    await controller
-        .fetchNewItems(pageKey: controller.config.pageKey)
+    await _listController
+        .fetchNewItems(pageKey: _listController.config.pageKey)
         .whenComplete(() {
-      if (controller.hasError) {
+      if (_listController.hasError) {
         WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-          scrollController.animateTo(
+          _scrollController.animateTo(
             duration: const Duration(milliseconds: 250),
-            scrollController.position.maxScrollExtent,
+            _scrollController.position.maxScrollExtent,
             curve: Curves.decelerate,
           );
         });
@@ -118,7 +120,7 @@ class _PagedListViewState<E, S> extends State<PagedListView<E, S>> {
   void dispose() {
     if (widget.scrollController == null &&
         widget.parentScrollController == null) {
-      scrollController.dispose();
+      _scrollController.dispose();
     }
     super.dispose();
   }
@@ -126,9 +128,9 @@ class _PagedListViewState<E, S> extends State<PagedListView<E, S>> {
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<List<S>>(
-      valueListenable: controller,
+      valueListenable: _listController,
       builder: (context, state, child) {
-        if (controller.isLoading && state.isEmpty) {
+        if (_listController.isLoading && state.isEmpty) {
           return widget.firstPageProgressIndicatorBuilder?.call(context) ??
               Center(
                 child: Padding(
@@ -136,43 +138,49 @@ class _PagedListViewState<E, S> extends State<PagedListView<E, S>> {
                   child: const CustomLoading(),
                 ),
               );
-        } else if (controller.hasError && state.isEmpty) {
+        } else if (_listController.hasError && state.isEmpty) {
           return widget.firstPageErrorIndicatorBuilder?.call(
                 context,
-                (controller.error as E),
-                controller.refresh,
+                (_listController.error as E),
+                _listController.refresh,
               ) ??
               Center(
                 child: CustomRequestError(
                   padding: widget.padding,
-                  message: controller.error.toString(),
-                  onPressed: controller.refresh,
+                  message: _listController.error.toString(),
+                  onPressed: _listController.refresh,
                 ),
               );
         } else if (state.isEmpty) {
           return widget.noItemsFoundIndicatorBuilder?.call(
                 context,
-                controller.refresh,
+                _listController.refresh,
               ) ??
               Center(
                 child: ListEmpty(
                   padding: widget.padding,
                   btnLabel: 'Tentar novamente',
-                  onPressed: controller.refresh,
+                  onPressed: _listController.refresh,
                   message: 'Nenhum item encontrado.',
                 ),
               );
         }
         return CustomRefreshIndicator(
-          onRefresh: controller.refresh,
           refreshLogo: widget.refreshLogo,
+          reverse: _listController.reverse,
+          onRefresh: _listController.refresh,
           child: RawScrollbar(
             padding: EdgeInsets.zero,
             thumbColor: context.colorScheme.primary,
             radius: context.theme.borderRadiusXLG.bottomLeft,
-            thickness: widget.thickness ?? (kIsWeb ? 0 : null),
-            controller:
-                widget.parentScrollController == null ? scrollController : null,
+            thickness: switch (defaultTargetPlatform) {
+              TargetPlatform.android => widget.thickness,
+              TargetPlatform.iOS => widget.thickness,
+              TargetPlatform() => 0,
+            },
+            controller: widget.parentScrollController == null
+                ? _scrollController
+                : null,
             child: _scrollChild(state),
           ),
         );
@@ -186,15 +194,15 @@ class _PagedListViewState<E, S> extends State<PagedListView<E, S>> {
         return ListView.separated(
           padding: widget.padding,
           itemCount: state.length,
-          reverse: controller.reverse,
+          reverse: _listController.reverse,
           addAutomaticKeepAlives: false,
           separatorBuilder: widget.separatorBuilder,
           controller:
-              widget.parentScrollController == null ? scrollController : null,
+              widget.parentScrollController == null ? _scrollController : null,
           shrinkWrap: widget.shrinkWrap,
           scrollDirection: widget.scrollDirection,
           physics: widget.shrinkWrap
-              ? const NeverScrollableScrollPhysics()
+              ? (widget.physics ?? NeverScrollableScrollPhysics())
               : const BouncingScrollPhysics(
                   parent: AlwaysScrollableScrollPhysics(),
                 ),
@@ -219,7 +227,7 @@ class _PagedListViewState<E, S> extends State<PagedListView<E, S>> {
   Widget _listItem(List<S> items, int index) {
     return SafeArea(
       top: false,
-      bottom: (controller.reverse
+      bottom: (_listController.reverse
               ? items.first == items[index]
               : items.last == items[index]) &&
           widget.safeAreaLastItem,
@@ -227,11 +235,11 @@ class _PagedListViewState<E, S> extends State<PagedListView<E, S>> {
         Axis.horizontal => Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              if (controller.reverse)
-                if (items.last == items[index]) ..._errorAndLoading(index),
+              if (_listController.reverse)
+                if (items.last == items[index]) ..._errorOrLoading(index),
               widget.itemBuilder(context, items[index], index),
-              if (!controller.reverse)
-                if (items.last == items[index]) ..._errorAndLoading(index),
+              if (!_listController.reverse)
+                if (items.last == items[index]) ..._errorOrLoading(index),
             ],
           ),
         Axis.vertical => Column(
@@ -241,33 +249,31 @@ class _PagedListViewState<E, S> extends State<PagedListView<E, S>> {
               PagedListMode.normal => CrossAxisAlignment.stretch,
             },
             children: [
-              if (controller.reverse)
-                if (items.last == items[index]) ..._errorAndLoading(index),
+              if (_listController.reverse)
+                if (items.last == items[index]) ..._errorOrLoading(index),
               widget.itemBuilder(context, items[index], index),
-              if (!controller.reverse)
-                if (items.last == items[index]) ..._errorAndLoading(index),
+              if (!_listController.reverse)
+                if (items.last == items[index]) ..._errorOrLoading(index),
             ],
           ),
       },
     );
   }
 
-  List<Widget> _errorAndLoading(int index) {
-    return [
-      if (controller.hasError || controller.isLoading)
-        widget.separatorBuilder(context, index),
-      if (controller.hasError && !controller.isLoading)
+  List<Widget> _errorOrLoading(int index) {
+    final errorOrLoading = [
+      if (_listController.hasError)
         widget.newPageErrorIndicatorBuilder?.call(
               context,
-              controller.error,
+              _listController.error,
               _fetchItemsAndScroll,
             ) ??
             CustomRequestError(
               padding: EdgeInsets.zero,
               onPressed: _fetchItemsAndScroll,
-              message: controller.error.toString(),
-            ),
-      if (controller.isLoading)
+              message: _listController.error.toString(),
+            )
+      else if (_listController.isLoading)
         widget.newPageProgressIndicatorBuilder?.call(context) ??
             Center(
               child: CustomLoading(
@@ -276,5 +282,18 @@ class _PagedListViewState<E, S> extends State<PagedListView<E, S>> {
               ),
             ),
     ];
+    if (_listController.reverse) {
+      return [
+        ...errorOrLoading,
+        if (_listController.isLoading || _listController.hasError)
+          widget.separatorBuilder(context, index),
+      ];
+    } else {
+      return [
+        if (_listController.isLoading || _listController.hasError)
+          widget.separatorBuilder(context, index),
+        ...errorOrLoading,
+      ];
+    }
   }
 }

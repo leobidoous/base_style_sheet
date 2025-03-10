@@ -84,94 +84,107 @@ class CustomImage extends StatelessWidget {
   final Widget Function(String)? errorBuilder;
   final Widget Function(BuildContext, String)? placeholder;
 
+  Widget _error([Object? err, StackTrace? stackTrace]) =>
+      errorBuilder?.call('${err?.toString()} $stackTrace') ??
+      ImageError(error: '${err?.toString()} $stackTrace');
+
+  Widget? get _urlImage {
+    if (url?.isEmpty ?? true) return null;
+    return ImageUrl(
+      fit: fit,
+      url: url!,
+      headers: headers,
+      cacheKey: cacheKey,
+      imageSize: imageSize,
+      errorBuilder: _error,
+      placeholder: placeholder,
+      cacheManager: cacheManager,
+      memCacheWidth: memCacheWidth,
+      memCacheHeight: memCacheHeight,
+      maxWidthDiskCache: maxWidthDiskCache,
+      maxHeightDiskCache: maxHeightDiskCache,
+    );
+  }
+
+  Widget? get _svgUrlImage {
+    if (urlSvg?.isEmpty ?? true) return null;
+    return SvgPicture.network(
+      fit: fit,
+      urlSvg!,
+      headers: headers,
+      width: imageSize?.width,
+      height: imageSize?.height,
+      colorFilter: (imageColor != null)
+          ? ColorFilter.mode(imageColor!, BlendMode.srcIn)
+          : null,
+      errorBuilder: (_, error, stackTrace) => _error(error, stackTrace),
+      placeholderBuilder: (context) => Center(
+        child: CustomShimmer(
+          width: imageSize?.width ?? 32,
+          height: imageSize?.height ?? 32,
+        ),
+      ),
+    );
+  }
+
+  Widget? get _svgAsset {
+    if (svgAsset?.isEmpty ?? true) return null;
+    return SvgPicture.asset(
+      svgAsset!,
+      fit: fit,
+      width: imageSize?.width,
+      height: imageSize?.height,
+      package: packageName,
+      errorBuilder: (_, error, stackTrace) => _error(error, stackTrace),
+      colorFilter: (imageColor != null)
+          ? ColorFilter.mode(imageColor!, BlendMode.srcIn)
+          : null,
+    );
+  }
+
+  Widget? _asset(BuildContext context) {
+    if (asset?.isEmpty ?? true) return null;
+    return Semantics(
+      button: true,
+      child: InkWell(
+        onTap: () =>
+            CustomPhotoView(image: AssetImage(asset!, package: packageName))
+                .show(context),
+        child: Image.asset(
+          asset!,
+          fit: fit,
+          color: imageColor,
+          package: packageName,
+          width: imageSize?.width,
+          height: imageSize?.height,
+          errorBuilder: (_, error, stackTrace) => _error(error, stackTrace),
+        ),
+      ),
+    );
+  }
+
+  Widget? _file(BuildContext context) {
+    if (file?.path.isEmpty ?? true) return null;
+    return Semantics(
+      button: true,
+      child: InkWell(
+        onTap: () => CustomPhotoView(image: FileImage(file!)).show(
+          context,
+        ),
+        child: Image.file(
+          file!,
+          fit: fit,
+          color: imageColor,
+          width: imageSize?.width,
+          height: imageSize?.height,
+          errorBuilder: (_, error, stackTrace) => _error(error, stackTrace),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    late final Widget child;
-    if (url != null && url!.isNotEmpty) {
-      child = ImageUrl(
-        fit: fit,
-        url: url!,
-        headers: headers,
-        cacheKey: cacheKey,
-        imageSize: imageSize,
-        placeholder: placeholder,
-        errorBuilder: errorBuilder,
-        cacheManager: cacheManager,
-        memCacheWidth: memCacheWidth,
-        memCacheHeight: memCacheHeight,
-        maxWidthDiskCache: maxWidthDiskCache,
-        maxHeightDiskCache: maxHeightDiskCache,
-      );
-    } else if (urlSvg != null && urlSvg!.isNotEmpty) {
-      child = SvgPicture.network(
-        fit: fit,
-        urlSvg!,
-        headers: headers,
-        width: imageSize?.width,
-        height: imageSize?.height,
-        colorFilter: (imageColor != null)
-            ? ColorFilter.mode(imageColor!, BlendMode.srcIn)
-            : null,
-        placeholderBuilder: (context) => Center(
-          child: CustomShimmer(
-            width: imageSize?.width ?? 32,
-            height: imageSize?.height ?? 32,
-          ),
-        ),
-      );
-    } else if (asset != null && asset!.isNotEmpty) {
-      child = Semantics(
-        button: true,
-        child: InkWell(
-          onTap: () => CustomPhotoView(
-            image: AssetImage(asset!, package: packageName),
-          ).show(context),
-          child: Image.asset(
-            asset!,
-            fit: fit,
-            width: imageSize?.width,
-            height: imageSize?.height,
-            package: packageName,
-            color: imageColor,
-          ),
-        ),
-      );
-    } else if (svgAsset != null && svgAsset!.isNotEmpty) {
-      child = SvgPicture.asset(
-        svgAsset!,
-        fit: fit,
-        width: imageSize?.width,
-        height: imageSize?.height,
-        package: packageName,
-        colorFilter: (imageColor != null)
-            ? ColorFilter.mode(imageColor!, BlendMode.srcIn)
-            : null,
-      );
-    } else if (file != null) {
-      child = Semantics(
-        button: true,
-        child: InkWell(
-          onTap: () => CustomPhotoView(image: FileImage(file!)).show(
-            context,
-          ),
-          child: Image.file(
-            file!,
-            fit: fit,
-            width: imageSize?.width,
-            height: imageSize?.height,
-            color: imageColor,
-            errorBuilder: (context, error, stackTrace) =>
-                errorBuilder?.call(error.toString()) ??
-                ImageError(
-                  error: error.toString(),
-                ),
-          ),
-        ),
-      );
-    } else {
-      child = errorBuilder?.call('Nenhuma imagem fornecida') ??
-          const ImageError(error: 'Nenhuma imagem fornecida');
-    }
     return CustomCard(
       onTap: onTap,
       border: border,
@@ -181,7 +194,15 @@ class CustomImage extends StatelessWidget {
       child: SizedBox(
         width: imageSize?.width,
         height: imageSize?.height,
-        child: IgnorePointer(ignoring: !enableGestures, child: child),
+        child: IgnorePointer(
+          ignoring: !enableGestures,
+          child: _urlImage ??
+              _svgUrlImage ??
+              _asset(context) ??
+              _svgAsset ??
+              _file(context) ??
+              _error(),
+        ),
       ),
     );
   }

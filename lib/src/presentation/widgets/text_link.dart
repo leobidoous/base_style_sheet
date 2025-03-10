@@ -37,6 +37,7 @@ class TextLink extends StatelessWidget {
       child: Semantics(
         button: true,
         child: InkWell(
+          borderRadius: context.theme.borderRadiusMD,
           onTap: isEnabled ? onTap : null,
           child: Row(
             mainAxisSize: MainAxisSize.min,

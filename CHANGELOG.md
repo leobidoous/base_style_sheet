@@ -1,3 +1,11 @@
+## 1.3.26
+
+* Update widgets and upgrade dependencies
+  * CustomRefreshIndicator
+  * CustomScrollContent
+  * CustomSnackBar
+  * CustomWebView
+  * 
 ## 1.3.25
 
 * Update CustomBottomSheet

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:webview_flutter_android/webview_flutter_android.dart';
@@ -39,10 +40,10 @@ class CustomWebView extends StatefulWidget {
 }
 
 class CustomWebViewState extends State<CustomWebView> {
-  late final WebViewController webViewController;
-  int progress = 0;
-  bool isLoading = false;
-  bool hasError = false;
+  late final WebViewController _webViewController;
+  final bool _isLoading = false;
+  final bool _hasError = false;
+  int _progress = 0;
 
   @override
   void initState() {
@@ -58,23 +59,32 @@ class CustomWebViewState extends State<CustomWebView> {
       params = const PlatformWebViewControllerCreationParams();
     }
 
-    final controller = WebViewController.fromPlatformCreationParams(
+    _webViewController = WebViewController.fromPlatformCreationParams(
       params,
       onPermissionRequest: (request) {
         request.platform.grant();
       },
     );
+    switch (defaultTargetPlatform) {
+      case TargetPlatform.android:
+        _webViewController.setBackgroundColor(Colors.transparent);
+        break;
+      case TargetPlatform.iOS:
+        _webViewController.setBackgroundColor(Colors.transparent);
+        break;
+      default:
+        break;
+    }
 
-    controller
+    _webViewController
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..setBackgroundColor(Colors.transparent)
       ..setNavigationDelegate(
         NavigationDelegate(
-          onProgress: (int progress) {
+          onProgress: (int value) {
             if (mounted) {
-              setState(() => this.progress = progress);
+              setState(() => _progress = value);
             }
-            widget.onProgress?.call(progress);
+            widget.onProgress?.call(value);
           },
           onPageStarted: widget.onPageStarted ??
               (String url) {
@@ -103,23 +113,21 @@ class CustomWebViewState extends State<CustomWebView> {
       )
       ..loadRequest(Uri.parse(widget.url), headers: widget.headers);
     widget.onJavaScriptChannels?.entries.forEach((e) {
-      controller.addJavaScriptChannel(
+      _webViewController.addJavaScriptChannel(
         e.key,
         onMessageReceived: e.value as void Function(JavaScriptMessage),
       );
     });
 
-    if (controller.platform is AndroidWebViewController) {
+    if (_webViewController.platform is AndroidWebViewController) {
       AndroidWebViewController.enableDebugging(true);
-      (controller.platform as AndroidWebViewController)
+      (_webViewController.platform as AndroidWebViewController)
           .setMediaPlaybackRequiresUserGesture(false);
-      (controller.platform as AndroidWebViewController)
+      (_webViewController.platform as AndroidWebViewController)
           .setOnPlatformPermissionRequest((permissionRequest) {
         permissionRequest.grant();
       });
     }
-
-    webViewController = controller;
   }
 
   @override
@@ -128,9 +136,9 @@ class CustomWebViewState extends State<CustomWebView> {
       resizeToAvoidBottomInset: false,
       body: Builder(
         builder: (context) {
-          if (isLoading) {
+          if (_isLoading) {
             return const Center(child: CustomLoading());
-          } else if (hasError) {
+          } else if (_hasError) {
             return Center(
               child: CustomRequestError(
                 padding: EdgeInsets.all(Spacing.sm.value),
@@ -138,16 +146,16 @@ class CustomWebViewState extends State<CustomWebView> {
             );
           }
           return SafeArea(
-            child: WebViewWidget(controller: webViewController),
+            child: WebViewWidget(controller: _webViewController),
           );
         },
       ),
       bottomNavigationBar: Visibility(
-        visible: progress != 0 && progress != 100,
+        visible: _progress != 0 && _progress != 100,
         child: SafeArea(
           child: LinearProgressIndicator(
             minHeight: 2.5,
-            value: progress / 100,
+            value: _progress / 100,
           ),
         ),
       ),

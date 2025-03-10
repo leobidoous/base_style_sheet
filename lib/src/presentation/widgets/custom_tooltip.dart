@@ -31,6 +31,7 @@ class CustomTooltip extends StatelessWidget {
       textStyle: context.textTheme.bodyMedium,
       enableFeedback: true,
       triggerMode: triggerMode,
+      textAlign: TextAlign.center,
       child: child,
     );
   }

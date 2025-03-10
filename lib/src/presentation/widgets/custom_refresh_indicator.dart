@@ -11,9 +11,11 @@ class CustomRefreshIndicator extends StatefulWidget {
     super.key,
     this.refreshLogo,
     required this.child,
+    this.reverse = false,
     required this.onRefresh,
   });
   final Widget child;
+  final bool reverse;
   final String? refreshLogo;
   final Future<void> Function() onRefresh;
 
@@ -23,21 +25,26 @@ class CustomRefreshIndicator extends StatefulWidget {
 
 class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
     with SingleTickerProviderStateMixin {
-  late final AnimationController animationController;
-  final duration = const Duration(seconds: 1);
-  late final Animation<double> animation;
+  late final AnimationController _animationController;
+  final _duration = const Duration(seconds: 1);
+  late final Animation<double> _animation;
   double get _offsetToArmed => 40;
 
   @override
   void initState() {
     super.initState();
-    animationController = AnimationController(vsync: this, duration: duration);
-    animation = Tween<double>(begin: 1, end: .25).animate(animationController);
+    _animationController = AnimationController(
+      vsync: this,
+      duration: _duration,
+    );
+    _animation = Tween<double>(begin: 1, end: .25).animate(
+      _animationController,
+    );
   }
 
   @override
   void dispose() {
-    animationController.dispose();
+    _animationController.dispose();
     super.dispose();
   }
 
@@ -51,10 +58,10 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
       onStateChanged: (change) {
         switch (change.currentState) {
           case cri.IndicatorState.dragging:
-            animationController.repeat();
+            _animationController.repeat();
             return;
           case cri.IndicatorState.complete:
-            animationController.stop();
+            _animationController.stop();
             return;
           default:
             break;
@@ -65,15 +72,18 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
           animation: controller,
           builder: (context, _) {
             return Stack(
+              alignment: !widget.reverse
+                  ? Alignment.topCenter
+                  : Alignment.bottomCenter,
               children: <Widget>[
                 ConstrainedBox(
                   constraints: BoxConstraints(maxHeight: _offsetToArmed),
                   child: SizeTransition(
-                    axisAlignment: 1,
+                    axisAlignment: widget.reverse ? -1 : 1,
                     sizeFactor: controller,
                     child: FadeTransition(
                       opacity:
-                          widget.refreshLogo != null ? animation : controller,
+                          widget.refreshLogo != null ? _animation : controller,
                       child: Center(
                         child: widget.refreshLogo != null
                             ? CustomImage(
@@ -85,8 +95,8 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
                                 imageSize: Size.fromHeight(_offsetToArmed * .4),
                               )
                             : CustomLoading(
-                                height: _offsetToArmed,
                                 width: _offsetToArmed,
+                                height: _offsetToArmed,
                               ),
                       ),
                     ),
@@ -94,7 +104,12 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
                 ),
                 ClipRRect(
                   child: Transform.translate(
-                    offset: Offset(0.0, _offsetToArmed * controller.value),
+                    offset: Offset(
+                      0.0,
+                      widget.reverse
+                          ? -(_offsetToArmed * controller.value)
+                          : _offsetToArmed * controller.value,
+                    ),
                     child: child,
                   ),
                 ),

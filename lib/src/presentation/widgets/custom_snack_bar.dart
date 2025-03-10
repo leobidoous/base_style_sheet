@@ -56,13 +56,14 @@ class CustomSnackBar {
   static void toastShowMessage({
     required BuildContext context,
     required String message,
-    EdgeInsets? padding,
     SnackBarType type = SnackBarType.info,
+    EdgeInsets? padding,
     TextStyle? style,
     Color? infoColor,
     Color? errorColor,
     Color? successColor,
     Duration? duration,
+    bool showClose = true,
   }) {
     FToast().removeQueuedCustomToasts();
     FToast().init(context).showToast(
@@ -88,6 +89,9 @@ class CustomSnackBar {
               SnackBarType.info => infoColor ?? Colors.orange,
               SnackBarType.success => successColor ?? Colors.green,
             },
+            constraints: BoxConstraints(
+              maxWidth: ScreenSizeType.phone.width,
+            ),
             borderRadius: context.theme.borderRadiusSM,
             padding: EdgeInsets.all(Spacing.sm.value),
             child: Row(
@@ -105,7 +109,7 @@ class CustomSnackBar {
                         SnackBarType() => Colors.white,
                       },
                 ),
-                Spacing.sm.horizontal,
+                Spacing.xs.horizontal,
                 Expanded(
                   child: Text(
                     message,
@@ -118,6 +122,20 @@ class CustomSnackBar {
                         ),
                   ),
                 ),
+                if (showClose) ...[
+                  Spacing.xs.horizontal,
+                  CustomButton.icon(
+                    icon: Icons.close,
+                    iconColor: style?.color ??
+                        switch (type) {
+                          SnackBarType.info => Colors.black,
+                          SnackBarType() => Colors.white,
+                        },
+                    type: ButtonType.noShape,
+                    heightType: ButtonHeightType.small,
+                    onPressed: FToast().removeQueuedCustomToasts,
+                  ),
+                ],
               ],
             ),
           ),

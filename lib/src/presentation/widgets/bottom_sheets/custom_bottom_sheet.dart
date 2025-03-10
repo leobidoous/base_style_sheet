@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/themes/app_theme_base.dart';
@@ -13,6 +14,7 @@ class CustomBottomSheet {
   static Future<bool> show(
     BuildContext context,
     Widget child, {
+    String? routeName,
     EdgeInsets? padding,
     Function()? onClose,
     Color? backgroundColor,
@@ -23,7 +25,6 @@ class CustomBottomSheet {
     bool useRootNavigator = true,
     bool allowDismissOnTap = true,
     bool isScrollControlled = true,
-    String routeName = '/custom_bottom_sheet/',
     CustomBottomSheetCloseMode closeMode = CustomBottomSheetCloseMode.outside,
   }) async {
     return await showModalBottomSheet<bool>(
@@ -35,7 +36,9 @@ class CustomBottomSheet {
       useRootNavigator: useRootNavigator,
       backgroundColor: Colors.transparent,
       isScrollControlled: isScrollControlled,
-      routeSettings: RouteSettings(name: routeName),
+      routeSettings: RouteSettings(
+        name: routeName ?? '/${child.runtimeType}/',
+      ),
       barrierColor: Colors.black.withValues(alpha: 0.8),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
@@ -122,7 +125,12 @@ class _CustomBottomSheetState extends State<_CustomBottomSheet> {
           bottom: false,
           child: Padding(
             padding: EdgeInsets.only(
-              top: context.theme.appBarTheme.appBarHeight,
+              top: switch (defaultTargetPlatform) {
+                TargetPlatform.android =>
+                  context.theme.appBarTheme.appBarHeight,
+                TargetPlatform.iOS => context.theme.appBarTheme.appBarHeight,
+                TargetPlatform() => widget.padding?.top ?? Spacing.sm.value,
+              },
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,

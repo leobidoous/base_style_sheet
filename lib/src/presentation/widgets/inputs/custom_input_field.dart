@@ -40,12 +40,14 @@ class CustomInputField extends StatefulWidget {
     this.errorText = '',
     this.contentPadding,
     this.enabled = true,
+    this.isDense = false,
     this.textInputAction,
     this.onFieldSubmitted,
     this.counterText = '',
     this.readOnly = false,
     this.autofocus = false,
     this.onEditingComplete,
+    this.isCollapsed = true,
     this.autocorrect = false,
     this.obscureText = false,
     this.opacityDisabled = 0.5,
@@ -85,6 +87,8 @@ class CustomInputField extends StatefulWidget {
   final int? minLines;
   final bool enableSuggestions;
   final bool autocorrect;
+  final bool isDense;
+  final bool isCollapsed;
   final int maxLines;
   final bool autofocus;
   final bool enabled;
@@ -197,8 +201,8 @@ class _CustomInputFieldState extends State<CustomInputField> {
               ),
               obscureText: widget.obscureText,
               decoration: InputDecoration(
-                isDense: true,
-                isCollapsed: true,
+                isCollapsed: widget.isCollapsed,
+                isDense: widget.isDense,
                 filled: widget.fillColor != null,
                 fillColor: widget.enabled
                     ? widget.fillColor ?? context.colorScheme.surface

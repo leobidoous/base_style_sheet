@@ -7,7 +7,7 @@ import '../../../core/themes/spacing/spacing.dart';
 import '../../../core/themes/typography/typography_constants.dart';
 import '../../extensions/build_context_extensions.dart';
 import '../buttons/custom_button.dart';
-import '../containers/custom_shimmer.dart';
+import '../custom_loading.dart';
 import '../custom_scroll_content.dart';
 import '../dividers/custom_divider.dart';
 import '../empties/list_empty.dart';
@@ -84,7 +84,7 @@ class CustomDropdown<T> extends StatefulWidget {
   final double? maxHeight;
   final Widget? prefixIcon;
   final String placeholder;
-  final Function(T)? onClear;
+  final Function()? onClear;
   final TextStyle? itemStyle;
   final BuildContext context;
   final Function(T)? onChange;
@@ -467,6 +467,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
             _showClear = false;
             _value = '';
           });
+          widget.onClear?.call();
           if (_animationController.isForwardOrCompleted) {
             Navigator.of(context).pop();
           }

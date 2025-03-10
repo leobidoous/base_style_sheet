@@ -40,6 +40,7 @@ class CustomCard extends StatelessWidget {
           hoverColor: Colors.transparent,
           splashColor: Colors.transparent,
           highlightColor: Colors.transparent,
+          borderRadius: borderRadius ?? context.theme.borderRadiusMD,
           child: AbsorbPointer(
             absorbing: !isEnabled,
             child: Container(

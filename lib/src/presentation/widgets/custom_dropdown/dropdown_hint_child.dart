@@ -39,7 +39,8 @@ class _DropdownHintChild<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: childPadding ?? EdgeInsets.only(left: fontSize),
+      padding: childPadding ??
+          EdgeInsets.only(left: prefixIcon == null ? fontSize : 0),
       constraints: boxConstraints ??
           BoxConstraints(
             minHeight: switch (heightType) {
@@ -75,7 +76,7 @@ class _DropdownHintChild<T> extends StatelessWidget {
           ),
           Spacing.xxs.horizontal,
           if (isLoading)
-            CustomShimmer(
+            SizedBox(
               width: switch (heightType) {
                 DropdownHeightType.normal => AppThemeBase.buttonHeightMD,
                 DropdownHeightType.small => AppThemeBase.buttonHeightSM,
@@ -84,8 +85,9 @@ class _DropdownHintChild<T> extends StatelessWidget {
                 DropdownHeightType.normal => AppThemeBase.buttonHeightMD,
                 DropdownHeightType.small => AppThemeBase.buttonHeightSM,
               },
-            ),
-          if (!isLoading) ...[
+              child: CustomLoading(width: fontSize, height: fontSize),
+            )
+          else ...[
             SizedBox(
               width: switch (heightType) {
                 DropdownHeightType.normal => AppThemeBase.buttonHeightMD,
@@ -96,31 +98,27 @@ class _DropdownHintChild<T> extends StatelessWidget {
                 DropdownHeightType.small => AppThemeBase.buttonHeightSM,
               },
               child: showClear
-                  ? CustomButton.icon(
-                      type: ButtonType.noShape,
-                      onPressed: readOnly || !isEnabled ? null : onClear,
-                      heightType: switch (heightType) {
-                        DropdownHeightType.small => ButtonHeightType.small,
-                        DropdownHeightType.normal => ButtonHeightType.normal,
-                      },
-                      icon: Icons.close,
+                  ? Center(
+                      child: CustomButton.icon(
+                        type: ButtonType.noShape,
+                        onPressed: readOnly || !isEnabled ? null : onClear,
+                        heightType: ButtonHeightType.small,
+                        icon: Icons.close,
+                      ),
                     )
-                  : AbsorbPointer(
-                      child: icon ??
-                          RotationTransition(
-                            turns: rotateAnimation,
-                            child: CustomButton.icon(
-                              type: ButtonType.noShape,
-                              heightType: switch (heightType) {
-                                DropdownHeightType.normal =>
-                                  ButtonHeightType.normal,
-                                DropdownHeightType.small =>
-                                  ButtonHeightType.small,
-                              },
-                              icon: Icons.keyboard_arrow_down_rounded,
-                            ),
-                          ),
-                    ),
+                  : icon ??
+                      RotationTransition(
+                        turns: rotateAnimation,
+                        child: CustomButton.icon(
+                          type: ButtonType.noShape,
+                          heightType: switch (heightType) {
+                            DropdownHeightType.normal =>
+                              ButtonHeightType.normal,
+                            DropdownHeightType.small => ButtonHeightType.small,
+                          },
+                          icon: Icons.keyboard_arrow_down_rounded,
+                        ),
+                      ),
             ),
           ],
         ],
