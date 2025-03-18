@@ -1,5 +1,10 @@
+## 1.3.27
+
+* Update CustomBottomSheet
+
 ## 1.3.26
 
+* Fix PagedListView reverse logic
 * Update widgets and upgrade dependencies
   * CustomRefreshIndicator
   * CustomScrollContent

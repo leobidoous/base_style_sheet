@@ -11,12 +11,12 @@ import 'bottom_sheet_drag_icon.dart';
 enum CustomBottomSheetCloseMode { inside, outside }
 
 class CustomBottomSheet {
-  static Future<bool> show(
+  static Future<bool> show<T>(
     BuildContext context,
     Widget child, {
     String? routeName,
     EdgeInsets? padding,
-    Function()? onClose,
+    Function(T)? onClose,
     Color? backgroundColor,
     bool showClose = false,
     bool useSafeArea = true,
@@ -27,7 +27,7 @@ class CustomBottomSheet {
     bool isScrollControlled = true,
     CustomBottomSheetCloseMode closeMode = CustomBottomSheetCloseMode.outside,
   }) async {
-    return await showModalBottomSheet<bool>(
+    return await showModalBottomSheet<T?>(
       elevation: 0,
       context: context,
       constraints: constraints,
@@ -56,18 +56,19 @@ class CustomBottomSheet {
             showClose: showClose,
             closeMode: closeMode,
             padding: padding,
-            onClose: onClose,
             child: child,
           ),
         );
       },
-    ).then((value) => value == true);
+    ).then((value) {
+      if (value is T) onClose?.call(value);
+      return value == true;
+    });
   }
 }
 
 class _CustomBottomSheet extends StatefulWidget {
   const _CustomBottomSheet({
-    this.onClose,
     this.padding,
     this.backgroundColor,
     required this.child,
@@ -80,7 +81,6 @@ class _CustomBottomSheet extends StatefulWidget {
   final bool showClose;
   final bool useSafeArea;
   final EdgeInsets? padding;
-  final Function()? onClose;
   final Color? backgroundColor;
   final bool allowDismissOnTap;
   final CustomBottomSheetCloseMode closeMode;
@@ -91,8 +91,7 @@ class _CustomBottomSheet extends StatefulWidget {
 
 class _CustomBottomSheetState extends State<_CustomBottomSheet> {
   void _onClose() {
-    widget.onClose?.call();
-    Navigator.of(context).pop(false);
+    Navigator.of(context).pop();
   }
 
   BoxDecoration get _decoration => BoxDecoration(
@@ -147,6 +146,7 @@ class _CustomBottomSheetState extends State<_CustomBottomSheet> {
                           onPressed: _onClose,
                           icon: Icons.close_rounded,
                           type: ButtonType.background,
+                          color: context.colorScheme.surface,
                           heightType: ButtonHeightType.small,
                         ),
                       ),

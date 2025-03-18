@@ -21,6 +21,7 @@ class ColumnLabelValue extends StatelessWidget {
     this.spacing,
     this.onTapTooltip,
     this.tooltipIconColor,
+    this.mainAxisAlignment = MainAxisAlignment.start,
     this.crossAxisAlignment = CrossAxisAlignment.start,
   });
 
@@ -38,6 +39,7 @@ class ColumnLabelValue extends StatelessWidget {
   final IconData? tooltipIcon;
   final Color? tooltipIconColor;
   final Function()? onTapTooltip;
+  final MainAxisAlignment mainAxisAlignment;
   final CrossAxisAlignment crossAxisAlignment;
 
   @override
@@ -54,6 +56,7 @@ class ColumnLabelValue extends StatelessWidget {
       children: [
         Row(
           crossAxisAlignment: crossAxisAlignment,
+          mainAxisAlignment: mainAxisAlignment,
           children: [
             Flexible(
               child: Text(

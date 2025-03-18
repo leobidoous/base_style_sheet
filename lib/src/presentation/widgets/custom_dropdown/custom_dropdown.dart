@@ -141,6 +141,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
   @override
   void didUpdateWidget(covariant CustomDropdown<T> oldWidget) {
     _value = widget.value;
+    _showClear = _value.isNotEmpty && widget.onClear != null;
     if (widget.autovalidateMode != AutovalidateMode.disabled) {
       _canForceValidator = _value.isEmpty;
     }

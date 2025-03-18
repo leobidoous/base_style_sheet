@@ -150,11 +150,8 @@ class PagedListController<E, S> extends ValueNotifier<List<S>> {
       if (value.isNotEmpty) {
         config.nextPageKey += config.pageIncrement;
         await Future.delayed(const Duration(milliseconds: 250));
-        if (reverse) {
-          update([...value.where((v) => !state.contains(v)), ...state]);
-        } else {
-          update([...state, ...value.where((v) => !state.contains(v))]);
-        }
+        final newValues = value.where((v) => !state.contains(v)).toList();
+        update(state..addAll(newValues));
       }
     }).catchError((error) {
       setError(error);

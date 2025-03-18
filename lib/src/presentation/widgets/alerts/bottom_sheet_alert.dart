@@ -26,7 +26,7 @@ class BottomSheetAlert extends StatelessWidget {
     this.buttons = const [],
     this.packageName,
     this.header,
-    this.verticalSpacing = Spacing.md,
+    this.verticalSpacing = Spacing.sm,
     this.horizontalSpacing = Spacing.sm,
     this.buttonsDirection = Axis.vertical,
   });
