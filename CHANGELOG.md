@@ -1,3 +1,8 @@
+## 1.3.28
+
+* Update PagedLisController
+* Upgrade dependencies
+
 ## 1.3.27
 
 * Update CustomBottomSheet

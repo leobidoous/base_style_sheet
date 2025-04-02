@@ -8,27 +8,23 @@ class _PagedListConfig<T> {
     required this.pageKey,
     required this.pageSize,
     required this.nextPageKey,
-    required this.pageIncrement,
     required this.forceNewFetch,
   }) {
     _pageKey = pageKey;
     _pageSize = pageSize;
     _nextPageKey = nextPageKey;
-    _pageIncrement = pageIncrement;
     _forceNewFetch = forceNewFetch;
   }
 
   int pageKey;
   int pageSize;
   int nextPageKey;
-  int pageIncrement;
   bool forceNewFetch;
   List<T> lastItems = List.empty(growable: true);
 
   late final int _pageKey;
   late final int _pageSize;
   late final int _nextPageKey;
-  late final int _pageIncrement;
   late final bool _forceNewFetch;
 
   bool get isLastFetch {
@@ -41,7 +37,6 @@ class _PagedListConfig<T> {
     pageSize = _pageSize;
     nextPageKey = _nextPageKey;
     forceNewFetch = _forceNewFetch;
-    pageIncrement = _pageIncrement;
   }
 }
 
@@ -50,15 +45,13 @@ class PagedListController<E, S> extends ValueNotifier<List<S>> {
     int pageSize = 10,
     this.firstPageKey = 0,
     this.reverse = false,
-    int pageIncrement = 1,
     this.searchPercent = 100,
     bool forceNewFetch = false,
   })  : assert(searchPercent >= 0 && searchPercent <= 100),
         super(const []) {
     config = _PagedListConfig(
-      nextPageKey: firstPageKey + pageIncrement,
+      nextPageKey: firstPageKey + pageSize,
       forceNewFetch: forceNewFetch,
-      pageIncrement: pageIncrement,
       pageKey: firstPageKey,
       pageSize: pageSize,
     );
@@ -146,9 +139,9 @@ class PagedListController<E, S> extends ValueNotifier<List<S>> {
     setLoading(true);
     await _fetchItems(pageKey: pageKey).then((value) async {
       config.lastItems = value;
-      config.pageKey += config.pageIncrement;
+      config.pageKey += config.pageSize;
       if (value.isNotEmpty) {
-        config.nextPageKey += config.pageIncrement;
+        config.nextPageKey += config.pageSize;
         await Future.delayed(const Duration(milliseconds: 250));
         final newValues = value.where((v) => !state.contains(v)).toList();
         update(state..addAll(newValues));

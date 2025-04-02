@@ -33,12 +33,12 @@ class TextLink extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Opacity(
-      opacity: isEnabled && onTap != null ? 1 : .5,
+      opacity: !isLoading && isEnabled && onTap != null ? 1 : .5,
       child: Semantics(
         button: true,
         child: InkWell(
           borderRadius: context.theme.borderRadiusMD,
-          onTap: isEnabled ? onTap : null,
+          onTap: !isLoading && isEnabled ? onTap : null,
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [

@@ -45,6 +45,12 @@ class _DropdownBuilderState<T> extends State<_DropdownBuilder<T>> {
   final _textController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    // _textController.text = widget.value;
+  }
+
+  @override
   void dispose() {
     _textController.dispose();
     super.dispose();
@@ -67,7 +73,10 @@ class _DropdownBuilderState<T> extends State<_DropdownBuilder<T>> {
         if (widget.isOnTop) ...[
           widget.hintChild,
           const CustomDivider(height: 0),
-          if (widget.canSearch) _searchField,
+          if (widget.canSearch) ...[
+            _searchField,
+            const CustomDivider(height: 0),
+          ],
         ],
         Flexible(
           child: SizedBox(
@@ -100,35 +109,30 @@ class _DropdownBuilderState<T> extends State<_DropdownBuilder<T>> {
   }
 
   Widget get _searchField {
-    return Padding(
-      padding: widget.padding ?? EdgeInsets.all(Spacing.xs.value),
-      child: CustomInputField(
-        controller: _textController,
-        hintText: widget.placeholder,
-        onChanged: (input) {
-          setState(() {});
-        },
-        suffixIcon: AnimatedScale(
-          scale: _textController.text.isNotEmpty ? 1 : 0,
-          duration: const Duration(milliseconds: 250),
-          child: SizedBox(
-            width: AppThemeBase.buttonHeightMD,
-            child: Center(
-              child: CustomButton.icon(
-                onPressed: () => setState(() {
-                  _textController.clear();
-                }),
-                type: ButtonType.noShape,
-                icon: Icons.close_rounded,
-                heightType: ButtonHeightType.small,
-              ),
-            ),
-          ),
+    return CustomInputField(
+      autofocus: true,
+      autocorrect: true,
+      enableSuggestions: true,
+      controller: _textController,
+      hintText: widget.placeholder,
+      contentPadding: EdgeInsets.zero,
+      heightType: InputHeightType.small,
+      prefixIcon: Icon(Icons.search_rounded),
+      fillColor: widget.boxDecoration?.color,
+      onChanged: (input) => setState(() {}),
+      borderRadius: context.theme.borderRadiusNone,
+      borderSide: BorderSide(width: 0, color: Colors.transparent),
+      suffixIcon: AnimatedScale(
+        scale: _textController.text.isNotEmpty ? 1 : 0,
+        duration: const Duration(milliseconds: 250),
+        child: CustomButton.icon(
+          onPressed: () => setState(() {
+            _textController.clear();
+          }),
+          type: ButtonType.noShape,
+          icon: Icons.close_rounded,
+          heightType: ButtonHeightType.small,
         ),
-        heightType: InputHeightType.small,
-        borderRadius:
-            widget.boxDecoration?.borderRadius?.resolve(TextDirection.ltr) ??
-                context.theme.borderRadiusSM,
       ),
     );
   }
