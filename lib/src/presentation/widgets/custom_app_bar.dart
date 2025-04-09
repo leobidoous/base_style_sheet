@@ -171,6 +171,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
               child: LinearProgressIndicator(
                 value: widget.progress,
                 minHeight: 2,
+                borderRadius: context.theme.borderRadiusMD,
                 backgroundColor: Colors.grey.shade300,
                 color: context.colorScheme.primary,
               ),

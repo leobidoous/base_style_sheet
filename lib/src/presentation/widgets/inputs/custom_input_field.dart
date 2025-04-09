@@ -193,6 +193,7 @@ class _CustomInputFieldState extends State<CustomInputField> {
               enableSuggestions: widget.enableSuggestions,
               onEditingComplete: widget.onEditingComplete,
               textCapitalization: widget.textCapitalization,
+              cursorRadius: Radius.circular(Spacing.md.value),
               enableInteractiveSelection: widget.enableinteractiveSelection,
               textInputAction: widget.textInputAction ?? TextInputAction.done,
               style: context.textTheme.bodyMedium?.copyWith(
@@ -201,6 +202,8 @@ class _CustomInputFieldState extends State<CustomInputField> {
               ),
               obscureText: widget.obscureText,
               decoration: InputDecoration(
+                focusColor: Colors.transparent,
+                hoverColor: Colors.transparent,
                 isCollapsed: widget.isCollapsed,
                 isDense: widget.isDense,
                 filled: widget.fillColor != null,

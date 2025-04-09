@@ -1,3 +1,9 @@
+## 1.3.29
+
+* Update PagedLisController
+* Update CustomAlert
+* Upgrade dependencies
+
 ## 1.3.28
 
 * Update PagedLisController

@@ -1,13 +1,14 @@
 part of 'custom_dropdown.dart';
 
-class _DropdownHintChild<T> extends StatelessWidget {
+class _DropdownHintChild extends StatefulWidget {
   const _DropdownHintChild({
     this.icon,
+    this.onTap,
     this.itemStyle,
     this.prefixIcon,
-    this.value = '',
     this.childPadding,
     this.boxConstraints,
+    this.onSearchChanged,
     required this.onClear,
     required this.fontSize,
     required this.readOnly,
@@ -17,101 +18,100 @@ class _DropdownHintChild<T> extends StatelessWidget {
     required this.heightType,
     required this.isExpanded,
     required this.placeholder,
+    required this.boxDecoration,
+    required this.textController,
     required this.rotateAnimation,
   });
+
   final Widget? icon;
-  final String value;
   final bool readOnly;
   final bool isLoading;
   final bool isEnabled;
   final bool showClear;
   final double fontSize;
   final bool isExpanded;
+  final Function()? onTap;
   final Widget? prefixIcon;
   final String placeholder;
   final Function() onClear;
   final TextStyle? itemStyle;
   final EdgeInsets? childPadding;
+  final BoxDecoration? boxDecoration;
   final DropdownHeightType heightType;
   final BoxConstraints? boxConstraints;
   final Animation<double> rotateAnimation;
+  final Function(String?)? onSearchChanged;
+  final TextEditingController textController;
 
   @override
+  State<_DropdownHintChild> createState() => _DropdownHintChildState();
+}
+
+class _DropdownHintChildState extends State<_DropdownHintChild> {
+  
+  @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: childPadding ??
-          EdgeInsets.only(left: prefixIcon == null ? fontSize : 0),
-      constraints: boxConstraints ??
-          BoxConstraints(
-            minHeight: switch (heightType) {
-              DropdownHeightType.normal => AppThemeBase.buttonHeightMD,
-              DropdownHeightType.small => AppThemeBase.buttonHeightSM,
-            },
-            maxHeight: AppThemeBase.buttonHeightMD,
-          ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Flexible(
-            child: Row(
-              children: [
-                if (prefixIcon != null)
-                  SizedBox(
-                    width: switch (heightType) {
-                      DropdownHeightType.normal => AppThemeBase.buttonHeightMD,
-                      DropdownHeightType.small => AppThemeBase.buttonHeightSM,
-                    },
-                    height: switch (heightType) {
-                      DropdownHeightType.normal => AppThemeBase.buttonHeightMD,
-                      DropdownHeightType.small => AppThemeBase.buttonHeightSM,
-                    },
-                    child: prefixIcon,
-                  ),
-                isExpanded
-                    ? Expanded(child: _textValue(context))
-                    : Flexible(child: _textValue(context)),
-              ],
-            ),
-          ),
-          Spacing.xxs.horizontal,
-          if (isLoading)
-            SizedBox(
-              width: switch (heightType) {
+    return CustomInputField(
+      autofocus: true,
+      autocorrect: true,
+      onTap: widget.onTap,
+      enableSuggestions: true,
+      readOnly: widget.readOnly,
+      enabled: widget.isEnabled,
+      borderSide: BorderSide.none,
+      hintText: widget.placeholder,
+      controller: widget.textController,
+      onChanged: (input) {
+        widget.onTap?.call();
+        widget.onSearchChanged?.call(input);
+      },
+      fillColor: widget.boxDecoration?.color,
+      borderRadius: context.theme.borderRadiusNone,
+      heightType: switch (widget.heightType) {
+        DropdownHeightType.normal => InputHeightType.normal,
+        DropdownHeightType.small => InputHeightType.small,
+      },
+      suffixIcon: widget.isLoading
+          ? SizedBox(
+              width: switch (widget.heightType) {
                 DropdownHeightType.normal => AppThemeBase.buttonHeightMD,
                 DropdownHeightType.small => AppThemeBase.buttonHeightSM,
               },
-              height: switch (heightType) {
+              height: switch (widget.heightType) {
                 DropdownHeightType.normal => AppThemeBase.buttonHeightMD,
                 DropdownHeightType.small => AppThemeBase.buttonHeightSM,
               },
-              child: CustomLoading(width: fontSize, height: fontSize),
+              child: CustomLoading(
+                width: widget.fontSize,
+                height: widget.fontSize,
+              ),
             )
-          else ...[
-            SizedBox(
-              width: switch (heightType) {
+          : SizedBox(
+              width: switch (widget.heightType) {
                 DropdownHeightType.normal => AppThemeBase.buttonHeightMD,
                 DropdownHeightType.small => AppThemeBase.buttonHeightSM,
               },
-              height: switch (heightType) {
+              height: switch (widget.heightType) {
                 DropdownHeightType.normal => AppThemeBase.buttonHeightMD,
                 DropdownHeightType.small => AppThemeBase.buttonHeightSM,
               },
-              child: showClear
+              child: widget.showClear
                   ? Center(
                       child: CustomButton.icon(
                         type: ButtonType.noShape,
-                        onPressed: readOnly || !isEnabled ? null : onClear,
+                        onPressed: widget.readOnly || !widget.isEnabled
+                            ? null
+                            : widget.onClear,
                         heightType: ButtonHeightType.small,
                         icon: Icons.close,
                       ),
                     )
-                  : icon ??
+                  : widget.icon ??
                       RotationTransition(
-                        turns: rotateAnimation,
+                        turns: widget.rotateAnimation,
                         child: CustomButton.icon(
                           type: ButtonType.noShape,
-                          heightType: switch (heightType) {
+                          heightType: switch (widget.heightType) {
                             DropdownHeightType.normal =>
                               ButtonHeightType.normal,
                             DropdownHeightType.small => ButtonHeightType.small,
@@ -120,36 +120,19 @@ class _DropdownHintChild<T> extends StatelessWidget {
                         ),
                       ),
             ),
-          ],
-        ],
-      ),
-    );
-  }
-
-  Widget _textValue(BuildContext context) {
-    return ConstrainedBox(
-      key: key,
-      constraints: BoxConstraints(minWidth: const Spacing(.5).value),
-      child: CustomScrollContent(
-        scrollDirection: Axis.horizontal,
-        alwaysScrollable: true,
-        expanded: true,
-        child: Text(
-          value.isNotEmpty ? value : placeholder,
-          textAlign: TextAlign.start,
-          style: value.isEmpty
-              ? context.textTheme.bodyMedium?.copyWith(
-                  fontWeight: AppFontWeight.medium.value,
-                  color: Colors.grey,
-                  fontSize: fontSize,
-                )
-              : itemStyle ??
-                  context.textTheme.bodyMedium?.copyWith(
-                    fontWeight: AppFontWeight.medium.value,
-                    fontSize: fontSize,
-                  ),
-        ),
-      ),
+      prefixIcon: widget.prefixIcon == null
+          ? null
+          : SizedBox(
+              width: switch (widget.heightType) {
+                DropdownHeightType.normal => AppThemeBase.buttonHeightMD,
+                DropdownHeightType.small => AppThemeBase.buttonHeightSM,
+              },
+              height: switch (widget.heightType) {
+                DropdownHeightType.normal => AppThemeBase.buttonHeightMD,
+                DropdownHeightType.small => AppThemeBase.buttonHeightSM,
+              },
+              child: widget.prefixIcon,
+            ),
     );
   }
 }

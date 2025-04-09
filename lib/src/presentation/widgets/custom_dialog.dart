@@ -48,8 +48,8 @@ class CustomDialog {
       context: context,
       barrierDismissible: false,
       useRootNavigator: useRootNavigator,
-      barrierColor: Colors.black.withValues(alpha: 0.8),
       routeSettings: RouteSettings(name: routeName),
+      barrierColor: Colors.black.withValues(alpha: 0.8),
       transitionDuration: const Duration(milliseconds: 250),
       barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
       pageBuilder: (_, animation, secondaryAnimation) {

@@ -1,18 +1,22 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../base_style_sheet.dart' show CustomCard;
 import '../../../core/themes/app_theme_base.dart';
 import '../../../core/themes/app_theme_factory.dart';
 import '../../../core/themes/spacing/spacing.dart';
 import '../../../core/themes/typography/typography_constants.dart';
+import '../../controllers/paged_list_controller.dart';
 import '../../extensions/build_context_extensions.dart';
 import '../buttons/custom_button.dart';
+import '../containers/custom_shimmer.dart';
 import '../custom_loading.dart';
 import '../custom_scroll_content.dart';
 import '../dividers/custom_divider.dart';
 import '../empties/list_empty.dart';
+import '../errors/custom_request_error.dart';
 import '../inputs/custom_input_field.dart';
 import '../inputs/input_label.dart';
+import '../paged_list/paged_list_view.dart';
 
 part 'dropdown_builder.dart';
 part 'dropdown_hint_child.dart';
@@ -46,7 +50,7 @@ class CustomDropdown<T> extends StatefulWidget {
     super.key,
     this.icon,
     this.onClear,
-    this.onChange,
+    this.onChanged,
     this.prefixIcon,
     this.itemStyle,
     this.maxHeight,
@@ -58,8 +62,10 @@ class CustomDropdown<T> extends StatefulWidget {
     this.childPadding,
     this.boxDecoration,
     this.boxConstraints,
-    required this.items,
+    this.listController,
+    this.onSearchChanged,
     this.verticalSpacing,
+    this.items = const [],
     required this.context,
     this.placeholder = '',
     this.isEnabled = true,
@@ -87,7 +93,7 @@ class CustomDropdown<T> extends StatefulWidget {
   final Function()? onClear;
   final TextStyle? itemStyle;
   final BuildContext context;
-  final Function(T)? onChange;
+  final Function(T)? onChanged;
   final InputLabel? labelWidget;
   final bool useParendRenderBox;
   final EdgeInsets? listPadding;
@@ -99,8 +105,10 @@ class CustomDropdown<T> extends StatefulWidget {
   final BoxConstraints? boxConstraints;
   final List<CustomDropdownItem<T>> items;
   final AutovalidateMode autovalidateMode;
+  final Function(String?)? onSearchChanged;
   final String? Function(String?)? validator;
   final List<String? Function(String?)>? validators;
+  final PagedListController<dynamic, CustomDropdownItem<T>>? listController;
 
   @override
   State<CustomDropdown<T>> createState() => _CustomDropdownState<T>();
@@ -108,7 +116,11 @@ class CustomDropdown<T> extends StatefulWidget {
 
 class _CustomDropdownState<T> extends State<CustomDropdown<T>>
     with SingleTickerProviderStateMixin {
+  late final PagedListController<dynamic, CustomDropdownItem<T>>
+      _listController;
+  final ValueNotifier<String> _valueSelected = ValueNotifier('');
   late final AnimationController _animationController;
+  final _textController = TextEditingController();
   late final Animation<double> _opacityAnimation;
   late final Animation<double> _rotateAnimation;
   final _scrollController = ScrollController();
@@ -118,14 +130,24 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
   bool _showClear = false;
   late double _maxHeight;
   late Offset _offset;
-  String _value = '';
   late Size _size;
+
+  bool get _isEnabled => !widget.isLoading && widget.isEnabled;
+
+  double get _fontSize {
+    switch (widget.heightType) {
+      case DropdownHeightType.normal:
+        return AppFontSize.bodyMedium.value;
+      case DropdownHeightType.small:
+        return AppFontSize.bodySmall.value;
+    }
+  }
 
   @override
   void initState() {
     super.initState();
-    _value = widget.value;
-    _showClear = _value.isNotEmpty && widget.onClear != null;
+    _textController.text = widget.value;
+    _showClear = widget.value.isNotEmpty && widget.onClear != null;
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 150),
@@ -136,22 +158,41 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
     _rotateAnimation = Tween<double>(begin: 1, end: .5).animate(
       _animationController,
     );
+
+    _listController = widget.listController ??
+        PagedListController(
+          preventNewFetch: true,
+          pageSize: widget.items.length,
+        );
+
+    if (widget.listController == null) {
+      _listController.setListener(({required pageKey}) async {
+        return widget.items
+            .where(
+              (e) => e.label
+                  .toLowerCase()
+                  .contains(_textController.text.toLowerCase()),
+            )
+            .toList();
+      });
+    }
   }
 
   @override
   void didUpdateWidget(covariant CustomDropdown<T> oldWidget) {
-    _value = widget.value;
-    _showClear = _value.isNotEmpty && widget.onClear != null;
+    _showClear = _textController.text.isNotEmpty && widget.onClear != null;
     if (widget.autovalidateMode != AutovalidateMode.disabled) {
-      _canForceValidator = _value.isEmpty;
+      _canForceValidator = _textController.text.isEmpty;
     }
     super.didUpdateWidget(oldWidget);
   }
 
   @override
   void dispose() {
+    if (widget.listController == null) _listController.dispose();
     _animationController.dispose();
     _scrollController.dispose();
+    _valueSelected.dispose();
     super.dispose();
   }
 
@@ -238,9 +279,9 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
             fullscreenDialog: true,
             barrierDismissible: true,
             barrierColor: Colors.transparent,
+            settings: RouteSettings(name: '/custom_dropdown/$T'),
             transitionDuration: const Duration(milliseconds: 150),
             reverseTransitionDuration: const Duration(milliseconds: 150),
-            settings: RouteSettings(name: '/custom_dropdown/$T'),
             transitionsBuilder: (_, animation, __, child) {
               return FadeTransition(
                 opacity: animation,
@@ -252,27 +293,25 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
             },
             pageBuilder: (context, animation, secondaryAnimation) {
               return Material(
+                shape: RoundedRectangleBorder(
+                  borderRadius: widget.boxDecoration?.borderRadius ??
+                      switch (widget.heightType) {
+                        DropdownHeightType.normal =>
+                          context.theme.borderRadiusLG,
+                        DropdownHeightType.small =>
+                          context.theme.borderRadiusMD,
+                      },
+                ),
                 borderOnForeground: false,
                 color: Colors.transparent,
                 shadowColor: Colors.transparent,
                 surfaceTintColor: Colors.transparent,
-                child: _dropdownBuilder,
+                child: _dropdownChild,
               );
             },
           ),
         )
         .whenComplete(_animationController.reverse);
-  }
-
-  bool get _isEnabled => !widget.isLoading && widget.isEnabled;
-
-  double get _fontSize {
-    switch (widget.heightType) {
-      case DropdownHeightType.normal:
-        return AppFontSize.bodyMedium.value;
-      case DropdownHeightType.small:
-        return AppFontSize.bodySmall.value;
-    }
   }
 
   @override
@@ -300,29 +339,19 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
       },
       child: FormField<String>(
         enabled: _isEnabled,
-        initialValue: _value,
         validator: _validator,
-        key: ValueKey(_value),
+        initialValue: _valueSelected.value,
+        key: ValueKey(_valueSelected.value),
         autovalidateMode: widget.autovalidateMode,
-        forceErrorText: _canForceValidator ? _validator(_value) : null,
+        forceErrorText:
+            _canForceValidator ? _validator(_valueSelected.value) : null,
         builder: (context) {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Semantics(
                 key: _key,
-                button: true,
-                child: Opacity(
-                  opacity: !_isEnabled ? .5 : 1,
-                  child: InkWell(
-                    onTap:
-                        widget.readOnly || !_isEnabled ? null : _showDropdown,
-                    hoverColor: Colors.transparent,
-                    splashColor: Colors.transparent,
-                    highlightColor: Colors.transparent,
-                    child: _container(child: _hintChild),
-                  ),
-                ),
+                child: _container(child: _hintChild),
               ),
               if (context.hasError) ...[
                 Padding(
@@ -346,7 +375,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
     );
   }
 
-  Widget get _dropdownBuilder {
+  LayoutBuilder get _dropdownChild {
     return LayoutBuilder(
       builder: (context, constraints) {
         _getWidgetInfos();
@@ -378,44 +407,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
                     Flexible(
                       child: _container(
                         maxHeight: _maxHeight,
-                        child: _DropdownBuilder(
-                          value: _value,
-                          width: _size.width,
-                          items: widget.items,
-                          fontSize: _fontSize,
-                          canSearch: widget.canSearch,
-                          isOnTop: _isOnTop(constraints),
-                          boxDecoration: widget.boxDecoration ??
-                              BoxDecoration(
-                                color: context.colorScheme.surface,
-                                borderRadius: switch (widget.heightType) {
-                                  DropdownHeightType.normal =>
-                                    context.theme.borderRadiusLG,
-                                  DropdownHeightType.small =>
-                                    context.theme.borderRadiusMD,
-                                },
-                                border: Border.all(
-                                  color: Colors.grey,
-                                  width: .5,
-                                ),
-                              ),
-                          onChanged: (item) {
-                            setState(() {
-                              _value = item.label;
-                              widget.onChange?.call(item.value);
-                              if (widget.onClear != null) _showClear = true;
-                            });
-                            Navigator.of(context).pop();
-                          },
-                          hintChild: _hintChild,
-                          padding: widget.listPadding,
-                          itemStyle: widget.itemStyle,
-                          heightType: widget.heightType,
-                          listPadding: widget.listPadding,
-                          placeholder: widget.placeholder,
-                          scrollController: _scrollController,
-                          itemSelectedStyle: widget.itemSelectedStyle,
-                        ),
+                        child: _dropdownBuilder(constraints),
                       ),
                     ),
                   ],
@@ -428,7 +420,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
     );
   }
 
-  Widget _container({required Widget child, double? maxHeight}) {
+  Container _container({required Widget child, double? maxHeight}) {
     return Container(
       decoration: widget.boxDecoration ??
           BoxDecoration(
@@ -453,42 +445,95 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
     );
   }
 
-  Widget get _hintChild {
-    return InkWell(
-      onTap: !_animationController.isForwardOrCompleted
-          ? null
-          : () {
-              if (_animationController.isForwardOrCompleted) {
-                Navigator.of(context).pop();
-              }
-            },
-      child: _DropdownHintChild(
-        onClear: () {
-          setState(() {
-            _showClear = false;
-            _value = '';
-          });
-          widget.onClear?.call();
-          if (_animationController.isForwardOrCompleted) {
+  Widget _dropdownBuilder(BoxConstraints constraints) {
+    return ValueListenableBuilder(
+      valueListenable: _valueSelected,
+      builder: (context, value, child) {
+        return _DropdownBuilder(
+          width: _size.width,
+          items: widget.items,
+          fontSize: _fontSize,
+          valueSelected: value,
+          canSearch: widget.canSearch,
+          isOnTop: _isOnTop(constraints),
+          listController: _listController,
+          boxDecoration: widget.boxDecoration ??
+              BoxDecoration(
+                color: context.colorScheme.surface,
+                borderRadius: switch (widget.heightType) {
+                  DropdownHeightType.normal => context.theme.borderRadiusLG,
+                  DropdownHeightType.small => context.theme.borderRadiusMD,
+                },
+                border: Border.all(color: Colors.grey, width: .5),
+              ),
+          onChanged: (item) {
+            setState(() {
+              _valueSelected.value = item.label;
+              _textController.text = item.label;
+              widget.onChanged?.call(item.value);
+              if (widget.onClear != null) _showClear = true;
+            });
             Navigator.of(context).pop();
-          }
-        },
-        value: _value,
-        icon: widget.icon,
-        fontSize: _fontSize,
-        isEnabled: _isEnabled,
-        showClear: _showClear,
-        readOnly: widget.readOnly,
-        itemStyle: widget.itemStyle,
-        prefixIcon: widget.prefixIcon,
-        isLoading: widget.isLoading,
-        heightType: widget.heightType,
-        isExpanded: widget.isExpanded,
-        placeholder: widget.placeholder,
-        rotateAnimation: _rotateAnimation,
-        childPadding: widget.childPadding,
-        boxConstraints: widget.boxConstraints,
-      ),
+          },
+          hintChild: _hintChild,
+          padding: widget.listPadding,
+          itemStyle: widget.itemStyle,
+          heightType: widget.heightType,
+          listPadding: widget.listPadding,
+          placeholder: widget.placeholder,
+          scrollController: _scrollController,
+          itemSelectedStyle: widget.itemSelectedStyle,
+        );
+      },
+    );
+  }
+
+  Widget get _hintChild {
+    return ValueListenableBuilder(
+      valueListenable: _valueSelected,
+      builder: (context, value, child) {
+        return _DropdownHintChild(
+          onClear: () {
+            setState(() {
+              _showClear = false;
+              widget.onClear?.call();
+              _textController.clear();
+              _valueSelected.value = '';
+              _listController.refresh();
+              widget.onSearchChanged?.call(_textController.text);
+            });
+            if (_animationController.isForwardOrCompleted) {
+              Navigator.of(context).pop();
+            }
+          },
+          onTap: () {
+            if (_animationController.isDismissed && !widget.readOnly) {
+              _showDropdown();
+            }
+          },
+          onSearchChanged: (input) {
+            _textController.text = input ?? '';
+            widget.onSearchChanged?.call(_textController.text);
+            _listController.refresh();
+          },
+          icon: widget.icon,
+          fontSize: _fontSize,
+          isEnabled: _isEnabled,
+          showClear: _showClear,
+          readOnly: widget.readOnly,
+          itemStyle: widget.itemStyle,
+          isLoading: widget.isLoading,
+          prefixIcon: widget.prefixIcon,
+          heightType: widget.heightType,
+          isExpanded: widget.isExpanded,
+          textController: _textController,
+          placeholder: widget.placeholder,
+          rotateAnimation: _rotateAnimation,
+          childPadding: widget.childPadding,
+          boxDecoration: widget.boxDecoration,
+          boxConstraints: widget.boxConstraints,
+        );
+      },
     );
   }
 }

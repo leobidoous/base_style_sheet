@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart' show Durations;
 
 class _PagedListConfig<T> {
   /// [nextPageKey] is the key to verify if is necessary
@@ -9,23 +10,31 @@ class _PagedListConfig<T> {
     required this.pageSize,
     required this.nextPageKey,
     required this.forceNewFetch,
+    required this.preventNewFetch,
+    required this.initWithRequest,
   }) {
     _pageKey = pageKey;
     _pageSize = pageSize;
     _nextPageKey = nextPageKey;
     _forceNewFetch = forceNewFetch;
+    _preventNewFetch = preventNewFetch;
+    _initWithRequest = initWithRequest;
   }
 
   int pageKey;
   int pageSize;
   int nextPageKey;
   bool forceNewFetch;
+  bool preventNewFetch;
+  bool initWithRequest;
   List<T> lastItems = List.empty(growable: true);
 
   late final int _pageKey;
   late final int _pageSize;
   late final int _nextPageKey;
   late final bool _forceNewFetch;
+  late final bool _preventNewFetch;
+  late final bool _initWithRequest;
 
   bool get isLastFetch {
     return lastItems.isNotEmpty && lastItems.length < pageSize;
@@ -37,6 +46,8 @@ class _PagedListConfig<T> {
     pageSize = _pageSize;
     nextPageKey = _nextPageKey;
     forceNewFetch = _forceNewFetch;
+    preventNewFetch = _preventNewFetch;
+    initWithRequest = _initWithRequest;
   }
 }
 
@@ -47,10 +58,14 @@ class PagedListController<E, S> extends ValueNotifier<List<S>> {
     this.reverse = false,
     this.searchPercent = 100,
     bool forceNewFetch = false,
+    bool initWithRequest = true,
+    bool preventNewFetch = false,
   })  : assert(searchPercent >= 0 && searchPercent <= 100),
         super(const []) {
     config = _PagedListConfig(
       nextPageKey: firstPageKey + pageSize,
+      initWithRequest: initWithRequest,
+      preventNewFetch: preventNewFetch,
       forceNewFetch: forceNewFetch,
       pageKey: firstPageKey,
       pageSize: pageSize,
@@ -129,7 +144,8 @@ class PagedListController<E, S> extends ValueNotifier<List<S>> {
       _fetchItems = fetchItems;
 
   Future<void> fetchNewItems({required int pageKey}) async {
-    if (config.nextPageKey == pageKey ||
+    if ((state.isNotEmpty && config.preventNewFetch) ||
+        (config.nextPageKey == pageKey) ||
         (config.isLastFetch && !config.forceNewFetch) ||
         isLoading) {
       return;
@@ -142,9 +158,9 @@ class PagedListController<E, S> extends ValueNotifier<List<S>> {
       config.pageKey += config.pageSize;
       if (value.isNotEmpty) {
         config.nextPageKey += config.pageSize;
-        await Future.delayed(const Duration(milliseconds: 250));
         final newValues = value.where((v) => !state.contains(v)).toList();
         update(state..addAll(newValues));
+        await Future.delayed(Durations.medium1);
       }
     }).catchError((error) {
       setError(error);

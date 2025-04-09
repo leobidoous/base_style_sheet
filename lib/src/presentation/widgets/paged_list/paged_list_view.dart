@@ -25,7 +25,6 @@ class PagedListView<E, S> extends StatefulWidget {
     this.scrollController,
     this.shrinkWrap = false,
     required this.itemBuilder,
-    this.initWithRequest = true,
     this.parentScrollController,
     required this.listController,
     this.safeAreaLastItem = true,
@@ -46,7 +45,6 @@ class PagedListView<E, S> extends StatefulWidget {
   final PagedListMode mode;
   final EdgeInsets padding;
   final String? refreshLogo;
-  final bool initWithRequest;
   final Axis scrollDirection;
   final bool safeAreaLastItem;
   final ScrollPhysics? physics;
@@ -85,7 +83,7 @@ class _PagedListViewState<E, S> extends State<PagedListView<E, S>> {
         widget.parentScrollController ??
         ScrollController();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      if (widget.initWithRequest) _listController.refresh();
+      if (_listController.config.initWithRequest) _listController.refresh();
     });
     _scrollController.addListener(() {
       final max = _scrollController.position.maxScrollExtent;
