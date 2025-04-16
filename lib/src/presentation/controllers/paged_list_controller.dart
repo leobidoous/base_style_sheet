@@ -9,6 +9,7 @@ class _PagedListConfig<T> {
     required this.pageKey,
     required this.pageSize,
     required this.nextPageKey,
+    required this.pageIncrement,
     required this.forceNewFetch,
     required this.preventNewFetch,
     required this.initWithRequest,
@@ -16,6 +17,7 @@ class _PagedListConfig<T> {
     _pageKey = pageKey;
     _pageSize = pageSize;
     _nextPageKey = nextPageKey;
+    _pageIncrement = pageIncrement;
     _forceNewFetch = forceNewFetch;
     _preventNewFetch = preventNewFetch;
     _initWithRequest = initWithRequest;
@@ -24,6 +26,7 @@ class _PagedListConfig<T> {
   int pageKey;
   int pageSize;
   int nextPageKey;
+  int pageIncrement;
   bool forceNewFetch;
   bool preventNewFetch;
   bool initWithRequest;
@@ -32,6 +35,7 @@ class _PagedListConfig<T> {
   late final int _pageKey;
   late final int _pageSize;
   late final int _nextPageKey;
+  late final int _pageIncrement;
   late final bool _forceNewFetch;
   late final bool _preventNewFetch;
   late final bool _initWithRequest;
@@ -45,6 +49,7 @@ class _PagedListConfig<T> {
     pageKey = _pageKey;
     pageSize = _pageSize;
     nextPageKey = _nextPageKey;
+    pageIncrement = _pageIncrement;
     forceNewFetch = _forceNewFetch;
     preventNewFetch = _preventNewFetch;
     initWithRequest = _initWithRequest;
@@ -56,6 +61,7 @@ class PagedListController<E, S> extends ValueNotifier<List<S>> {
     int pageSize = 10,
     this.firstPageKey = 0,
     this.reverse = false,
+    int pageIncrement = 1,
     this.searchPercent = 100,
     bool forceNewFetch = false,
     bool initWithRequest = true,
@@ -63,10 +69,11 @@ class PagedListController<E, S> extends ValueNotifier<List<S>> {
   })  : assert(searchPercent >= 0 && searchPercent <= 100),
         super(const []) {
     config = _PagedListConfig(
-      nextPageKey: firstPageKey + pageSize,
+      nextPageKey: firstPageKey + pageIncrement,
       initWithRequest: initWithRequest,
       preventNewFetch: preventNewFetch,
       forceNewFetch: forceNewFetch,
+      pageIncrement: pageIncrement,
       pageKey: firstPageKey,
       pageSize: pageSize,
     );
@@ -155,12 +162,12 @@ class PagedListController<E, S> extends ValueNotifier<List<S>> {
     setLoading(true);
     await _fetchItems(pageKey: pageKey).then((value) async {
       config.lastItems = value;
-      config.pageKey += config.pageSize;
+      config.pageKey += config.pageIncrement;
       if (value.isNotEmpty) {
-        config.nextPageKey += config.pageSize;
+        config.nextPageKey += config.pageIncrement;
         final newValues = value.where((v) => !state.contains(v)).toList();
+        await Future.delayed(Durations.long2);
         update(state..addAll(newValues));
-        await Future.delayed(Durations.medium1);
       }
     }).catchError((error) {
       setError(error);

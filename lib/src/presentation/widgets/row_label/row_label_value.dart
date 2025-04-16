@@ -21,6 +21,7 @@ class RowLabelValue extends StatelessWidget {
     this.onTapTooltip,
     this.tooltipIconColor,
     this.crossAxisAlignment,
+    this.mainAxisAlignment,
     this.flexLabel = 4,
     this.flexValue = 6,
   });
@@ -38,6 +39,7 @@ class RowLabelValue extends StatelessWidget {
   final IconData? tooltipIcon;
   final Color? tooltipIconColor;
   final Function()? onTapTooltip;
+  final MainAxisAlignment? mainAxisAlignment;
   final CrossAxisAlignment? crossAxisAlignment;
   final int flexLabel;
   final int flexValue;
@@ -52,12 +54,14 @@ class RowLabelValue extends StatelessWidget {
         );
 
     return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: mainAxisAlignment ?? MainAxisAlignment.spaceBetween,
       crossAxisAlignment: crossAxisAlignment ?? CrossAxisAlignment.center,
       children: [
-        Expanded(
+        Flexible(
           flex: flexLabel,
           child: Row(
+            mainAxisSize: MainAxisSize.min,
             children: [
               Flexible(
                 child: Text(
@@ -86,7 +90,7 @@ class RowLabelValue extends StatelessWidget {
             ],
           ),
         ),
-        Expanded(
+        Flexible(
           flex: flexValue,
           child: Text(
             value,

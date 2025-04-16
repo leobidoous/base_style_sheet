@@ -120,12 +120,12 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
       _listController;
   final ValueNotifier<String> _valueSelected = ValueNotifier('');
   late final AnimationController _animationController;
-  final _textController = TextEditingController();
   late final Animation<double> _opacityAnimation;
   late final Animation<double> _rotateAnimation;
   final _scrollController = ScrollController();
   Offset _parentContextOffset = Offset.zero;
   bool _canForceValidator = false;
+  String _textSearchFilter = '';
   final _key = GlobalKey();
   bool _showClear = false;
   late double _maxHeight;
@@ -146,7 +146,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
   @override
   void initState() {
     super.initState();
-    _textController.text = widget.value;
+    _valueSelected.value = widget.value;
     _showClear = widget.value.isNotEmpty && widget.onClear != null;
     _animationController = AnimationController(
       vsync: this,
@@ -171,7 +171,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
             .where(
               (e) => e.label
                   .toLowerCase()
-                  .contains(_textController.text.toLowerCase()),
+                  .contains(_textSearchFilter.toLowerCase()),
             )
             .toList();
       });
@@ -180,9 +180,12 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
 
   @override
   void didUpdateWidget(covariant CustomDropdown<T> oldWidget) {
-    _showClear = _textController.text.isNotEmpty && widget.onClear != null;
+    _textSearchFilter = '';
+    _showClear =
+        (_valueSelected.value.isNotEmpty || _textSearchFilter.isNotEmpty) &&
+            widget.onClear != null;
     if (widget.autovalidateMode != AutovalidateMode.disabled) {
-      _canForceValidator = _textController.text.isEmpty;
+      _canForceValidator = _valueSelected.value.isEmpty;
     }
     super.didUpdateWidget(oldWidget);
   }
@@ -205,6 +208,15 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
       }
     });
     return error;
+  }
+
+  void _onChangedItem(CustomDropdownItem<T> item) {
+    setState(() {
+      _textSearchFilter = '';
+      _valueSelected.value = item.label;
+      widget.onChanged?.call(item.value);
+    });
+    Navigator.of(context).pop();
   }
 
   void _getWidgetInfos() {
@@ -454,9 +466,17 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
           items: widget.items,
           fontSize: _fontSize,
           valueSelected: value,
+          hintChild: _hintChild,
+          padding: widget.listPadding,
+          itemStyle: widget.itemStyle,
           canSearch: widget.canSearch,
+          heightType: widget.heightType,
           isOnTop: _isOnTop(constraints),
           listController: _listController,
+          listPadding: widget.listPadding,
+          placeholder: widget.placeholder,
+          scrollController: _scrollController,
+          itemSelectedStyle: widget.itemSelectedStyle,
           boxDecoration: widget.boxDecoration ??
               BoxDecoration(
                 color: context.colorScheme.surface,
@@ -466,23 +486,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
                 },
                 border: Border.all(color: Colors.grey, width: .5),
               ),
-          onChanged: (item) {
-            setState(() {
-              _valueSelected.value = item.label;
-              _textController.text = item.label;
-              widget.onChanged?.call(item.value);
-              if (widget.onClear != null) _showClear = true;
-            });
-            Navigator.of(context).pop();
-          },
-          hintChild: _hintChild,
-          padding: widget.listPadding,
-          itemStyle: widget.itemStyle,
-          heightType: widget.heightType,
-          listPadding: widget.listPadding,
-          placeholder: widget.placeholder,
-          scrollController: _scrollController,
-          itemSelectedStyle: widget.itemSelectedStyle,
+          onChanged: _onChangedItem,
         );
       },
     );
@@ -494,17 +498,16 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
       builder: (context, value, child) {
         return _DropdownHintChild(
           onClear: () {
-            setState(() {
-              _showClear = false;
-              widget.onClear?.call();
-              _textController.clear();
-              _valueSelected.value = '';
-              _listController.refresh();
-              widget.onSearchChanged?.call(_textController.text);
-            });
             if (_animationController.isForwardOrCompleted) {
               Navigator.of(context).pop();
             }
+            setState(() {
+              widget.onClear?.call();
+              _textSearchFilter = '';
+              _valueSelected.value = '';
+              _listController.refresh();
+              widget.onSearchChanged?.call(_textSearchFilter);
+            });
           },
           onTap: () {
             if (_animationController.isDismissed && !widget.readOnly) {
@@ -512,8 +515,8 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
             }
           },
           onSearchChanged: (input) {
-            _textController.text = input ?? '';
-            widget.onSearchChanged?.call(_textController.text);
+            _textSearchFilter = input ?? '';
+            widget.onSearchChanged?.call(_textSearchFilter);
             _listController.refresh();
           },
           icon: widget.icon,
@@ -526,12 +529,23 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
           prefixIcon: widget.prefixIcon,
           heightType: widget.heightType,
           isExpanded: widget.isExpanded,
-          textController: _textController,
           placeholder: widget.placeholder,
           rotateAnimation: _rotateAnimation,
           childPadding: widget.childPadding,
           boxDecoration: widget.boxDecoration,
+          valueSelected: _valueSelected.value,
           boxConstraints: widget.boxConstraints,
+          onEditingComplete: () {
+            if (_listController.value.isNotEmpty) {
+              _onChangedItem(
+                _listController.value.firstWhere(
+                  (e) => e.label == _valueSelected.value,
+                  orElse: () => _listController.value.first,
+                ),
+              );
+            }
+          },
+          canFocus: _animationController.isForwardOrCompleted,
         );
       },
     );
