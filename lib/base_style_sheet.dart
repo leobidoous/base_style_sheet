@@ -64,4 +64,5 @@ export 'package:cached_network_image/cached_network_image.dart';
 export 'package:file_picker/file_picker.dart';
 export 'package:flutter_cache_manager/flutter_cache_manager.dart';
 export 'package:image_picker/image_picker.dart';
-export 'package:webview_flutter/webview_flutter.dart' show NavigationDecision;
+export 'package:webview_flutter/webview_flutter.dart'
+    show NavigationDecision, WebViewCookieManager;

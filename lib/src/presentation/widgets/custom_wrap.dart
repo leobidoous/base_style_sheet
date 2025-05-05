@@ -17,8 +17,8 @@ class CustomWrap<T> extends StatelessWidget {
   final double runSpacing;
   final List<Widget> items;
   final EdgeInsets padding;
-  final WrapAlignment runAlignment;
   final WrapAlignment alignment;
+  final WrapAlignment runAlignment;
   final WrapCrossAlignment crossAxisAlignment;
 
   @override
@@ -29,8 +29,8 @@ class CustomWrap<T> extends StatelessWidget {
         builder: (context, constrains) {
           return Wrap(
             spacing: spacing,
-            runSpacing: runSpacing,
             alignment: alignment,
+            runSpacing: runSpacing,
             runAlignment: runAlignment,
             crossAxisAlignment: crossAxisAlignment,
             children: items.map((item) {

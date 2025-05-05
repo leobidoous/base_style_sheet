@@ -1,3 +1,7 @@
+## 1.3.30
+
+* Update CustomDivider
+
 ## 1.3.29
 
 * Update PagedLisController
