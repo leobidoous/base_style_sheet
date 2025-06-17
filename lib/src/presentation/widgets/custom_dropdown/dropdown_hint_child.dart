@@ -63,7 +63,9 @@ class _DropdownHintChildState extends State<_DropdownHintChild> {
 
   @override
   void didUpdateWidget(covariant _DropdownHintChild oldWidget) {
-    _editingController.text = widget.valueSelected;
+    WidgetsBinding.instance.addPostFrameCallback((callback) {
+      _editingController.text = widget.valueSelected;
+    });
     super.didUpdateWidget(oldWidget);
   }
 

@@ -1,3 +1,13 @@
+## 1.3.32
+
+* Update PagedLisController
+* Update CustomDropDown
+* Upgrade dependencies
+
+## 1.3.31
+
+* Update PagedLisView: Add allowRefresh arg
+
 ## 1.3.30
 
 * Update CustomDivider

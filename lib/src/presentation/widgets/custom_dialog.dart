@@ -41,7 +41,7 @@ class CustomDialog {
     bool showClose = true,
     BoxConstraints? constraints,
     bool useRootNavigator = true,
-    bool allowDismissOnTap = true,
+    bool isDismissible = true,
     String routeName = '/custom_dialog/',
   }) async {
     return await showGeneralDialog<bool>(
@@ -56,7 +56,7 @@ class CustomDialog {
         return PopScope(
           canPop: false,
           child: _CustomDialog(
-            allowDismissOnTap: allowDismissOnTap,
+            isDismissible: isDismissible,
             constraints: constraints,
             showClose: showClose,
             onClose: onClose,
@@ -93,7 +93,7 @@ class CustomDialog {
 
 class _CustomDialog extends StatelessWidget {
   const _CustomDialog({
-    this.allowDismissOnTap = true,
+    this.isDismissible = true,
     required this.showClose,
     required this.child,
     this.constraints,
@@ -104,7 +104,7 @@ class _CustomDialog extends StatelessWidget {
   final bool showClose;
   final Function()? onClose;
   final EdgeInsets? padding;
-  final bool allowDismissOnTap;
+  final bool isDismissible;
   final BoxConstraints? constraints;
 
   void _onClose(BuildContext context) {
@@ -119,7 +119,7 @@ class _CustomDialog extends StatelessWidget {
       children: [
         Positioned.fill(
           child: GestureDetector(
-            onTap: allowDismissOnTap ? () => _onClose(context) : null,
+            onTap: isDismissible ? () => _onClose(context) : null,
             child: const ColoredBox(color: Colors.transparent),
           ),
         ),

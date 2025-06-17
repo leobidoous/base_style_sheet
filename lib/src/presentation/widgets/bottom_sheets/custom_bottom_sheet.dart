@@ -23,7 +23,6 @@ class CustomBottomSheet {
     bool isDismissible = true,
     BoxConstraints? constraints,
     bool useRootNavigator = true,
-    bool allowDismissOnTap = true,
     bool isScrollControlled = true,
     CustomBottomSheetCloseMode closeMode = CustomBottomSheetCloseMode.outside,
   }) async {
@@ -50,7 +49,7 @@ class CustomBottomSheet {
         return PopScope(
           canPop: false,
           child: _CustomBottomSheet(
-            allowDismissOnTap: allowDismissOnTap,
+            isDismissible: isDismissible,
             backgroundColor: backgroundColor,
             useSafeArea: useSafeArea,
             showClose: showClose,
@@ -75,14 +74,14 @@ class _CustomBottomSheet extends StatefulWidget {
     required this.closeMode,
     required this.showClose,
     this.useSafeArea = true,
-    this.allowDismissOnTap = true,
+    this.isDismissible = true,
   });
   final Widget child;
   final bool showClose;
   final bool useSafeArea;
   final EdgeInsets? padding;
   final Color? backgroundColor;
-  final bool allowDismissOnTap;
+  final bool isDismissible;
   final CustomBottomSheetCloseMode closeMode;
 
   @override
@@ -116,7 +115,7 @@ class _CustomBottomSheetState extends State<_CustomBottomSheet> {
       children: [
         Positioned.fill(
           child: GestureDetector(
-            onTap: widget.allowDismissOnTap ? _onClose : null,
+            onTap: widget.isDismissible ? _onClose : null,
             child: const ColoredBox(color: Colors.transparent),
           ),
         ),

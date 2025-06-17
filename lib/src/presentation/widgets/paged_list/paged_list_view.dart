@@ -24,6 +24,7 @@ class PagedListView<E, S> extends StatefulWidget {
     this.refreshLogo,
     this.scrollController,
     this.shrinkWrap = false,
+    this.allowRefresh = true,
     required this.itemBuilder,
     this.parentScrollController,
     required this.listController,
@@ -41,6 +42,7 @@ class PagedListView<E, S> extends StatefulWidget {
 
   final int? nCols;
   final bool shrinkWrap;
+  final bool allowRefresh;
   final double? thickness;
   final PagedListMode mode;
   final EdgeInsets padding;
@@ -163,24 +165,29 @@ class _PagedListViewState<E, S> extends State<PagedListView<E, S>> {
                 ),
               );
         }
+        final child = RawScrollbar(
+          padding: EdgeInsets.zero,
+          thumbColor: context.colorScheme.primary,
+          radius: context.theme.borderRadiusXLG.bottomLeft,
+          thickness: switch (defaultTargetPlatform) {
+            TargetPlatform.android => widget.thickness,
+            TargetPlatform.iOS => widget.thickness,
+            TargetPlatform() => 0,
+          },
+          controller:
+              widget.parentScrollController == null ? _scrollController : null,
+          child: _scrollChild(state),
+        );
+
+        /// Validate if it is allowed to use
+        /// the onRefresh from the listController
+        if (!widget.allowRefresh) return child;
+
         return CustomRefreshIndicator(
           refreshLogo: widget.refreshLogo,
           reverse: _listController.reverse,
           onRefresh: _listController.refresh,
-          child: RawScrollbar(
-            padding: EdgeInsets.zero,
-            thumbColor: context.colorScheme.primary,
-            radius: context.theme.borderRadiusXLG.bottomLeft,
-            thickness: switch (defaultTargetPlatform) {
-              TargetPlatform.android => widget.thickness,
-              TargetPlatform.iOS => widget.thickness,
-              TargetPlatform() => 0,
-            },
-            controller: widget.parentScrollController == null
-                ? _scrollController
-                : null,
-            child: _scrollChild(state),
-          ),
+          child: child,
         );
       },
     );
