@@ -41,8 +41,8 @@ class RowLabelValue extends StatelessWidget {
   final Function()? onTapTooltip;
   final MainAxisAlignment? mainAxisAlignment;
   final CrossAxisAlignment? crossAxisAlignment;
-  final int flexLabel;
-  final int flexValue;
+  final int? flexLabel;
+  final int? flexValue;
 
   @override
   Widget build(BuildContext context) {
@@ -55,11 +55,11 @@ class RowLabelValue extends StatelessWidget {
 
     return Row(
       mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: mainAxisAlignment ?? MainAxisAlignment.spaceBetween,
       crossAxisAlignment: crossAxisAlignment ?? CrossAxisAlignment.center,
+      mainAxisAlignment: mainAxisAlignment ?? MainAxisAlignment.spaceBetween,
       children: [
         Flexible(
-          flex: flexLabel,
+          flex: flexLabel ?? 1,
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -91,7 +91,7 @@ class RowLabelValue extends StatelessWidget {
           ),
         ),
         Flexible(
-          flex: flexValue,
+          flex: flexValue ?? 1,
           child: Text(
             value,
             textAlign: TextAlign.end,

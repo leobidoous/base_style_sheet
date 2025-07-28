@@ -240,7 +240,8 @@ class _CustomInputFieldState extends State<CustomInputField> {
                 suffixIcon: widget.suffixIcon ?? SizedBox(width: _fontSize),
                 prefixIcon: widget.prefixIcon ?? SizedBox(width: _fontSize),
                 errorStyle: widget.errorStyle ??
-                    context.textTheme.labelSmall?.copyWith(color: Colors.red),
+                    context.textTheme.labelSmall
+                        ?.copyWith(color: context.colorScheme.error),
                 contentPadding: widget.contentPadding ??
                     EdgeInsets.symmetric(
                       horizontal: _fontSize,
@@ -248,11 +249,11 @@ class _CustomInputFieldState extends State<CustomInputField> {
                     ),
                 errorText: widget.errorText == '' ? null : widget.errorText,
                 floatingLabelBehavior: widget.floatingLabelBehavior,
-                focusedErrorBorder: _border(Colors.red),
+                focusedErrorBorder: _border(context.colorScheme.error),
+                errorBorder: _border(context.colorScheme.error),
                 disabledBorder: _border(Colors.grey),
                 enabledBorder: _border(Colors.grey),
                 focusedBorder: _border(Colors.grey),
-                errorBorder: _border(Colors.red),
                 border: _border(Colors.grey),
                 alignLabelWithHint: true,
               ),
