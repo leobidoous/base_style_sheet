@@ -51,11 +51,11 @@ class Spacing {
   final int factor;
 
   /// The scaling factor for gutters and margins
-  static keyboardHeigth(BuildContext context) =>
+  static double keyboardHeigth(BuildContext context) =>
       context.mediaQuery.viewInsets.bottom;
 
   /// The scaling factor for gutters and margins
-  static keyboardIsOpened(BuildContext context) =>
+  static bool keyboardIsOpened(BuildContext context) =>
       context.mediaQuery.viewInsets.bottom != 0;
 
   /// Default Spacing or keyboard padding

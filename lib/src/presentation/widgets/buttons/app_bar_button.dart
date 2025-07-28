@@ -23,7 +23,7 @@ class AppBarButton extends StatelessWidget {
   final bool isLastButtom;
   final BorderRadius? borderRadius;
 
-  static Widget shimmer({isLastButtom = true, double? padding}) {
+  static Widget shimmer({bool isLastButtom = true, double? padding}) {
     return Padding(
       padding: EdgeInsets.only(
         right: isLastButtom ? (padding ?? Spacing.sm.value) : 0,

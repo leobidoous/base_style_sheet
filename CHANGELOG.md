@@ -1,3 +1,8 @@
+## 1.3.34
+
+* Update CustomDropDown
+  * Add validation error style
+
 ## 1.3.33
 
 * Update CustomDropDown
