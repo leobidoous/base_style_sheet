@@ -357,15 +357,15 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
         autovalidateMode: widget.autovalidateMode,
         forceErrorText:
             _canForceValidator ? _validator(_valueSelected.value) : null,
-        builder: (context) {
+        builder: (c) {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Semantics(
                 key: _key,
-                child: _container(child: _hintChild),
+                child: _container(child: _hintChild, hasError: c.hasError),
               ),
-              if (context.hasError) ...[
+              if (c.hasError) ...[
                 Padding(
                   padding: EdgeInsets.only(
                     top: Spacing.xxs.value,
@@ -373,9 +373,9 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
                     right: widget.childPadding?.right ?? Spacing.xs.value,
                   ),
                   child: Text(
-                    context.errorText ?? '',
-                    style: context.context.textTheme.labelSmall?.copyWith(
-                      color: Colors.red,
+                    c.errorText ?? '',
+                    style: c.context.textTheme.labelSmall?.copyWith(
+                      color: context.colorScheme.error,
                     ),
                   ),
                 ),
@@ -432,7 +432,11 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
     );
   }
 
-  Container _container({required Widget child, double? maxHeight}) {
+  Container _container({
+    required Widget child,
+    double? maxHeight,
+    bool hasError = false,
+  }) {
     return Container(
       decoration: widget.boxDecoration ??
           BoxDecoration(
@@ -441,7 +445,10 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
               DropdownHeightType.normal => context.theme.borderRadiusLG,
               DropdownHeightType.small => context.theme.borderRadiusMD,
             },
-            border: Border.all(color: Colors.grey, width: .5),
+            border: Border.all(
+              color: hasError ? context.colorScheme.error : Colors.grey,
+              width: .5,
+            ),
           ),
       constraints: BoxConstraints(
         maxHeight: maxHeight ?? AppThemeBase.buttonHeightMD,
