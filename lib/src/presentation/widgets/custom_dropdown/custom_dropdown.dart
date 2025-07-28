@@ -505,7 +505,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
               widget.onClear?.call();
               _textSearchFilter = '';
               _valueSelected.value = '';
-              _listController.refresh();
+              if (widget.onSearchChanged == null) _listController.refresh();
               widget.onSearchChanged?.call(_textSearchFilter);
             });
           },
@@ -516,8 +516,8 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
           },
           onSearchChanged: (input) {
             _textSearchFilter = input ?? '';
+            if (widget.onSearchChanged == null) _listController.refresh();
             widget.onSearchChanged?.call(_textSearchFilter);
-            _listController.refresh();
           },
           icon: widget.icon,
           fontSize: _fontSize,
