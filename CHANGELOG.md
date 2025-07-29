@@ -1,3 +1,9 @@
+## 1.3.35
+
+* chore: update version to 1.3.35 and modify CHANGELOG; 
+* refactor CustomBottomSheet and CustomDialog for improved functionality; 
+* enhance CustomTooltip and InputLabel with new features
+
 ## 1.3.34
 
 * Update CustomDropDown

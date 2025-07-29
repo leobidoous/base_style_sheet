@@ -35,6 +35,7 @@ class _DropdownList<T> extends StatelessWidget {
       physics: const BouncingScrollPhysics(
         parent: AlwaysScrollableScrollPhysics(),
       ),
+      allowRefresh: !listController.config.preventNewFetch,
       separatorBuilder: (_, __) => const CustomDivider(height: 0),
       noItemsFoundIndicatorBuilder: (_, onRefresh) {
         return ListEmpty(

@@ -22,13 +22,15 @@ class CustomTooltip extends StatelessWidget {
   Widget build(BuildContext context) {
     return Tooltip(
       message: message,
-      verticalOffset: verticalOffset ?? Spacing.md.value,
       excludeFromSemantics: true,
+      verticalOffset: verticalOffset ?? Spacing.md.value,
       decoration: BoxDecoration(
-        color: context.colorScheme.primaryContainer,
+        color: context.colorScheme.primary,
         borderRadius: context.theme.borderRadiusSM,
       ),
-      textStyle: context.textTheme.bodyMedium,
+      textStyle: context.textTheme.bodyMedium?.copyWith(
+        color: context.colorScheme.onPrimary,
+      ),
       triggerMode: triggerMode,
       textAlign: TextAlign.center,
       child: child,

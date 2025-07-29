@@ -79,9 +79,9 @@ class _CustomBottomSheet extends StatefulWidget {
   final Widget child;
   final bool showClose;
   final bool useSafeArea;
+  final bool isDismissible;
   final EdgeInsets? padding;
   final Color? backgroundColor;
-  final bool isDismissible;
   final CustomBottomSheetCloseMode closeMode;
 
   @override
