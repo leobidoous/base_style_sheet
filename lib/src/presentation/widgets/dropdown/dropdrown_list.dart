@@ -71,25 +71,21 @@ class _DropdownList<T> extends StatelessWidget {
         );
       },
       newPageErrorIndicatorBuilder: (_, error, onRefresh) {
-        return Center(
-          child: CustomRequestError(
-            isSafeArea: false,
-            onPressed: onRefresh,
-            message: error?.toString(),
-            btnLabel: 'Buscar novamente',
-            padding: padding ?? EdgeInsets.all(Spacing.sm.value),
-          ),
+        return CustomRequestError(
+          isSafeArea: false,
+          onPressed: onRefresh,
+          message: error?.toString(),
+          btnLabel: 'Buscar novamente',
+          padding: padding ?? EdgeInsets.all(Spacing.sm.value),
         );
       },
       firstPageErrorIndicatorBuilder: (_, error, onRefresh) {
-        return Center(
-          child: CustomRequestError(
-            isSafeArea: false,
-            onPressed: onRefresh,
-            btnLabel: 'Buscar novamente',
-            message: error?.toString(),
-            padding: padding ?? EdgeInsets.all(Spacing.sm.value),
-          ),
+        return CustomRequestError(
+          isSafeArea: false,
+          onPressed: onRefresh,
+          btnLabel: 'Buscar novamente',
+          message: error?.toString(),
+          padding: padding ?? EdgeInsets.all(Spacing.sm.value),
         );
       },
       itemBuilder: (context, item, index) {

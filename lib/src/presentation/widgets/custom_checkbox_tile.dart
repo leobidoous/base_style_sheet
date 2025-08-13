@@ -69,8 +69,9 @@ class CustomCheckboxTile<T> extends StatelessWidget {
         borderRadius: context.theme.borderRadiusXSM,
         border: Border.all(
           width: 1,
-          color:
-              isSelected ? context.colorScheme.primary : Colors.grey.shade300,
+          color: isSelected
+              ? context.colorScheme.primary
+              : context.textTheme.bodyMedium?.color ?? Colors.grey,
         ),
       ),
       height: const Spacing(2).value,

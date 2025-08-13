@@ -1,3 +1,14 @@
+## 1.3.37
+
+* Upgrade dependencies
+* Update CustomListTile style;
+* chore: update version to 1.3.37;
+
+## 1.3.36
+
+* Add borderRadius to CustomDropdown;
+* chore: update version to 1.3.36;
+
 ## 1.3.35
 
 * chore: update version to 1.3.35 and modify CHANGELOG; 

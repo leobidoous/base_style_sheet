@@ -59,6 +59,7 @@ class CustomDropdown<T> extends StatefulWidget {
     this.validators,
     this.labelWidget,
     this.listPadding,
+    this.borderRadius,
     this.childPadding,
     this.boxDecoration,
     this.boxConstraints,
@@ -99,6 +100,7 @@ class CustomDropdown<T> extends StatefulWidget {
   final EdgeInsets? listPadding;
   final double? verticalSpacing;
   final EdgeInsets? childPadding;
+  final BorderRadius? borderRadius;
   final TextStyle? itemSelectedStyle;
   final BoxDecoration? boxDecoration;
   final DropdownHeightType heightType;
@@ -309,9 +311,9 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
                   borderRadius: widget.boxDecoration?.borderRadius ??
                       switch (widget.heightType) {
                         DropdownHeightType.normal =>
-                          context.theme.borderRadiusLG,
+                          widget.borderRadius ?? context.theme.borderRadiusLG,
                         DropdownHeightType.small =>
-                          context.theme.borderRadiusMD,
+                          widget.borderRadius ?? context.theme.borderRadiusMD,
                       },
                 ),
                 borderOnForeground: false,
@@ -442,8 +444,10 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
           BoxDecoration(
             color: context.colorScheme.surface,
             borderRadius: switch (widget.heightType) {
-              DropdownHeightType.normal => context.theme.borderRadiusLG,
-              DropdownHeightType.small => context.theme.borderRadiusMD,
+              DropdownHeightType.normal =>
+                widget.borderRadius ?? context.theme.borderRadiusLG,
+              DropdownHeightType.small =>
+                widget.borderRadius ?? context.theme.borderRadiusMD,
             },
             border: Border.all(
               color: hasError ? context.colorScheme.error : Colors.grey,
@@ -456,8 +460,10 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
       child: ClipRRect(
         borderRadius: widget.boxDecoration?.borderRadius ??
             switch (widget.heightType) {
-              DropdownHeightType.normal => context.theme.borderRadiusLG,
-              DropdownHeightType.small => context.theme.borderRadiusMD,
+              DropdownHeightType.normal =>
+                widget.borderRadius ?? context.theme.borderRadiusLG,
+              DropdownHeightType.small =>
+                widget.borderRadius ?? context.theme.borderRadiusMD,
             },
         child: child,
       ),
@@ -488,8 +494,10 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
               BoxDecoration(
                 color: context.colorScheme.surface,
                 borderRadius: switch (widget.heightType) {
-                  DropdownHeightType.normal => context.theme.borderRadiusLG,
-                  DropdownHeightType.small => context.theme.borderRadiusMD,
+                  DropdownHeightType.normal =>
+                    widget.borderRadius ?? context.theme.borderRadiusLG,
+                  DropdownHeightType.small =>
+                    widget.borderRadius ?? context.theme.borderRadiusMD,
                 },
                 border: Border.all(color: Colors.grey, width: .5),
               ),
