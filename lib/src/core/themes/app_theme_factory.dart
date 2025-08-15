@@ -80,7 +80,7 @@ extension ElevatedButtonThemeDataExtension on ElevatedButtonThemeData {
   double get heightLarge => AppThemeBase.buttonHeightLG;
 }
 
-extension AppBarThemeExtension on AppBarTheme {
+extension AppBarThemeDataExtension on AppBarThemeData {
   double get appBarHeight => AppThemeBase.appBarHeight;
 }
 

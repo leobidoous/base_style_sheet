@@ -1,3 +1,7 @@
+## 1.4.0
+
+* `BREAKING FEAT`: Bump flutter version to 3.35.1
+
 ## 1.3.37
 
 * Upgrade dependencies
