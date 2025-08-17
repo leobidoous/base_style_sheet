@@ -1,3 +1,8 @@
+## 1.4.1
+
+* Update Custom Button
+* Upgrade dependencies
+
 ## 1.4.0
 
 * `BREAKING FEAT`: Bump flutter version to 3.35.1

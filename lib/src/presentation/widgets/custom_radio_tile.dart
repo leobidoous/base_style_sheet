@@ -45,7 +45,7 @@ class CustomRadioTile<T> extends StatelessWidget {
                   children: [
                     if (controlAffinity == ListTileControlAffinity.leading) ...[
                       _radioCheck(context),
-                      Spacing.xs.horizontal,
+                      Spacing.sm.horizontal,
                     ],
                     Expanded(child: title),
                     if (controlAffinity ==

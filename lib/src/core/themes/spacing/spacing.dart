@@ -27,6 +27,9 @@ class Spacing {
   /// Small = 16
   static const sm = Spacing(2);
 
+  /// Medium = 20
+  static const nm = Spacing(2.5);
+
   /// Medium = 24
   static const md = Spacing(3);
 

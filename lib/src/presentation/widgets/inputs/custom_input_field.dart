@@ -8,7 +8,7 @@ import '../../../core/themes/typography/typography_constants.dart';
 import '../../extensions/build_context_extensions.dart';
 import 'input_label.dart';
 
-enum InputHeightType { normal, small }
+enum InputHeightType { medium, normal, small }
 
 class CustomInputField extends StatefulWidget {
   const CustomInputField({
@@ -56,7 +56,7 @@ class CustomInputField extends StatefulWidget {
     this.inputFormatters = const [],
     this.textAlign = TextAlign.start,
     this.enableinteractiveSelection = true,
-    this.heightType = InputHeightType.normal,
+    this.heightType = InputHeightType.medium,
     this.textCapitalization = TextCapitalization.sentences,
     this.floatingLabelBehavior = FloatingLabelBehavior.always,
     this.autovalidateMode = AutovalidateMode.onUserInteraction,
@@ -122,10 +122,15 @@ class CustomInputField extends StatefulWidget {
 class _CustomInputFieldState extends State<CustomInputField> {
   BoxConstraints get _boxConstraints {
     switch (widget.heightType) {
-      case InputHeightType.normal:
+      case InputHeightType.medium:
         return BoxConstraints(
           minHeight: AppThemeBase.buttonHeightMD,
           minWidth: AppThemeBase.buttonHeightMD,
+        );
+      case InputHeightType.normal:
+        return BoxConstraints(
+          minHeight: AppThemeBase.buttonHeightNM,
+          minWidth: AppThemeBase.buttonHeightNM,
         );
       case InputHeightType.small:
         return BoxConstraints(
@@ -148,8 +153,10 @@ class _CustomInputFieldState extends State<CustomInputField> {
 
   double get _fontSize {
     switch (widget.heightType) {
-      case InputHeightType.normal:
+      case InputHeightType.medium:
         return AppFontSize.bodyMedium.value;
+      case InputHeightType.normal:
+        return (AppFontSize.bodyMedium.value + AppFontSize.bodySmall.value) / 2;
       case InputHeightType.small:
         return AppFontSize.bodySmall.value;
     }

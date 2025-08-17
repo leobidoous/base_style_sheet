@@ -76,6 +76,17 @@ class _DropdownHintChildState extends State<_DropdownHintChild> {
     super.dispose();
   }
 
+  double get _buttonHeight {
+    switch (widget.heightType) {
+      case DropdownHeightType.medium:
+        return AppThemeBase.buttonHeightMD;
+      case DropdownHeightType.normal:
+        return AppThemeBase.buttonHeightNM;
+      case DropdownHeightType.small:
+        return AppThemeBase.buttonHeightSM;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return CustomInputField(
@@ -98,33 +109,22 @@ class _DropdownHintChildState extends State<_DropdownHintChild> {
       onEditingComplete: widget.onEditingComplete,
       borderRadius: context.theme.borderRadiusNone,
       heightType: switch (widget.heightType) {
+        DropdownHeightType.medium => InputHeightType.medium,
         DropdownHeightType.normal => InputHeightType.normal,
         DropdownHeightType.small => InputHeightType.small,
       },
       suffixIcon: widget.isLoading
           ? SizedBox(
-              width: switch (widget.heightType) {
-                DropdownHeightType.normal => AppThemeBase.buttonHeightMD,
-                DropdownHeightType.small => AppThemeBase.buttonHeightSM,
-              },
-              height: switch (widget.heightType) {
-                DropdownHeightType.normal => AppThemeBase.buttonHeightMD,
-                DropdownHeightType.small => AppThemeBase.buttonHeightSM,
-              },
+              width: _buttonHeight,
+              height: _buttonHeight,
               child: CustomLoading(
                 width: widget.fontSize,
                 height: widget.fontSize,
               ),
             )
           : SizedBox(
-              width: switch (widget.heightType) {
-                DropdownHeightType.normal => AppThemeBase.buttonHeightMD,
-                DropdownHeightType.small => AppThemeBase.buttonHeightSM,
-              },
-              height: switch (widget.heightType) {
-                DropdownHeightType.normal => AppThemeBase.buttonHeightMD,
-                DropdownHeightType.small => AppThemeBase.buttonHeightSM,
-              },
+              width: _buttonHeight,
+              height: _buttonHeight,
               child: widget.showClear
                   ? Center(
                       child: CustomButton.icon(
@@ -142,6 +142,8 @@ class _DropdownHintChildState extends State<_DropdownHintChild> {
                         child: CustomButton.icon(
                           type: ButtonType.noShape,
                           heightType: switch (widget.heightType) {
+                            DropdownHeightType.medium =>
+                              ButtonHeightType.medium,
                             DropdownHeightType.normal =>
                               ButtonHeightType.normal,
                             DropdownHeightType.small => ButtonHeightType.small,
@@ -153,14 +155,8 @@ class _DropdownHintChildState extends State<_DropdownHintChild> {
       prefixIcon: widget.prefixIcon == null
           ? null
           : SizedBox(
-              width: switch (widget.heightType) {
-                DropdownHeightType.normal => AppThemeBase.buttonHeightMD,
-                DropdownHeightType.small => AppThemeBase.buttonHeightSM,
-              },
-              height: switch (widget.heightType) {
-                DropdownHeightType.normal => AppThemeBase.buttonHeightMD,
-                DropdownHeightType.small => AppThemeBase.buttonHeightSM,
-              },
+              width: _buttonHeight,
+              height: _buttonHeight,
               child: widget.prefixIcon,
             ),
     );

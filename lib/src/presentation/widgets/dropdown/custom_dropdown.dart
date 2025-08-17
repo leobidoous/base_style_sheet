@@ -22,7 +22,7 @@ part 'dropdown_builder.dart';
 part 'dropdown_hint_child.dart';
 part 'dropdrown_list.dart';
 
-enum DropdownHeightType { normal, small }
+enum DropdownHeightType { medium, normal, small }
 
 class CustomDropdownItem<T> {
   const CustomDropdownItem({
@@ -77,7 +77,7 @@ class CustomDropdown<T> extends StatefulWidget {
     this.isExpanded = false,
     this.useSafeArea = true,
     this.useParendRenderBox = true,
-    this.heightType = DropdownHeightType.normal,
+    this.heightType = DropdownHeightType.medium,
     this.autovalidateMode = AutovalidateMode.disabled,
   });
   final Widget? icon;
@@ -138,10 +138,23 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
 
   double get _fontSize {
     switch (widget.heightType) {
-      case DropdownHeightType.normal:
+      case DropdownHeightType.medium:
         return AppFontSize.bodyMedium.value;
+      case DropdownHeightType.normal:
+        return (AppFontSize.bodyMedium.value + AppFontSize.bodySmall.value) / 2;
       case DropdownHeightType.small:
         return AppFontSize.bodySmall.value;
+    }
+  }
+
+  BorderRadius get _borderRadius {
+    switch (widget.heightType) {
+      case DropdownHeightType.medium:
+        return widget.borderRadius ?? context.theme.borderRadiusMD;
+      case DropdownHeightType.normal:
+        return widget.borderRadius ?? context.theme.borderRadiusNM;
+      case DropdownHeightType.small:
+        return widget.borderRadius ?? context.theme.borderRadiusSM;
     }
   }
 
@@ -308,13 +321,8 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
             pageBuilder: (context, animation, secondaryAnimation) {
               return Material(
                 shape: RoundedRectangleBorder(
-                  borderRadius: widget.boxDecoration?.borderRadius ??
-                      switch (widget.heightType) {
-                        DropdownHeightType.normal =>
-                          widget.borderRadius ?? context.theme.borderRadiusLG,
-                        DropdownHeightType.small =>
-                          widget.borderRadius ?? context.theme.borderRadiusMD,
-                      },
+                  borderRadius:
+                      widget.boxDecoration?.borderRadius ?? _borderRadius,
                 ),
                 borderOnForeground: false,
                 color: Colors.transparent,
@@ -443,12 +451,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
       decoration: widget.boxDecoration ??
           BoxDecoration(
             color: context.colorScheme.surface,
-            borderRadius: switch (widget.heightType) {
-              DropdownHeightType.normal =>
-                widget.borderRadius ?? context.theme.borderRadiusLG,
-              DropdownHeightType.small =>
-                widget.borderRadius ?? context.theme.borderRadiusMD,
-            },
+            borderRadius: _borderRadius,
             border: Border.all(
               color: hasError ? context.colorScheme.error : Colors.grey,
               width: .5,
@@ -458,13 +461,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
         maxHeight: maxHeight ?? AppThemeBase.buttonHeightMD,
       ),
       child: ClipRRect(
-        borderRadius: widget.boxDecoration?.borderRadius ??
-            switch (widget.heightType) {
-              DropdownHeightType.normal =>
-                widget.borderRadius ?? context.theme.borderRadiusLG,
-              DropdownHeightType.small =>
-                widget.borderRadius ?? context.theme.borderRadiusMD,
-            },
+        borderRadius: widget.boxDecoration?.borderRadius ?? _borderRadius,
         child: child,
       ),
     );
@@ -492,13 +489,8 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
           itemSelectedStyle: widget.itemSelectedStyle,
           boxDecoration: widget.boxDecoration ??
               BoxDecoration(
+                borderRadius: _borderRadius,
                 color: context.colorScheme.surface,
-                borderRadius: switch (widget.heightType) {
-                  DropdownHeightType.normal =>
-                    widget.borderRadius ?? context.theme.borderRadiusLG,
-                  DropdownHeightType.small =>
-                    widget.borderRadius ?? context.theme.borderRadiusMD,
-                },
                 border: Border.all(color: Colors.grey, width: .5),
               ),
           onChanged: _onChangedItem,

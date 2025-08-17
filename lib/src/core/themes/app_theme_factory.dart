@@ -40,6 +40,7 @@ extension ThemeDataExtension on ThemeData {
   BorderRadius get borderRadiusNone => AppThemeBase.borderRadiusNone;
   BorderRadius get borderRadiusXSM => AppThemeBase.borderRadiusXSM;
   BorderRadius get borderRadiusSM => AppThemeBase.borderRadiusSM;
+  BorderRadius get borderRadiusNM => AppThemeBase.borderRadiusNM;
   BorderRadius get borderRadiusMD => AppThemeBase.borderRadiusMD;
   BorderRadius get borderRadiusLG => AppThemeBase.borderRadiusLG;
   BorderRadius get borderRadiusXLG => AppThemeBase.borderRadiusXLG;

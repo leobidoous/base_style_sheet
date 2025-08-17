@@ -71,7 +71,59 @@ class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
       );
 }
 
-class _CustomAppBarState extends State<CustomAppBar> {
+class _CustomAppBarState extends State<CustomAppBar>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
+  late Animation<double> _progressAnimation;
+  double _currentProgress = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      duration: Durations.medium1,
+      vsync: this,
+    );
+    _progressAnimation = Tween<double>(
+      begin: 0,
+      end: widget.progress ?? 0,
+    ).animate(
+      CurvedAnimation(
+        parent: _animationController,
+        curve: Curves.easeInOut,
+      ),
+    );
+    _currentProgress = widget.progress ?? 0;
+    if (widget.progress != null) {
+      _animationController.forward();
+    }
+  }
+
+  @override
+  void didUpdateWidget(CustomAppBar oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.progress != widget.progress) {
+      _progressAnimation = Tween<double>(
+        begin: _currentProgress,
+        end: widget.progress ?? 0,
+      ).animate(
+        CurvedAnimation(
+          parent: _animationController,
+          curve: Curves.easeInOut,
+        ),
+      );
+      _currentProgress = widget.progress ?? 0;
+      _animationController.reset();
+      _animationController.forward();
+    }
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -145,8 +197,8 @@ class _CustomAppBarState extends State<CustomAppBar> {
                       widget.onBackTap != null
                   ? Align(
                       child: CustomButton.child(
-                        onPressed: widget.onBackTap ??
-                            () => Navigator.of(context).pop(),
+                        onPressed:
+                            widget.onBackTap ?? Navigator.of(context).pop,
                         type: ButtonType.noShape,
                         padding: EdgeInsets.zero,
                         heightType: ButtonHeightType.small,
@@ -154,6 +206,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
                             Icon(
                               Icons.chevron_left_rounded,
                               size: AppFontSize.iconButton.value,
+                              color: context.textTheme.titleMedium?.color,
                             ),
                       ),
                     )
@@ -168,12 +221,17 @@ class _CustomAppBarState extends State<CustomAppBar> {
                 EdgeInsets.symmetric(horizontal: Spacing.sm.value),
             child: ClipRRect(
               borderRadius: context.theme.borderRadiusXLG,
-              child: LinearProgressIndicator(
-                value: widget.progress,
-                minHeight: 2,
-                borderRadius: context.theme.borderRadiusMD,
-                backgroundColor: Colors.grey.shade300,
-                color: context.colorScheme.primary,
+              child: AnimatedBuilder(
+                animation: _progressAnimation,
+                builder: (context, child) {
+                  return LinearProgressIndicator(
+                    borderRadius: context.theme.borderRadiusMD,
+                    backgroundColor: Colors.grey.shade300,
+                    color: context.colorScheme.primary,
+                    value: _progressAnimation.value,
+                    minHeight: 2,
+                  );
+                },
               ),
             ),
           ),

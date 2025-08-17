@@ -4,78 +4,89 @@ import '../../../../base_style_sheet.dart';
 
 enum ButtonType { primary, secondary, tertiary, background, noShape }
 
-enum ButtonHeightType { normal, small }
+enum ButtonHeightType { medium, normal, small }
 
 class CustomButton extends StatefulWidget {
   factory CustomButton.text({
-    ButtonType type = ButtonType.primary,
-    TextStyle? textStyle,
-    ButtonHeightType heightType = ButtonHeightType.normal,
-    Function()? onPressed,
+    Color? color,
+    Color? textColor,
+    EdgeInsets? padding,
+    bool isSafe = false,
     required String text,
     Alignment? alignment,
+    TextStyle? textStyle,
+    Function()? onPressed,
     bool isEnabled = true,
     bool isLoading = false,
-    bool isSafe = false,
-    EdgeInsets? padding,
+    Decoration? decoration,
     BorderRadius? borderRadius,
-    Color? color,
     Color? loadingPrimaryColor,
     Color? loadingSecondaryColor,
+    ButtonType type = ButtonType.primary,
+    ButtonHeightType heightType = ButtonHeightType.medium,
   }) {
     return CustomButton(
       type: type,
-      alignment: alignment,
-      borderRadius: borderRadius,
-      onPressed: onPressed,
-      heightType: heightType,
-      isEnabled: isEnabled,
-      isLoading: isLoading,
-      padding: padding ?? EdgeInsets.symmetric(horizontal: Spacing.sm.value),
       color: color,
       isSafe: isSafe,
+      alignment: alignment,
+      onPressed: onPressed,
+      isEnabled: isEnabled,
+      isLoading: isLoading,
+      decoration: decoration,
+      heightType: heightType,
+      borderRadius: borderRadius,
       loadingPrimaryColor: loadingPrimaryColor,
       loadingSecondaryColor: loadingSecondaryColor,
+      padding: padding ?? EdgeInsets.symmetric(horizontal: Spacing.sm.value),
       child: CustomTooltip(
         verticalOffset: switch (heightType) {
-          ButtonHeightType.normal => Spacing.md.value,
+          ButtonHeightType.medium => Spacing.md.value,
+          ButtonHeightType.normal => Spacing.nm.value,
           ButtonHeightType.small => Spacing.sm.value,
         },
         message: text,
-        child: _textValue(text, type: type, textStyle: textStyle),
+        child: _textValue(
+          text,
+          type: type,
+          textStyle: textStyle,
+          textColor: textColor,
+        ),
       ),
     );
   }
 
   factory CustomButton.icon({
-    ButtonType type = ButtonType.primary,
-    ButtonHeightType heightType = ButtonHeightType.normal,
+    Color? color,
+    Color? iconColor,
+    bool isSafe = false,
+    Alignment? alignment,
+    bool isEnabled = true,
     Function()? onPressed,
     required IconData icon,
-    Alignment? alignment,
-    Color? iconColor,
-    bool isEnabled = true,
     bool isLoading = false,
-    bool isSafe = false,
-    EdgeInsets? padding = EdgeInsets.zero,
+    Decoration? decoration,
     BorderRadius? borderRadius,
-    Color? color,
     Color? loadingPrimaryColor,
     Color? loadingSecondaryColor,
+    ButtonType type = ButtonType.primary,
+    EdgeInsets? padding = EdgeInsets.zero,
+    ButtonHeightType heightType = ButtonHeightType.medium,
   }) {
     return CustomButton(
       type: type,
-      alignment: alignment,
-      borderRadius: borderRadius,
-      onPressed: onPressed,
-      heightType: heightType,
-      isEnabled: isEnabled,
-      isLoading: isLoading,
-      padding: padding ?? EdgeInsets.symmetric(horizontal: Spacing.sm.value),
       color: color,
       isSafe: isSafe,
+      alignment: alignment,
+      onPressed: onPressed,
+      isEnabled: isEnabled,
+      isLoading: isLoading,
+      heightType: heightType,
+      decoration: decoration,
+      borderRadius: borderRadius,
       loadingPrimaryColor: loadingPrimaryColor,
       loadingSecondaryColor: loadingSecondaryColor,
+      padding: padding ?? EdgeInsets.symmetric(horizontal: Spacing.sm.value),
       child: _iconValue(
         icon,
         type: type,
@@ -86,63 +97,68 @@ class CustomButton extends StatefulWidget {
   }
 
   factory CustomButton.child({
-    ButtonType type = ButtonType.primary,
-    ButtonHeightType heightType = ButtonHeightType.normal,
-    Function()? onPressed,
+    Color? color,
+    bool isSafe = false,
     Alignment? alignment,
+    Function()? onPressed,
     required Widget child,
     bool isEnabled = true,
     bool isLoading = false,
-    bool isSafe = false,
-    Color? color,
-    BorderRadius? borderRadius,
-    EdgeInsets? padding = EdgeInsets.zero,
+    Decoration? decoration,
     Color? loadingPrimaryColor,
+    BorderRadius? borderRadius,
     Color? loadingSecondaryColor,
+    ButtonType type = ButtonType.primary,
+    EdgeInsets? padding = EdgeInsets.zero,
+    ButtonHeightType heightType = ButtonHeightType.medium,
   }) {
     return CustomButton(
       type: type,
-      alignment: alignment,
-      borderRadius: borderRadius,
-      onPressed: onPressed,
-      heightType: heightType,
-      isEnabled: isEnabled,
-      isLoading: isLoading,
-      padding: padding ?? EdgeInsets.symmetric(horizontal: Spacing.sm.value),
       color: color,
       isSafe: isSafe,
+      alignment: alignment,
+      onPressed: onPressed,
+      isEnabled: isEnabled,
+      isLoading: isLoading,
+      decoration: decoration,
+      heightType: heightType,
+      borderRadius: borderRadius,
       loadingPrimaryColor: loadingPrimaryColor,
       loadingSecondaryColor: loadingSecondaryColor,
+      padding: padding ?? EdgeInsets.symmetric(horizontal: Spacing.sm.value),
       child: child,
     );
   }
 
   factory CustomButton.iconText({
-    ButtonType type = ButtonType.primary,
-    ButtonHeightType heightType = ButtonHeightType.normal,
-    TextStyle? textStyle,
-    Alignment? alignment,
+    Color? color,
     Color? iconColor,
-    Function()? onPressed,
-    required IconData icon,
-    required String text,
-    bool isEnabled = true,
-    bool isLoading = false,
+    Color? textColor,
     bool isSafe = false,
     EdgeInsets? padding,
+    required String text,
+    Alignment? alignment,
+    TextStyle? textStyle,
+    Function()? onPressed,
+    bool isEnabled = true,
+    required IconData icon,
+    bool isLoading = false,
+    Decoration? decoration,
     BorderRadius? borderRadius,
-    Color? color,
     Color? loadingPrimaryColor,
     Color? loadingSecondaryColor,
+    ButtonType type = ButtonType.primary,
+    ButtonHeightType heightType = ButtonHeightType.medium,
   }) {
     return CustomButton(
       type: type,
       alignment: alignment,
-      borderRadius: borderRadius,
       onPressed: onPressed,
-      heightType: heightType,
       isEnabled: isEnabled,
       isLoading: isLoading,
+      heightType: heightType,
+      decoration: decoration,
+      borderRadius: borderRadius,
       padding: padding ?? EdgeInsets.symmetric(horizontal: Spacing.sm.value),
       color: color,
       isSafe: isSafe,
@@ -150,7 +166,8 @@ class CustomButton extends StatefulWidget {
       loadingSecondaryColor: loadingSecondaryColor,
       child: CustomTooltip(
         verticalOffset: switch (heightType) {
-          ButtonHeightType.normal => Spacing.md.value,
+          ButtonHeightType.medium => Spacing.md.value,
+          ButtonHeightType.normal => Spacing.nm.value,
           ButtonHeightType.small => Spacing.sm.value,
         },
         message: text,
@@ -165,7 +182,14 @@ class CustomButton extends StatefulWidget {
               heightType: heightType,
             ),
             Spacing.xxs.horizontal,
-            Flexible(child: _textValue(text, type: type, textStyle: textStyle)),
+            Flexible(
+              child: _textValue(
+                text,
+                type: type,
+                textStyle: textStyle,
+                textColor: textColor,
+              ),
+            ),
           ],
         ),
       ),
@@ -173,39 +197,43 @@ class CustomButton extends StatefulWidget {
   }
 
   factory CustomButton.textIcon({
-    ButtonType type = ButtonType.primary,
-    ButtonHeightType heightType = ButtonHeightType.normal,
-    TextStyle? textStyle,
+    Color? color,
     Color? iconColor,
-    Alignment? alignment,
-    Function()? onPressed,
-    required IconData icon,
-    required String text,
-    bool isEnabled = true,
-    bool isLoading = false,
+    Color? textColor,
     bool isSafe = false,
     EdgeInsets? padding,
-    Color? color,
+    Alignment? alignment,
+    TextStyle? textStyle,
+    required String text,
+    bool isEnabled = true,
+    Function()? onPressed,
+    bool isLoading = false,
+    required IconData icon,
+    Decoration? decoration,
     BorderRadius? borderRadius,
     Color? loadingPrimaryColor,
     Color? loadingSecondaryColor,
+    ButtonType type = ButtonType.primary,
+    ButtonHeightType heightType = ButtonHeightType.medium,
   }) {
     return CustomButton(
       type: type,
-      alignment: alignment,
-      borderRadius: borderRadius,
-      onPressed: onPressed,
-      heightType: heightType,
-      isEnabled: isEnabled,
-      isLoading: isLoading,
       color: color,
       isSafe: isSafe,
+      alignment: alignment,
+      onPressed: onPressed,
+      isEnabled: isEnabled,
+      isLoading: isLoading,
+      decoration: decoration,
+      heightType: heightType,
+      borderRadius: borderRadius,
       loadingPrimaryColor: loadingPrimaryColor,
       loadingSecondaryColor: loadingSecondaryColor,
       padding: padding ?? EdgeInsets.symmetric(horizontal: Spacing.sm.value),
       child: CustomTooltip(
         verticalOffset: switch (heightType) {
-          ButtonHeightType.normal => Spacing.md.value,
+          ButtonHeightType.medium => Spacing.md.value,
+          ButtonHeightType.normal => Spacing.nm.value,
           ButtonHeightType.small => Spacing.sm.value,
         },
         message: text,
@@ -213,7 +241,14 @@ class CustomButton extends StatefulWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Flexible(child: _textValue(text, type: type, textStyle: textStyle)),
+            Flexible(
+              child: _textValue(
+                text,
+                type: type,
+                textStyle: textStyle,
+                textColor: textColor,
+              ),
+            ),
             Spacing.xxs.horizontal,
             _iconValue(
               icon,
@@ -231,6 +266,7 @@ class CustomButton extends StatefulWidget {
     super.key,
     this.color,
     this.alignment,
+    this.decoration,
     this.borderRadius,
     required this.child,
     this.isSafe = false,
@@ -256,6 +292,7 @@ class CustomButton extends StatefulWidget {
   final EdgeInsets padding;
   final Alignment? alignment;
   final Function()? onPressed;
+  final Decoration? decoration;
   final Color? loadingPrimaryColor;
   final BorderRadius? borderRadius;
   final ButtonHeightType heightType;
@@ -268,35 +305,56 @@ class CustomButton extends StatefulWidget {
     IconData iconData, {
     Color? iconColor,
     ButtonType type = ButtonType.primary,
-    ButtonHeightType heightType = ButtonHeightType.normal,
+    ButtonHeightType heightType = ButtonHeightType.medium,
   }) {
     return Builder(
       builder: (context) {
         return Icon(
           iconData,
           size: switch (heightType) {
-            ButtonHeightType.normal => AppFontSize.iconButton.value,
+            ButtonHeightType.medium => AppFontSize.iconButton.value,
+            ButtonHeightType.normal => AppFontSize.iconButton.value * .95,
             ButtonHeightType.small => AppFontSize.iconButton.value * .9,
           },
-          color: iconColor ??
-              (context.isDarkMode
-                  ? context.colorScheme.onSurface
-                  : switch (type) {
-                      ButtonType.secondary => context.colorScheme.onSecondary,
-                      ButtonType.tertiary => context.colorScheme.onTertiary,
-                      ButtonType.primary => context.colorScheme.onPrimary,
-                      ButtonType() => context.textTheme.bodyMedium?.color,
-                    }),
+          color: iconColor ?? _color(context, type),
         );
       },
     );
   }
 
+  static Color? _color(BuildContext context, ButtonType type) {
+    if (context.isDarkMode) return context.colorScheme.onSurface;
+    switch (type) {
+      case ButtonType.background:
+        return context.colorScheme.primary;
+      case ButtonType.secondary:
+        return context.colorScheme.onSecondary;
+      case ButtonType.tertiary:
+        return context.colorScheme.onTertiary;
+      case ButtonType.primary:
+        return context.colorScheme.onPrimary;
+      default:
+        return context.textTheme.bodyMedium?.color;
+    }
+  }
+
+  static double _fontSize(ButtonHeightType heightType) {
+    switch (heightType) {
+      case ButtonHeightType.medium:
+        return AppFontSize.bodyMedium.value;
+      case ButtonHeightType.normal:
+        return (AppFontSize.bodyMedium.value + AppFontSize.bodySmall.value) / 2;
+      case ButtonHeightType.small:
+        return AppFontSize.bodySmall.value;
+    }
+  }
+
   static Widget _textValue(
     String text, {
+    Color? textColor,
     TextStyle? textStyle,
     ButtonType type = ButtonType.primary,
-    ButtonHeightType heightType = ButtonHeightType.normal,
+    ButtonHeightType heightType = ButtonHeightType.medium,
   }) {
     return Builder(
       builder: (context) {
@@ -311,21 +369,9 @@ class CustomButton extends StatefulWidget {
               minFontSize: 8,
               style: textStyle ??
                   context.textTheme.bodyMedium?.copyWith(
-                    fontWeight: AppFontWeight.bold.value,
-                    fontSize: switch (heightType) {
-                      ButtonHeightType.small => AppFontSize.bodySmall.value,
-                      ButtonHeightType.normal => AppFontSize.bodyMedium.value,
-                    },
-                    color: (context.isDarkMode
-                        ? context.colorScheme.onSurface
-                        : switch (type) {
-                            ButtonType.secondary =>
-                              context.colorScheme.onSecondary,
-                            ButtonType.tertiary =>
-                              context.colorScheme.onTertiary,
-                            ButtonType.primary => context.colorScheme.onPrimary,
-                            ButtonType() => context.textTheme.bodyMedium?.color,
-                          }),
+                    fontWeight: AppFontWeight.semiBold.value,
+                    fontSize: _fontSize(heightType),
+                    color: textColor ?? _color(context, type),
                   ),
             ),
           ],
@@ -338,16 +384,53 @@ class CustomButton extends StatefulWidget {
 class _CustomButtonState extends State<CustomButton> {
   Size get _minimumSize {
     switch (widget.heightType) {
-      case ButtonHeightType.normal:
+      case ButtonHeightType.medium:
         return Size(
           AppThemeBase.buttonHeightMD,
           AppThemeBase.buttonHeightMD,
+        );
+      case ButtonHeightType.normal:
+        return Size(
+          AppThemeBase.buttonHeightNM,
+          AppThemeBase.buttonHeightNM,
         );
       case ButtonHeightType.small:
         return Size(
           AppThemeBase.buttonHeightSM,
           AppThemeBase.buttonHeightSM,
         );
+    }
+  }
+
+  Color get _surfaceTintColor {
+    switch (widget.type) {
+      case ButtonType.primary:
+        return context.colorScheme.surface.withValues(alpha: .1);
+      case ButtonType.secondary:
+        return context.colorScheme.onSecondary.withValues(alpha: .1);
+      case ButtonType.background:
+        return context.colorScheme.primary.withValues(alpha: .1);
+      case ButtonType.tertiary:
+        return context.colorScheme.onTertiary.withValues(alpha: .1);
+      case ButtonType.noShape:
+        return context.colorScheme.onSurface.withValues(alpha: .1);
+    }
+  }
+
+  Color get _borderColor {
+    if (widget.color != null) return widget.color!;
+
+    switch (widget.type) {
+      case ButtonType.primary:
+        return context.colorScheme.primary;
+      case ButtonType.secondary:
+        return context.colorScheme.secondary;
+      case ButtonType.background:
+        return context.colorScheme.primary;
+      case ButtonType.tertiary:
+        return context.colorScheme.tertiary;
+      case ButtonType.noShape:
+        return Colors.transparent;
     }
   }
 
@@ -361,12 +444,9 @@ class _CustomButtonState extends State<CustomButton> {
           onPressed: widget.onPressed,
           style: ButtonStyle(
             backgroundBuilder: (context, states, child) {
-              return ColoredBox(
-                color: switch (widget.type) {
-                  ButtonType.background => context.colorScheme.surface,
-                  ButtonType() => Colors.transparent
-                },
-                child: ColoredBox(color: _backgroundColor, child: child),
+              return DecoratedBox(
+                decoration: widget.decoration ?? BoxDecoration(),
+                child: child ?? SizedBox(),
               );
             },
             shape: WidgetStateProperty.all(
@@ -392,14 +472,18 @@ class _CustomButtonState extends State<CustomButton> {
             side: WidgetStateProperty.all(
               BorderSide(color: _borderColor, width: .5),
             ),
-            elevation: WidgetStateProperty.all(4),
+            visualDensity: VisualDensity.compact,
+            elevation: WidgetStateProperty.all(0),
             tapTargetSize: MaterialTapTargetSize.shrinkWrap,
             padding: WidgetStateProperty.all(widget.padding),
             minimumSize: WidgetStateProperty.all(_minimumSize),
-            overlayColor: WidgetStateProperty.all(_overlayColor),
             shadowColor: WidgetStateProperty.all(Colors.transparent),
             backgroundColor: WidgetStateProperty.all(_backgroundColor),
+            foregroundColor: WidgetStateProperty.all(_backgroundColor),
             surfaceTintColor: WidgetStateProperty.all(_surfaceTintColor),
+            overlayColor: WidgetStateProperty.all(
+              _surfaceTintColor,
+            ),
           ),
           clipBehavior: Clip.antiAliasWithSaveLayer,
           child: SafeArea(
@@ -423,7 +507,7 @@ class _CustomButtonState extends State<CustomButton> {
     );
   }
 
-  Widget get _child {
+  AnimatedSwitcher get _child {
     return AnimatedSwitcher(
       duration: const Duration(milliseconds: 500),
       child: widget.isLoading
@@ -445,59 +529,11 @@ class _CustomButtonState extends State<CustomButton> {
       case ButtonType.secondary:
         return context.colorScheme.secondary;
       case ButtonType.background:
-        return Colors.transparent;
-      case ButtonType.noShape:
-        return Colors.transparent;
-      case ButtonType.tertiary:
-        return context.colorScheme.tertiary;
-    }
-  }
-
-  Color get _surfaceTintColor {
-    if (widget.color != null) return widget.color!;
-    switch (widget.type) {
-      case ButtonType.primary:
-        return context.colorScheme.primary;
-      case ButtonType.secondary:
-        return context.colorScheme.secondary;
-      case ButtonType.background:
         return context.colorScheme.surface;
-      case ButtonType.tertiary:
-        return context.colorScheme.tertiary;
       case ButtonType.noShape:
         return Colors.transparent;
-    }
-  }
-
-  Color get _overlayColor {
-    if (widget.color != null) return widget.color!.withValues(alpha: .1);
-    switch (widget.type) {
-      case ButtonType.primary:
-        return context.colorScheme.onPrimary.withValues(alpha: .1);
-      case ButtonType.secondary:
-        return context.colorScheme.onSecondary.withValues(alpha: .1);
-      case ButtonType.background:
-        return context.colorScheme.onSurface.withValues(alpha: .1);
-      case ButtonType.noShape:
-        return Colors.transparent.withValues(alpha: .1);
-      case ButtonType.tertiary:
-        return context.colorScheme.tertiary.withValues(alpha: .1);
-    }
-  }
-
-  Color get _borderColor {
-    if (widget.color != null) return widget.color!;
-    switch (widget.type) {
-      case ButtonType.primary:
-        return context.colorScheme.primary;
-      case ButtonType.secondary:
-        return context.colorScheme.secondary;
-      case ButtonType.background:
-        return context.colorScheme.primary;
       case ButtonType.tertiary:
         return context.colorScheme.tertiary;
-      case ButtonType.noShape:
-        return Colors.transparent;
     }
   }
 }

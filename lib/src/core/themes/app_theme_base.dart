@@ -18,12 +18,14 @@ class AppThemeBase {
 
   static double get buttonHeight => 38.responsiveHeight;
   static double get buttonHeightSM => 32.responsiveHeight;
+  static double get buttonHeightNM => 40.responsiveHeight;
   static double get buttonHeightMD => 48.responsiveHeight;
   static double get buttonHeightLG => 56.responsiveHeight;
 
   static BorderRadius get borderRadiusNone => BorderRadius.zero;
   static BorderRadius get borderRadiusXSM => BorderRadius.circular(4);
   static BorderRadius get borderRadiusSM => BorderRadius.circular(8);
+  static BorderRadius get borderRadiusNM => BorderRadius.circular(12);
   static BorderRadius get borderRadiusMD => BorderRadius.circular(16);
   static BorderRadius get borderRadiusLG => BorderRadius.circular(24);
   static BorderRadius get borderRadiusXLG => BorderRadius.circular(32);
