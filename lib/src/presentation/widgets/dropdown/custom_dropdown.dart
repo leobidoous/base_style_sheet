@@ -150,11 +150,11 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
   BorderRadius get _borderRadius {
     switch (widget.heightType) {
       case DropdownHeightType.medium:
-        return widget.borderRadius ?? context.theme.borderRadiusMD;
+        return widget.borderRadius ?? context.theme.borderRadiusLG;
       case DropdownHeightType.normal:
-        return widget.borderRadius ?? context.theme.borderRadiusNM;
+        return widget.borderRadius ?? context.theme.borderRadiusLG;
       case DropdownHeightType.small:
-        return widget.borderRadius ?? context.theme.borderRadiusSM;
+        return widget.borderRadius ?? context.theme.borderRadiusLG;
     }
   }
 

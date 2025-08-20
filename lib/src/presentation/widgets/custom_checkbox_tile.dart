@@ -64,20 +64,18 @@ class CustomCheckboxTile<T> extends StatelessWidget {
   }
 
   Widget _boxCheck(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: context.theme.borderRadiusXSM,
-        border: Border.all(
-          width: 1,
-          color: isSelected
-              ? context.colorScheme.primary
-              : context.textTheme.bodyMedium?.color ?? Colors.grey,
-        ),
-      ),
+    return SizedBox(
       height: const Spacing(2).value,
       width: const Spacing(2).value,
       child: DecoratedBox(
         decoration: BoxDecoration(
+          border: Border.all(
+            width: 1,
+            color: isSelected
+                ? context.colorScheme.primary
+                : context.colorScheme.onSurface.withValues(alpha: .75),
+          ),
+          borderRadius: context.theme.borderRadiusXSM,
           color: isSelected ? context.colorScheme.primary : Colors.transparent,
         ),
         child: isSelected
