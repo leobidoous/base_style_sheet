@@ -65,7 +65,7 @@ class CustomPhotoView extends StatefulWidget {
         barrierColor: Colors.transparent,
         transitionDuration: const Duration(milliseconds: 250),
         reverseTransitionDuration: const Duration(milliseconds: 250),
-        transitionsBuilder: (_, animation, __, child) {
+        transitionsBuilder: (_, animation, animation2, child) {
           const begin = Offset(0, 1);
           const end = Offset.zero;
           const curve = Curves.decelerate;

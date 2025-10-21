@@ -1,3 +1,17 @@
+## 1.4.2
+
+* Upgrade major dependencies to latest versions
+* Update Syncfusion PDF Viewer from 30.2.5 to 31.1.20 with improved PDF handling
+* Update Fluttertoast from 8.2.12 to 9.0.0 with better toast notifications
+* Fix CustomButton foregroundColor property that was causing visual issues
+* Improve CustomAlert button parameter order for better consistency
+* Enhance CustomSnackBar and CustomTooltip with GlobalKey support for better widget identification
+* Fix CustomDropdown keyboard handling and positioning improvements
+* Update CustomExpansion with new animation properties (isExpanded, isAnimating, isDismissed)
+* Upgrade multiple dependencies including file_picker, image_picker, and webview components
+* Update Flutter SVG from 2.2.0 to 2.2.1 with performance improvements
+* General dependency updates for better compatibility and security
+
 ## 1.4.1
 
 * Update Custom Button

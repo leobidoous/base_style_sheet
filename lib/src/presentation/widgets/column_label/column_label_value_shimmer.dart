@@ -37,7 +37,7 @@ class _ColumnLabelValueShimmerState extends State<ColumnLabelValueShimmer> {
               shrinkWrap: true,
               itemCount: widget.nLabelLines,
               physics: const NeverScrollableScrollPhysics(),
-              separatorBuilder: (_, __) => Spacing.xxs.vertical,
+              separatorBuilder: (_, index) => Spacing.xxs.vertical,
               itemBuilder: (_, index) {
                 final factor = _random.nextInt(10);
                 return Align(
@@ -64,7 +64,7 @@ class _ColumnLabelValueShimmerState extends State<ColumnLabelValueShimmer> {
               shrinkWrap: true,
               itemCount: widget.nValueLines,
               physics: const NeverScrollableScrollPhysics(),
-              separatorBuilder: (_, __) => Spacing.xxs.vertical,
+              separatorBuilder: (_, index) => Spacing.xxs.vertical,
               itemBuilder: (_, index) {
                 final factor = _random.nextInt(10);
                 return Align(

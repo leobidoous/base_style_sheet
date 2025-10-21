@@ -36,7 +36,7 @@ class _DropdownList<T> extends StatelessWidget {
         parent: AlwaysScrollableScrollPhysics(),
       ),
       allowRefresh: !listController.config.preventNewFetch,
-      separatorBuilder: (_, __) => const CustomDivider(height: 0),
+      separatorBuilder: (_, index) => const CustomDivider(height: 0),
       noItemsFoundIndicatorBuilder: (_, onRefresh) {
         return ListEmpty(
           message: 'Nenhum item encontrado',
@@ -48,8 +48,8 @@ class _DropdownList<T> extends StatelessWidget {
           itemCount: 5,
           shrinkWrap: true,
           padding: EdgeInsets.zero,
-          separatorBuilder: (_, __) => const CustomDivider(height: 0),
-          itemBuilder: (_, __) {
+          separatorBuilder: (_, index) => const CustomDivider(height: 0),
+          itemBuilder: (_, index) {
             return CustomCard(
               shaddow: [],
               color: Colors.transparent,

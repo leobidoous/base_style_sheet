@@ -10,6 +10,7 @@ class CustomButton extends StatefulWidget {
   factory CustomButton.text({
     Color? color,
     Color? textColor,
+    Color? borderColor,
     EdgeInsets? padding,
     bool isSafe = false,
     required String text,
@@ -35,6 +36,7 @@ class CustomButton extends StatefulWidget {
       isLoading: isLoading,
       decoration: decoration,
       heightType: heightType,
+      borderColor: borderColor,
       borderRadius: borderRadius,
       loadingPrimaryColor: loadingPrimaryColor,
       loadingSecondaryColor: loadingSecondaryColor,
@@ -59,6 +61,7 @@ class CustomButton extends StatefulWidget {
   factory CustomButton.icon({
     Color? color,
     Color? iconColor,
+    Color? borderColor,
     bool isSafe = false,
     Alignment? alignment,
     bool isEnabled = true,
@@ -83,6 +86,7 @@ class CustomButton extends StatefulWidget {
       isLoading: isLoading,
       heightType: heightType,
       decoration: decoration,
+      borderColor: borderColor,
       borderRadius: borderRadius,
       loadingPrimaryColor: loadingPrimaryColor,
       loadingSecondaryColor: loadingSecondaryColor,
@@ -98,6 +102,7 @@ class CustomButton extends StatefulWidget {
 
   factory CustomButton.child({
     Color? color,
+    Color? borderColor,
     bool isSafe = false,
     Alignment? alignment,
     Function()? onPressed,
@@ -122,6 +127,7 @@ class CustomButton extends StatefulWidget {
       isLoading: isLoading,
       decoration: decoration,
       heightType: heightType,
+      borderColor: borderColor,
       borderRadius: borderRadius,
       loadingPrimaryColor: loadingPrimaryColor,
       loadingSecondaryColor: loadingSecondaryColor,
@@ -134,6 +140,7 @@ class CustomButton extends StatefulWidget {
     Color? color,
     Color? iconColor,
     Color? textColor,
+    Color? borderColor,
     bool isSafe = false,
     EdgeInsets? padding,
     required String text,
@@ -158,6 +165,7 @@ class CustomButton extends StatefulWidget {
       isLoading: isLoading,
       heightType: heightType,
       decoration: decoration,
+      borderColor: borderColor,
       borderRadius: borderRadius,
       padding: padding ?? EdgeInsets.symmetric(horizontal: Spacing.sm.value),
       color: color,
@@ -200,6 +208,7 @@ class CustomButton extends StatefulWidget {
     Color? color,
     Color? iconColor,
     Color? textColor,
+    Color? borderColor,
     bool isSafe = false,
     EdgeInsets? padding,
     Alignment? alignment,
@@ -226,6 +235,7 @@ class CustomButton extends StatefulWidget {
       isLoading: isLoading,
       decoration: decoration,
       heightType: heightType,
+      borderColor: borderColor,
       borderRadius: borderRadius,
       loadingPrimaryColor: loadingPrimaryColor,
       loadingSecondaryColor: loadingSecondaryColor,
@@ -267,6 +277,7 @@ class CustomButton extends StatefulWidget {
     this.color,
     this.alignment,
     this.decoration,
+    this.borderColor,
     this.borderRadius,
     required this.child,
     this.isSafe = false,
@@ -279,9 +290,9 @@ class CustomButton extends StatefulWidget {
     this.type = ButtonType.primary,
     this.heightType = ButtonHeightType.normal,
   }) : assert(
-          color != null && type == ButtonType.background || color == null,
-          '[type] must be background',
-        );
+         color != null && type == ButtonType.background || color == null,
+         '[type] must be background',
+       );
 
   final Color? color;
   final bool isSafe;
@@ -289,6 +300,7 @@ class CustomButton extends StatefulWidget {
   final bool isEnabled;
   final bool isLoading;
   final ButtonType type;
+  final Color? borderColor;
   final EdgeInsets padding;
   final Alignment? alignment;
   final Function()? onPressed;
@@ -367,7 +379,8 @@ class CustomButton extends StatefulWidget {
               textAlign: TextAlign.center,
               overflow: TextOverflow.ellipsis,
               minFontSize: 8,
-              style: textStyle ??
+              style:
+                  textStyle ??
                   context.textTheme.bodyMedium?.copyWith(
                     fontWeight: AppFontWeight.semiBold.value,
                     fontSize: _fontSize(heightType),
@@ -385,20 +398,11 @@ class _CustomButtonState extends State<CustomButton> {
   Size get _minimumSize {
     switch (widget.heightType) {
       case ButtonHeightType.medium:
-        return Size(
-          AppThemeBase.buttonHeightMD,
-          AppThemeBase.buttonHeightMD,
-        );
+        return Size(AppThemeBase.buttonHeightMD, AppThemeBase.buttonHeightMD);
       case ButtonHeightType.normal:
-        return Size(
-          AppThemeBase.buttonHeightNM,
-          AppThemeBase.buttonHeightNM,
-        );
+        return Size(AppThemeBase.buttonHeightNM, AppThemeBase.buttonHeightNM);
       case ButtonHeightType.small:
-        return Size(
-          AppThemeBase.buttonHeightSM,
-          AppThemeBase.buttonHeightSM,
-        );
+        return Size(AppThemeBase.buttonHeightSM, AppThemeBase.buttonHeightSM);
     }
   }
 
@@ -418,7 +422,7 @@ class _CustomButtonState extends State<CustomButton> {
   }
 
   Color get _borderColor {
-    if (widget.color != null) return widget.color!;
+    if (widget.borderColor != null) return widget.borderColor!;
 
     switch (widget.type) {
       case ButtonType.primary:
@@ -458,14 +462,18 @@ class _CustomButtonState extends State<CustomButton> {
                   topRight:
                       (widget.borderRadius ?? context.theme.borderRadiusXLG)
                           .topRight,
-                  bottomLeft: widget.isSafe
-                      ? Radius.zero
-                      : (widget.borderRadius ?? context.theme.borderRadiusXLG)
-                          .bottomLeft,
-                  bottomRight: widget.isSafe
-                      ? Radius.zero
-                      : (widget.borderRadius ?? context.theme.borderRadiusXLG)
-                          .bottomRight,
+                  bottomLeft:
+                      widget.isSafe
+                          ? Radius.zero
+                          : (widget.borderRadius ??
+                                  context.theme.borderRadiusXLG)
+                              .bottomLeft,
+                  bottomRight:
+                      widget.isSafe
+                          ? Radius.zero
+                          : (widget.borderRadius ??
+                                  context.theme.borderRadiusXLG)
+                              .bottomRight,
                 ),
               ),
             ),
@@ -479,11 +487,8 @@ class _CustomButtonState extends State<CustomButton> {
             minimumSize: WidgetStateProperty.all(_minimumSize),
             shadowColor: WidgetStateProperty.all(Colors.transparent),
             backgroundColor: WidgetStateProperty.all(_backgroundColor),
-            foregroundColor: WidgetStateProperty.all(_backgroundColor),
             surfaceTintColor: WidgetStateProperty.all(_surfaceTintColor),
-            overlayColor: WidgetStateProperty.all(
-              _surfaceTintColor,
-            ),
+            overlayColor: WidgetStateProperty.all(_surfaceTintColor),
           ),
           clipBehavior: Clip.antiAliasWithSaveLayer,
           child: SafeArea(
@@ -494,12 +499,10 @@ class _CustomButtonState extends State<CustomButton> {
                 minHeight: _minimumSize.height,
                 minWidth: _minimumSize.width,
               ),
-              child: widget.alignment == null
-                  ? _child
-                  : Align(
-                      alignment: widget.alignment!,
-                      child: _child,
-                    ),
+              child:
+                  widget.alignment == null
+                      ? _child
+                      : Align(alignment: widget.alignment!, child: _child),
             ),
           ),
         ),
@@ -510,14 +513,15 @@ class _CustomButtonState extends State<CustomButton> {
   AnimatedSwitcher get _child {
     return AnimatedSwitcher(
       duration: const Duration(milliseconds: 500),
-      child: widget.isLoading
-          ? CustomLoading(
-              primaryColor: widget.loadingPrimaryColor,
-              secondaryColor: widget.loadingSecondaryColor,
-              height: const Spacing(1).value,
-              width: const Spacing(1).value,
-            )
-          : widget.child,
+      child:
+          widget.isLoading
+              ? CustomLoading(
+                primaryColor: widget.loadingPrimaryColor,
+                secondaryColor: widget.loadingSecondaryColor,
+                height: const Spacing(1).value,
+                width: const Spacing(1).value,
+              )
+              : widget.child,
     );
   }
 

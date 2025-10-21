@@ -53,13 +53,13 @@ class CustomAlert extends StatelessWidget {
 
   CustomButton get _confirmButtom => CustomButton.text(
         onPressed: onConfirm,
-        isLoading: confirmIsLoading,
         text: btnConfirmLabel,
+        isLoading: confirmIsLoading,
       );
   CustomButton get _cancelButtom => CustomButton.text(
         onPressed: onCancel,
-        isLoading: cancelIsLoading,
         text: btnCancelLabel,
+        isLoading: cancelIsLoading,
         type: ButtonType.background,
       );
 

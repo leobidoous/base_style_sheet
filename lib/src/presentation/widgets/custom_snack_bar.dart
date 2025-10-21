@@ -11,10 +11,12 @@ class CustomSnackBar {
     required String message,
     SnackBarType type = SnackBarType.info,
     Duration? duration,
+    GlobalKey? key,
   }) {
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
+        key: key ?? ValueKey('SnackBar_${context.hashCode}'),
         content: Row(
           children: <Widget>[
             Icon(
@@ -64,6 +66,7 @@ class CustomSnackBar {
     Color? successColor,
     Duration? duration,
     bool showClose = true,
+    GlobalKey? key,
   }) {
     FToast().removeQueuedCustomToasts();
     FToast().init(context).showToast(
@@ -84,6 +87,7 @@ class CustomSnackBar {
             );
           },
           child: CustomCard(
+            key: key ?? ValueKey('Toast_${context.hashCode}'),
             color: switch (type) {
               SnackBarType.error => errorColor ?? Colors.red,
               SnackBarType.info => infoColor ?? Colors.orange,

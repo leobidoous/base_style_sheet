@@ -16,11 +16,11 @@ class CustomBottomSheet {
     Widget child, {
     String? routeName,
     EdgeInsets? padding,
-    Function(T)? onClose,
     Color? backgroundColor,
     bool showClose = false,
     bool useSafeArea = true,
     bool isDismissible = true,
+    Function(T value)? onClose,
     BoxConstraints? constraints,
     bool useRootNavigator = true,
     bool isScrollControlled = true,

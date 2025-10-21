@@ -51,7 +51,8 @@ class CustomExpansionState<T> extends State<CustomExpansion<T>>
     super.initState();
     _animationController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 250),
+      duration: Durations.medium2,
+      reverseDuration: Durations.medium2,
     );
     switch (widget.initialState) {
       case ExpansionState.opened:
@@ -77,6 +78,10 @@ class CustomExpansionState<T> extends State<CustomExpansion<T>>
   void reverse() {
     _animationController.reverse();
   }
+
+  bool get isExpanded => _animationController.isCompleted;
+  bool get isAnimating => _animationController.isAnimating;
+  bool get isDismissed => _animationController.isDismissed;
 
   @override
   void dispose() {

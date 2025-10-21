@@ -262,12 +262,13 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
   double _getBottomPosition(BuildContext context, BoxConstraints constraints) {
     late double dy;
     dy = _isOnTop(constraints)
-        ? Spacing.keyboardHeigth(context)
+        ? (widget.verticalSpacing ?? Spacing.sm.value)
         : constraints.maxHeight - _offset.dy - _size.height;
     return (_isOnTop(constraints)
             ? dy + (widget.verticalSpacing ?? Spacing.sm.value)
             : Spacing.keyboardHeigth(context) > dy
-                ? Spacing.keyboardHeigth(context)
+                ? Spacing.keyboardHeigth(context) +
+                    (widget.verticalSpacing ?? Spacing.sm.value)
                 : dy) -
         (widget.useSafeArea ? _parentContextOffset.dy : 0);
   }
@@ -309,7 +310,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
             settings: RouteSettings(name: '/custom_dropdown/$T'),
             transitionDuration: const Duration(milliseconds: 150),
             reverseTransitionDuration: const Duration(milliseconds: 150),
-            transitionsBuilder: (_, animation, __, child) {
+            transitionsBuilder: (_, animation, animation2, child) {
               return FadeTransition(
                 opacity: animation,
                 child: Column(
@@ -410,7 +411,13 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
             children: [
               Positioned.fill(
                 child: InkWell(
-                  onTap: Navigator.of(widget.context).pop,
+                  onTap: () {
+                    if (Spacing.keyboardIsOpened(context)) {
+                      FocusScope.of(context).requestFocus(FocusNode());
+                    } else {
+                      Navigator.of(widget.context).pop();
+                    }
+                  },
                   child: Container(color: Colors.transparent),
                 ),
               ),
