@@ -20,6 +20,7 @@ class CustomBottomSheet {
     bool showClose = false,
     bool useSafeArea = true,
     bool isDismissible = true,
+    bool showDragHandle = false,
     Function(T value)? onClose,
     BoxConstraints? constraints,
     bool useRootNavigator = true,
@@ -29,15 +30,14 @@ class CustomBottomSheet {
     return await showModalBottomSheet<T?>(
       elevation: 0,
       context: context,
-      constraints: constraints,
       enableDrag: isDismissible,
       isDismissible: isDismissible,
+      constraints: BoxConstraints(),
+      showDragHandle: showDragHandle,
       useRootNavigator: useRootNavigator,
       backgroundColor: Colors.transparent,
       isScrollControlled: isScrollControlled,
-      routeSettings: RouteSettings(
-        name: routeName ?? '/${child.runtimeType}/',
-      ),
+      routeSettings: RouteSettings(name: routeName ?? '/${child.runtimeType}/'),
       barrierColor: Colors.black.withValues(alpha: 0.8),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
@@ -49,8 +49,9 @@ class CustomBottomSheet {
         return PopScope(
           canPop: false,
           child: _CustomBottomSheet(
-            isDismissible: isDismissible,
             backgroundColor: backgroundColor,
+            isDismissible: isDismissible,
+            constraints: constraints,
             useSafeArea: useSafeArea,
             showClose: showClose,
             closeMode: closeMode,
@@ -69,6 +70,7 @@ class CustomBottomSheet {
 class _CustomBottomSheet extends StatefulWidget {
   const _CustomBottomSheet({
     this.padding,
+    this.constraints,
     this.backgroundColor,
     required this.child,
     required this.closeMode,
@@ -82,6 +84,7 @@ class _CustomBottomSheet extends StatefulWidget {
   final bool isDismissible;
   final EdgeInsets? padding;
   final Color? backgroundColor;
+  final BoxConstraints? constraints;
   final CustomBottomSheetCloseMode closeMode;
 
   @override
@@ -94,19 +97,19 @@ class _CustomBottomSheetState extends State<_CustomBottomSheet> {
   }
 
   BoxDecoration get _decoration => BoxDecoration(
-        borderRadius: BorderRadius.only(
-          topLeft: context.theme.borderRadiusMD.topLeft,
-          topRight: context.theme.borderRadiusMD.topRight,
-        ),
-        color: widget.backgroundColor ?? context.colorScheme.surface,
-        boxShadow: [
-          BoxShadow(
-            blurRadius: 5,
-            spreadRadius: -5,
-            color: context.colorScheme.surface.withValues(alpha: 0.5),
-          ),
-        ],
-      );
+    borderRadius: BorderRadius.only(
+      topLeft: context.theme.borderRadiusMD.topLeft,
+      topRight: context.theme.borderRadiusMD.topRight,
+    ),
+    color: widget.backgroundColor ?? context.colorScheme.surface,
+    boxShadow: [
+      BoxShadow(
+        blurRadius: 5,
+        spreadRadius: -5,
+        color: context.colorScheme.surface.withValues(alpha: 0.5),
+      ),
+    ],
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -119,70 +122,88 @@ class _CustomBottomSheetState extends State<_CustomBottomSheet> {
             child: const ColoredBox(color: Colors.transparent),
           ),
         ),
-        SafeArea(
-          bottom: false,
-          child: Padding(
-            padding: EdgeInsets.only(
-              top: switch (defaultTargetPlatform) {
-                TargetPlatform.android =>
-                  context.theme.appBarTheme.appBarHeight,
-                TargetPlatform.iOS => context.theme.appBarTheme.appBarHeight,
-                TargetPlatform() => widget.padding?.top ?? Spacing.sm.value,
-              },
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                if (widget.closeMode == CustomBottomSheetCloseMode.outside)
-                  if (widget.showClose)
-                    Padding(
-                      padding: EdgeInsets.all(Spacing.xs.value),
-                      child: Align(
-                        alignment: Alignment.bottomRight,
-                        child: CustomButton.icon(
-                          onPressed: _onClose,
-                          icon: Icons.close_rounded,
-                          type: ButtonType.background,
-                          color: context.colorScheme.surface,
-                          heightType: ButtonHeightType.small,
-                        ),
-                      ),
+        Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Flexible(
+              child: ConstrainedBox(
+                constraints:
+                    widget.constraints ?? BoxConstraints(maxWidth: 640),
+                child: SafeArea(
+                  bottom: false,
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                      top: switch (defaultTargetPlatform) {
+                        TargetPlatform.android =>
+                          context.theme.appBarTheme.appBarHeight,
+                        TargetPlatform.iOS =>
+                          context.theme.appBarTheme.appBarHeight,
+                        TargetPlatform() =>
+                          widget.padding?.top ?? Spacing.sm.value,
+                      },
                     ),
-                Flexible(
-                  child: DecoratedBox(
-                    decoration: _decoration,
-                    child: SafeArea(
-                      bottom: widget.useSafeArea,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.only(top: Spacing.xxxs.value),
-                            child: _header,
-                          ),
-                          Flexible(
-                            child: Padding(
-                              padding: widget.padding ??
-                                  EdgeInsets.fromLTRB(
-                                    Spacing.sm.value,
-                                    Spacing.xs.value,
-                                    Spacing.sm.value,
-                                    Spacing.sm.value,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        if (widget.closeMode ==
+                            CustomBottomSheetCloseMode.outside)
+                          if (widget.showClose)
+                            Padding(
+                              padding: EdgeInsets.all(Spacing.xs.value),
+                              child: Align(
+                                alignment: Alignment.bottomRight,
+                                child: CustomButton.icon(
+                                  onPressed: _onClose,
+                                  icon: Icons.close_rounded,
+                                  type: ButtonType.background,
+                                  color: context.colorScheme.surface,
+                                  heightType: ButtonHeightType.small,
+                                ),
+                              ),
+                            ),
+                        Flexible(
+                          child: DecoratedBox(
+                            decoration: _decoration,
+                            child: SafeArea(
+                              bottom: widget.useSafeArea,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.only(
+                                      top: Spacing.xxxs.value,
+                                    ),
+                                    child: _header,
                                   ),
-                              child: widget.child,
+                                  Flexible(
+                                    child: Padding(
+                                      padding:
+                                          widget.padding ??
+                                          EdgeInsets.fromLTRB(
+                                            Spacing.sm.value,
+                                            Spacing.xs.value,
+                                            Spacing.sm.value,
+                                            Spacing.sm.value,
+                                          ),
+                                      child: widget.child,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
-              ],
+              ),
             ),
-          ),
+          ],
         ),
       ],
     );

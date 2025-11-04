@@ -40,7 +40,8 @@ class CustomScrollContent extends StatelessWidget {
         return false;
       },
       child: SingleChildScrollView(
-        physics: physics ??
+        physics:
+            physics ??
             (alwaysScrollable ? const AlwaysScrollableScrollPhysics() : null),
         scrollDirection: scrollDirection,
         controller: scrollController,

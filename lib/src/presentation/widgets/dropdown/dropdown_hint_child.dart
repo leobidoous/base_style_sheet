@@ -89,76 +89,90 @@ class _DropdownHintChildState extends State<_DropdownHintChild> {
 
   @override
   Widget build(BuildContext context) {
-    return CustomInputField(
-      autocorrect: true,
-      onTap: widget.onTap,
-      focusNode: _focusNode,
-      enableSuggestions: true,
-      readOnly: widget.readOnly,
-      enabled: widget.isEnabled,
-      autofocus: widget.canFocus,
-      borderSide: BorderSide.none,
-      hintText: widget.placeholder,
-      controller: _editingController,
-      onChanged: (input) {
-        widget.onTap?.call();
-        widget.onSearchChanged?.call(input);
-      },
-      textInputAction: TextInputAction.done,
-      fillColor: widget.boxDecoration?.color,
-      onEditingComplete: widget.onEditingComplete,
-      borderRadius: context.theme.borderRadiusNone,
-      heightType: switch (widget.heightType) {
-        DropdownHeightType.medium => InputHeightType.medium,
-        DropdownHeightType.normal => InputHeightType.normal,
-        DropdownHeightType.small => InputHeightType.small,
-      },
-      suffixIcon: widget.isLoading
-          ? SizedBox(
-              width: _buttonHeight,
-              height: _buttonHeight,
-              child: CustomLoading(
-                width: widget.fontSize,
-                height: widget.fontSize,
-              ),
-            )
-          : SizedBox(
-              width: _buttonHeight,
-              height: _buttonHeight,
-              child: widget.showClear
-                  ? Center(
-                      child: CustomButton.icon(
-                        type: ButtonType.noShape,
-                        onPressed: widget.readOnly || !widget.isEnabled
-                            ? null
-                            : widget.onClear,
-                        heightType: ButtonHeightType.small,
-                        icon: Icons.close,
-                      ),
-                    )
-                  : widget.icon ??
-                      RotationTransition(
-                        turns: widget.rotateAnimation,
-                        child: CustomButton.icon(
-                          type: ButtonType.noShape,
-                          heightType: switch (widget.heightType) {
-                            DropdownHeightType.medium =>
-                              ButtonHeightType.medium,
-                            DropdownHeightType.normal =>
-                              ButtonHeightType.normal,
-                            DropdownHeightType.small => ButtonHeightType.small,
-                          },
-                          icon: Icons.keyboard_arrow_down_rounded,
-                        ),
-                      ),
-            ),
-      prefixIcon: widget.prefixIcon == null
-          ? null
-          : SizedBox(
-              width: _buttonHeight,
-              height: _buttonHeight,
-              child: widget.prefixIcon,
-            ),
+    return ConstrainedBox(
+      constraints: widget.boxConstraints ?? const BoxConstraints(),
+      child: IntrinsicWidth(
+        stepWidth:
+            widget.isExpanded
+                ? widget.boxConstraints?.maxWidth ?? double.infinity
+                : widget.boxConstraints?.minWidth,
+        child: CustomInputField(
+          autocorrect: true,
+          onTap: widget.onTap,
+          focusNode: _focusNode,
+          enableSuggestions: true,
+          readOnly: widget.readOnly,
+          enabled: widget.isEnabled,
+          autofocus: widget.canFocus,
+          borderSide: BorderSide.none,
+          hintText: widget.placeholder,
+          controller: _editingController,
+          onChanged: (input) {
+            widget.onTap?.call();
+            widget.onSearchChanged?.call(input);
+          },
+          textInputAction: TextInputAction.done,
+          fillColor: widget.boxDecoration?.color,
+          onEditingComplete: widget.onEditingComplete,
+          borderRadius: context.theme.borderRadiusNone,
+          heightType: switch (widget.heightType) {
+            DropdownHeightType.medium => InputHeightType.medium,
+            DropdownHeightType.normal => InputHeightType.normal,
+            DropdownHeightType.small => InputHeightType.small,
+          },
+          suffixIcon:
+              widget.isLoading
+                  ? SizedBox(
+                    width: _buttonHeight,
+                    height: _buttonHeight,
+                    child: CustomLoading(
+                      width: widget.fontSize,
+                      height: widget.fontSize,
+                    ),
+                  )
+                  : SizedBox(
+                    width: _buttonHeight,
+                    height: _buttonHeight,
+                    child:
+                        widget.showClear
+                            ? Center(
+                              child: CustomButton.icon(
+                                type: ButtonType.noShape,
+                                onPressed:
+                                    widget.readOnly || !widget.isEnabled
+                                        ? null
+                                        : widget.onClear,
+                                heightType: ButtonHeightType.small,
+                                icon: Icons.close,
+                              ),
+                            )
+                            : widget.icon ??
+                                RotationTransition(
+                                  turns: widget.rotateAnimation,
+                                  child: CustomButton.icon(
+                                    type: ButtonType.noShape,
+                                    heightType: switch (widget.heightType) {
+                                      DropdownHeightType.medium =>
+                                        ButtonHeightType.medium,
+                                      DropdownHeightType.normal =>
+                                        ButtonHeightType.normal,
+                                      DropdownHeightType.small =>
+                                        ButtonHeightType.small,
+                                    },
+                                    icon: Icons.keyboard_arrow_down_rounded,
+                                  ),
+                                ),
+                  ),
+          prefixIcon:
+              widget.prefixIcon == null
+                  ? null
+                  : SizedBox(
+                    width: _buttonHeight,
+                    height: _buttonHeight,
+                    child: widget.prefixIcon,
+                  ),
+        ),
+      ),
     );
   }
 }

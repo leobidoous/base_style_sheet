@@ -65,10 +65,8 @@ class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
   State<CustomAppBar> createState() => _CustomAppBarState();
 
   @override
-  Size get preferredSize => Size(
-        double.infinity,
-        toolbarHeight ?? AppThemeBase.appBarHeight,
-      );
+  Size get preferredSize =>
+      Size(double.infinity, toolbarHeight ?? AppThemeBase.appBarHeight);
 }
 
 class _CustomAppBarState extends State<CustomAppBar>
@@ -88,10 +86,7 @@ class _CustomAppBarState extends State<CustomAppBar>
       begin: 0,
       end: widget.progress ?? 0,
     ).animate(
-      CurvedAnimation(
-        parent: _animationController,
-        curve: Curves.easeInOut,
-      ),
+      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
     );
     _currentProgress = widget.progress ?? 0;
     if (widget.progress != null) {
@@ -107,10 +102,7 @@ class _CustomAppBarState extends State<CustomAppBar>
         begin: _currentProgress,
         end: widget.progress ?? 0,
       ).animate(
-        CurvedAnimation(
-          parent: _animationController,
-          curve: Curves.easeInOut,
-        ),
+        CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
       );
       _currentProgress = widget.progress ?? 0;
       _animationController.reset();
@@ -134,19 +126,21 @@ class _CustomAppBarState extends State<CustomAppBar>
           child: DecoratedBox(
             decoration: BoxDecoration(
               color: Colors.transparent,
-              border: widget.enableShadow
-                  ? Border(
-                      bottom: BorderSide(
-                        width: .1,
-                        color: context.colorScheme.onSurface.withValues(
-                          alpha: .1,
+              border:
+                  widget.enableShadow
+                      ? Border(
+                        bottom: BorderSide(
+                          width: .1,
+                          color: context.colorScheme.onSurface.withValues(
+                            alpha: .1,
+                          ),
                         ),
-                      ),
-                    )
-                  : null,
-              boxShadow: widget.enableShadow
-                  ? [context.theme.shadowLightmodeLevel1]
-                  : null,
+                      )
+                      : null,
+              boxShadow:
+                  widget.enableShadow
+                      ? [context.theme.shadowLightmodeLevel1]
+                      : null,
             ),
             child: AppBar(
               elevation: 0,
@@ -157,22 +151,25 @@ class _CustomAppBarState extends State<CustomAppBar>
               toolbarHeight: widget.toolbarHeight,
               foregroundColor: Colors.transparent,
               surfaceTintColor: Colors.transparent,
-              shape: widget.enableShadow
-                  ? UnderlineInputBorder(
-                      borderSide: BorderSide(
-                        color: context.colorScheme.onSurface.withValues(
-                          alpha: .1,
-                        ),
-                        width: .1,
-                      ),
-                    )
-                  : null,
+              scrolledUnderElevation: widget.scrolledUnderElevation ?? 0,
               automaticallyImplyLeading: widget.automaticallyImplyLeading,
               backgroundColor:
                   widget.backgroundColor ?? context.colorScheme.surface,
+              shape:
+                  widget.enableShadow
+                      ? UnderlineInputBorder(
+                        borderSide: BorderSide(
+                          color: context.colorScheme.onSurface.withValues(
+                            alpha: .1,
+                          ),
+                          width: .1,
+                        ),
+                      )
+                      : null,
               title: Padding(
                 padding: widget.titlePadding,
-                child: widget.titleWidget ??
+                child:
+                    widget.titleWidget ??
                     AutoSizeText(
                       widget.title ?? '',
                       maxLines: 1,
@@ -184,40 +181,43 @@ class _CustomAppBarState extends State<CustomAppBar>
                       ),
                     ),
               ),
-              leadingWidth: widget.leadingWidth ??
+              leadingWidth:
+                  widget.leadingWidth ??
                   (widget.automaticallyImplyLeading &&
                               Navigator.of(context).canPop() ||
                           widget.leadingIcon != null ||
                           widget.onBackTap != null
                       ? null
                       : 0),
-              leading: widget.automaticallyImplyLeading &&
-                          Navigator.of(context).canPop() ||
-                      widget.leadingIcon != null ||
-                      widget.onBackTap != null
-                  ? Align(
-                      child: CustomButton.child(
-                        onPressed:
-                            widget.onBackTap ?? Navigator.of(context).pop,
-                        type: ButtonType.noShape,
-                        padding: EdgeInsets.zero,
-                        heightType: ButtonHeightType.small,
-                        child: widget.leadingIcon ??
-                            Icon(
-                              Icons.chevron_left_rounded,
-                              size: AppFontSize.iconButton.value,
-                              color: context.textTheme.titleMedium?.color,
-                            ),
-                      ),
-                    )
-                  : const SizedBox(),
-              scrolledUnderElevation: widget.scrolledUnderElevation ?? 0,
+              leading:
+                  widget.automaticallyImplyLeading &&
+                              Navigator.of(context).canPop() ||
+                          widget.leadingIcon != null ||
+                          widget.onBackTap != null
+                      ? Align(
+                        child: CustomButton.child(
+                          onPressed:
+                              widget.onBackTap ?? Navigator.of(context).pop,
+                          type: ButtonType.noShape,
+                          padding: EdgeInsets.zero,
+                          heightType: ButtonHeightType.small,
+                          child:
+                              widget.leadingIcon ??
+                              Icon(
+                                Icons.chevron_left_rounded,
+                                size: AppFontSize.iconButton.value,
+                                color: context.textTheme.titleMedium?.color,
+                              ),
+                        ),
+                      )
+                      : const SizedBox(),
             ),
           ),
         ),
         if (widget.progress != null)
           Padding(
-            padding: widget.linearProgressPadding ??
+            padding:
+                widget.linearProgressPadding ??
                 EdgeInsets.symmetric(horizontal: Spacing.sm.value),
             child: ClipRRect(
               borderRadius: context.theme.borderRadiusXLG,

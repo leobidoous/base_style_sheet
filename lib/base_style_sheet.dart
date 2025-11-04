@@ -54,6 +54,7 @@ export 'package:base_style_sheet/src/presentation/widgets/inputs/custom_input_fi
 export 'package:base_style_sheet/src/presentation/widgets/inputs/custom_pin_input.dart';
 export 'package:base_style_sheet/src/presentation/widgets/inputs/input_label.dart';
 export 'package:base_style_sheet/src/presentation/widgets/paged_list/paged_list_view.dart';
+export 'package:base_style_sheet/src/presentation/widgets/paged_list/paged_table_view.dart';
 export 'package:base_style_sheet/src/presentation/widgets/pdf/custom_pdf_view.dart';
 export 'package:base_style_sheet/src/presentation/widgets/row_label/row_label_value.dart';
 export 'package:base_style_sheet/src/presentation/widgets/row_label/row_label_value_shimmer.dart';

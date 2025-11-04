@@ -35,13 +35,8 @@ class CustomDropdownItem<T> {
   final String label;
   final Widget? item;
 
-  CustomDropdownItem<T> copyWith({
-    String? label,
-  }) {
-    return CustomDropdownItem(
-      value: value,
-      label: label ?? this.label,
-    );
+  CustomDropdownItem<T> copyWith({String? label}) {
+    return CustomDropdownItem(value: value, label: label ?? this.label);
   }
 }
 
@@ -74,7 +69,7 @@ class CustomDropdown<T> extends StatefulWidget {
     this.itemSelectedStyle,
     this.isLoading = false,
     this.canSearch = false,
-    this.isExpanded = false,
+    this.isExpanded = true,
     this.useSafeArea = true,
     this.useParendRenderBox = true,
     this.heightType = DropdownHeightType.medium,
@@ -119,7 +114,7 @@ class CustomDropdown<T> extends StatefulWidget {
 class _CustomDropdownState<T> extends State<CustomDropdown<T>>
     with SingleTickerProviderStateMixin {
   late final PagedListController<dynamic, CustomDropdownItem<T>>
-      _listController;
+  _listController;
   final ValueNotifier<String> _valueSelected = ValueNotifier('');
   late final AnimationController _animationController;
   late final Animation<double> _opacityAnimation;
@@ -167,26 +162,32 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
       vsync: this,
       duration: const Duration(milliseconds: 150),
     );
-    _opacityAnimation = Tween<double>(begin: 1, end: 0).animate(
-      _animationController,
-    );
-    _rotateAnimation = Tween<double>(begin: 1, end: .5).animate(
-      _animationController,
-    );
+    _opacityAnimation = Tween<double>(
+      begin: 1,
+      end: 0,
+    ).animate(_animationController);
+    _rotateAnimation = Tween<double>(
+      begin: 1,
+      end: .5,
+    ).animate(_animationController);
 
-    _listController = widget.listController ??
+    _listController =
+        widget.listController ??
         PagedListController(
           preventNewFetch: true,
           pageSize: widget.items.length,
         );
 
     if (widget.listController == null) {
-      _listController.setListener(({required pageKey}) async {
+      _listController.setListener(({
+        required int pageKey,
+        int? pageSize,
+      }) async {
         return widget.items
             .where(
-              (e) => e.label
-                  .toLowerCase()
-                  .contains(_textSearchFilter.toLowerCase()),
+              (e) => e.label.toLowerCase().contains(
+                _textSearchFilter.toLowerCase(),
+              ),
             )
             .toList();
       });
@@ -198,7 +199,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
     _textSearchFilter = '';
     _showClear =
         (_valueSelected.value.isNotEmpty || _textSearchFilter.isNotEmpty) &&
-            widget.onClear != null;
+        widget.onClear != null;
     if (widget.autovalidateMode != AutovalidateMode.disabled) {
       _canForceValidator = _valueSelected.value.isEmpty;
     }
@@ -253,34 +254,34 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
 
   double _getTopPosition(BoxConstraints constraints) {
     late double dy;
-    dy = _isOnTop(constraints)
-        ? _offset.dy
-        : (widget.verticalSpacing ?? Spacing.sm.value);
+    dy =
+        _isOnTop(constraints)
+            ? _offset.dy
+            : (widget.verticalSpacing ?? Spacing.sm.value);
     return dy + (widget.useSafeArea ? _parentContextOffset.dy : 0);
   }
 
   double _getBottomPosition(BuildContext context, BoxConstraints constraints) {
     late double dy;
-    dy = _isOnTop(constraints)
-        ? (widget.verticalSpacing ?? Spacing.sm.value)
-        : constraints.maxHeight - _offset.dy - _size.height;
+    dy =
+        _isOnTop(constraints)
+            ? (widget.verticalSpacing ?? Spacing.sm.value)
+            : constraints.maxHeight - _offset.dy - _size.height;
     return (_isOnTop(constraints)
             ? dy + (widget.verticalSpacing ?? Spacing.sm.value)
             : Spacing.keyboardHeigth(context) > dy
-                ? Spacing.keyboardHeigth(context) +
-                    (widget.verticalSpacing ?? Spacing.sm.value)
-                : dy) -
+            ? Spacing.keyboardHeigth(context) +
+                (widget.verticalSpacing ?? Spacing.sm.value)
+            : dy) -
         (widget.useSafeArea ? _parentContextOffset.dy : 0);
   }
 
   double get _getLeftPosition {
-    return widget.isExpanded ? (widget.listPadding?.left ?? 0) : _offset.dx;
+    return _offset.dx;
   }
 
   double _getRightPosition(BoxConstraints constraints) {
-    return widget.isExpanded
-        ? widget.listPadding?.right ?? 0
-        : constraints.maxWidth - _offset.dx - _size.width;
+    return constraints.maxWidth - _offset.dx - _size.width;
   }
 
   double _getMaxHeight(BuildContext context, BoxConstraints constraints) {
@@ -289,12 +290,12 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
             ? constraints.maxHeight
             : widget.maxHeight!
         : _isOnTop(constraints)
-            ? constraints.maxHeight -
-                (_getTopPosition(constraints) +
-                    (widget.useSafeArea ? _parentContextOffset.dy : 0))
-            : constraints.maxHeight -
-                (_getBottomPosition(context, constraints) -
-                    (widget.useSafeArea ? _parentContextOffset.dy : 0));
+        ? constraints.maxHeight -
+            (_getTopPosition(constraints) +
+                (widget.useSafeArea ? _parentContextOffset.dy : 0))
+        : constraints.maxHeight -
+            (_getBottomPosition(context, constraints) -
+                (widget.useSafeArea ? _parentContextOffset.dy : 0));
   }
 
   Future<void> _showDropdown() async {
@@ -344,7 +345,10 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
       builder: (BuildContext context, Widget? child) {
         return Column(
           mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment:
+              widget.isExpanded
+                  ? CrossAxisAlignment.stretch
+                  : CrossAxisAlignment.start,
           children: [
             if (widget.labelWidget != null) ...[
               widget.labelWidget!,
@@ -370,7 +374,11 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
             _canForceValidator ? _validator(_valueSelected.value) : null,
         builder: (c) {
           return Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment:
+                widget.isExpanded
+                    ? CrossAxisAlignment.stretch
+                    : CrossAxisAlignment.start,
             children: [
               Semantics(
                 key: _key,
@@ -429,9 +437,10 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
-                  mainAxisAlignment: _isOnTop(constraints)
-                      ? MainAxisAlignment.start
-                      : MainAxisAlignment.end,
+                  mainAxisAlignment:
+                      _isOnTop(constraints)
+                          ? MainAxisAlignment.start
+                          : MainAxisAlignment.end,
                   children: [
                     Flexible(
                       child: _container(
@@ -455,7 +464,8 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
     bool hasError = false,
   }) {
     return Container(
-      decoration: widget.boxDecoration ??
+      decoration:
+          widget.boxDecoration ??
           BoxDecoration(
             color: context.colorScheme.surface,
             borderRadius: _borderRadius,
@@ -494,7 +504,8 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
           placeholder: widget.placeholder,
           scrollController: _scrollController,
           itemSelectedStyle: widget.itemSelectedStyle,
-          boxDecoration: widget.boxDecoration ??
+          boxDecoration:
+              widget.boxDecoration ??
               BoxDecoration(
                 borderRadius: _borderRadius,
                 color: context.colorScheme.surface,
@@ -533,11 +544,11 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
             if (widget.onSearchChanged == null) _listController.refresh();
             widget.onSearchChanged?.call(_textSearchFilter);
           },
+
           icon: widget.icon,
           fontSize: _fontSize,
           isEnabled: _isEnabled,
           showClear: _showClear,
-          readOnly: widget.readOnly,
           itemStyle: widget.itemStyle,
           isLoading: widget.isLoading,
           prefixIcon: widget.prefixIcon,
@@ -549,6 +560,8 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
           boxDecoration: widget.boxDecoration,
           valueSelected: _valueSelected.value,
           boxConstraints: widget.boxConstraints,
+          readOnly: widget.readOnly || !widget.canSearch,
+          canFocus: _animationController.isForwardOrCompleted,
           onEditingComplete: () {
             if (_listController.value.isNotEmpty) {
               _onChangedItem(
@@ -559,7 +572,6 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
               );
             }
           },
-          canFocus: _animationController.isForwardOrCompleted,
         );
       },
     );

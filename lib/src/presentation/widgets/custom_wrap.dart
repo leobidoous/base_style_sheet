@@ -8,6 +8,7 @@ class CustomWrap<T> extends StatelessWidget {
     this.runSpacing = 8,
     required this.items,
     this.padding = EdgeInsets.zero,
+    this.useIntrinsicHeight = false,
     this.alignment = WrapAlignment.start,
     this.runAlignment = WrapAlignment.start,
     this.crossAxisAlignment = WrapCrossAlignment.center,
@@ -18,6 +19,7 @@ class CustomWrap<T> extends StatelessWidget {
   final List<Widget> items;
   final EdgeInsets padding;
   final WrapAlignment alignment;
+  final bool useIntrinsicHeight;
   final WrapAlignment runAlignment;
   final WrapCrossAlignment crossAxisAlignment;
 
@@ -33,17 +35,19 @@ class CustomWrap<T> extends StatelessWidget {
             runSpacing: runSpacing,
             runAlignment: runAlignment,
             crossAxisAlignment: crossAxisAlignment,
-            children: items.map((item) {
-              return SizedBox(
-                width: nCols != null
-                    ? ((constrains.maxWidth / nCols!) -
-                            ((spacing * (nCols! - 1)) / nCols!))
-                        .floor()
-                        .toDouble()
-                    : null,
-                child: item,
-              );
-            }).toList(),
+            children:
+                items.map((item) {
+                  return SizedBox(
+                    width:
+                        nCols != null
+                            ? ((constrains.maxWidth / nCols!) -
+                                    ((spacing * (nCols! - 1)) / nCols!))
+                                .floor()
+                                .toDouble()
+                            : null,
+                    child: item,
+                  );
+                }).toList(),
           );
         },
       ),

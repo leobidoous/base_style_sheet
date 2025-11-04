@@ -99,7 +99,11 @@ class _PagedListViewState<E, S> extends State<PagedListView<E, S>> {
 
   Future<void> _fetchItemsAndScroll() async {
     await _listController
-        .fetchNewItems(pageKey: _listController.config.pageKey)
+        .fetchNewItems(
+          pageKey:
+              _listController.config.pageKey +
+              _listController.config.pageIncrement,
+        )
         .whenComplete(() {
           if (_listController.hasError) {
             WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -144,8 +148,9 @@ class _PagedListViewState<E, S> extends State<PagedListView<E, S>> {
               Center(
                 child: CustomRequestError(
                   padding: widget.padding,
-                  message: _listController.error.toString(),
+                  btnLabel: 'Tentar novamente',
                   onPressed: _listController.refresh,
+                  message: _listController.error.toString(),
                 ),
               );
         } else if (state.isEmpty) {
@@ -196,8 +201,8 @@ class _PagedListViewState<E, S> extends State<PagedListView<E, S>> {
         return ListView.separated(
           padding: widget.padding,
           itemCount: state.length,
-          reverse: _listController.reverse,
           addAutomaticKeepAlives: false,
+          reverse: _listController.reverse,
           separatorBuilder: widget.separatorBuilder,
           controller:
               widget.parentScrollController == null ? _scrollController : null,

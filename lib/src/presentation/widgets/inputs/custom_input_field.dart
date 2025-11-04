@@ -113,7 +113,8 @@ class CustomInputField extends StatefulWidget {
     required int currentLength,
     required bool isFocused,
     required int? maxLength,
-  })? buildCounter;
+  })?
+  buildCounter;
 
   @override
   State<CustomInputField> createState() => _CustomInputFieldState();
@@ -214,14 +215,16 @@ class _CustomInputFieldState extends State<CustomInputField> {
                 isCollapsed: widget.isCollapsed,
                 isDense: widget.isDense,
                 filled: widget.fillColor != null,
-                fillColor: widget.enabled
-                    ? widget.fillColor ?? context.colorScheme.surface
-                    : (widget.fillColor ?? context.colorScheme.surface)
-                        .withValues(alpha: .75),
+                fillColor:
+                    widget.enabled
+                        ? widget.fillColor ?? context.colorScheme.surface
+                        : (widget.fillColor ?? context.colorScheme.surface)
+                            .withValues(alpha: .75),
                 hintStyle: context.textTheme.bodyMedium?.copyWith(
                   fontWeight: AppFontWeight.normal.value,
-                  color: context.textTheme.bodyMedium?.color
-                      ?.withValues(alpha: .75),
+                  color: context.textTheme.bodyMedium?.color?.withValues(
+                    alpha: .75,
+                  ),
                   fontSize: _fontSize,
                 ),
                 labelStyle: context.textTheme.titleMedium?.copyWith(
@@ -234,22 +237,27 @@ class _CustomInputFieldState extends State<CustomInputField> {
                 counterText: widget.counterText,
                 prefix: Text(widget.prefix ?? ''),
                 suffixIconConstraints: _boxConstraints.copyWith(
-                  minWidth: widget.suffixIcon != null
-                      ? _boxConstraints.minWidth
-                      : widget.contentPadding?.right ?? _fontSize,
+                  minWidth:
+                      widget.suffixIcon != null
+                          ? _boxConstraints.minWidth
+                          : widget.contentPadding?.right ?? _fontSize,
                 ),
                 prefixIconConstraints: _boxConstraints.copyWith(
-                  minWidth: widget.prefixIcon != null
-                      ? _boxConstraints.minWidth
-                      : widget.contentPadding?.left ?? _fontSize,
+                  minWidth:
+                      widget.prefixIcon != null
+                          ? _boxConstraints.minWidth
+                          : widget.contentPadding?.left ?? _fontSize,
                 ),
                 helperStyle: context.textTheme.labelSmall,
                 suffixIcon: widget.suffixIcon ?? SizedBox(width: _fontSize),
                 prefixIcon: widget.prefixIcon ?? SizedBox(width: _fontSize),
-                errorStyle: widget.errorStyle ??
-                    context.textTheme.labelSmall
-                        ?.copyWith(color: context.colorScheme.error),
-                contentPadding: widget.contentPadding ??
+                errorStyle:
+                    widget.errorStyle ??
+                    context.textTheme.labelSmall?.copyWith(
+                      color: context.colorScheme.error,
+                    ),
+                contentPadding:
+                    widget.contentPadding ??
                     EdgeInsets.symmetric(
                       horizontal: _fontSize,
                       vertical: widget.maxLines > 1 ? _fontSize : 0,

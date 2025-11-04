@@ -66,8 +66,8 @@ class PagedListController<E, S> extends ValueNotifier<List<S>> {
     bool forceNewFetch = false,
     bool initWithRequest = true,
     bool preventNewFetch = false,
-  })  : assert(searchPercent >= 0 && searchPercent <= 100),
-        super(const []) {
+  }) : assert(searchPercent >= 0 && searchPercent <= 100),
+       super(const []) {
     config = _PagedListConfig(
       nextPageKey: firstPageKey + pageIncrement,
       initWithRequest: initWithRequest,
@@ -122,7 +122,8 @@ class PagedListController<E, S> extends ValueNotifier<List<S>> {
   }
 
   /// [fetchItems] is used to do a new search by new items.
-  late final Future<List<S>> Function({required int pageKey}) _fetchItems;
+  late final Future<List<S>> Function({required int pageKey, int? pageSize})
+  _fetchItems;
 
   /// [searchPercent] is the key to be used in case of a [refresh].
   final int searchPercent;
@@ -141,37 +142,66 @@ class PagedListController<E, S> extends ValueNotifier<List<S>> {
     if (!isLoading) {
       config.reset();
       update(List<S>.empty(growable: true));
-      await fetchNewItems(pageKey: firstPageKey);
+      await fetchNewItems(pageKey: firstPageKey, pageSize: config.pageSize);
     }
   }
 
   void setListener(
-    Future<List<S>> Function({required int pageKey}) fetchItems,
-  ) =>
-      _fetchItems = fetchItems;
+    Future<List<S>> Function({required int pageKey, int? pageSize}) fetchItems,
+  ) => _fetchItems = fetchItems;
 
-  Future<void> fetchNewItems({required int pageKey}) async {
-    if ((state.isNotEmpty && config.preventNewFetch) ||
-        (config.nextPageKey == pageKey) ||
-        (config.isLastFetch && !config.forceNewFetch) ||
-        isLoading) {
+  Future<void> fetchNewItems({
+    bool forceFetch = false,
+    required int pageKey,
+    int? pageSize,
+  }) async {
+    if (((state.isNotEmpty && config.preventNewFetch) ||
+            (config.nextPageKey + config.pageIncrement == pageKey) ||
+            (config.isLastFetch && !config.forceNewFetch) ||
+            isLoading) &&
+        !forceFetch) {
       return;
     }
 
+    config.pageKey = pageKey;
+    config.pageSize = pageSize ?? config.pageSize;
+    config.nextPageKey = config.pageKey + config.pageIncrement;
     clearError();
     setLoading(true);
-    await _fetchItems(pageKey: pageKey).then((value) async {
-      config.lastItems = value;
-      config.pageKey += config.pageIncrement;
-      if (value.isNotEmpty) {
-        config.nextPageKey += config.pageIncrement;
-        final newValues = value.where((v) => !state.contains(v)).toList();
-        await Future.delayed(Durations.medium1);
-        update(state..addAll(newValues));
-      }
-    }).catchError((error) {
-      setError(error);
-    }).whenComplete(() => setLoading(false));
+    await _fetchItems(pageKey: pageKey, pageSize: pageSize ?? config.pageSize)
+        .then((value) async {
+          config.lastItems = value;
+          if (value.isNotEmpty) {
+            final newValues = value.where((v) => !state.contains(v)).toList();
+            await Future.delayed(Durations.medium1);
+            update(state..addAll(newValues));
+          }
+        })
+        .catchError((error) {
+          setError(error);
+        })
+        .whenComplete(() => setLoading(false));
+  }
+
+  Future<void> fetchItemsPerPage({required int pageKey, int? pageSize}) async {
+    update([]);
+    setLoading(true);
+    config.pageKey = pageKey;
+    config.pageSize = pageSize ?? config.pageSize;
+    config.nextPageKey = config.pageKey + config.pageIncrement;
+    await _fetchItems(pageKey: pageKey, pageSize: pageSize ?? config.pageSize)
+        .then((value) async {
+          config.lastItems = value;
+          if (value.isNotEmpty) {
+            final newValues = value.where((v) => !state.contains(v)).toList();
+            await Future.delayed(Durations.medium1);
+            update(state..addAll(newValues));
+          }
+        })
+        .catchError((error) {
+          setError(error);
+        })
+        .whenComplete(() => setLoading(false));
   }
 
   @override

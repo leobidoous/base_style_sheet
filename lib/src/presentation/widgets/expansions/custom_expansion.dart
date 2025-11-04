@@ -8,7 +8,9 @@ class CustomExpansion<T> extends StatefulWidget {
   const CustomExpansion({
     super.key,
     this.body,
+    this.icon,
     this.onTap,
+    this.iconColor,
     this.onForward,
     this.onReverse,
     required this.title,
@@ -24,8 +26,10 @@ class CustomExpansion<T> extends StatefulWidget {
 
   final Widget title;
   final Widget? body;
+  final IconData? icon;
   final bool isEnabled;
   final bool isSelected;
+  final Color? iconColor;
   final bool allowExpand;
   final bool showTrailing;
   final EdgeInsets padding;
@@ -137,10 +141,11 @@ class CustomExpansionState<T> extends State<CustomExpansion<T>>
                         RotationTransition(
                           turns: _rotateAnimation,
                           child: CustomButton.icon(
+                            type: ButtonType.noShape,
+                            iconColor: widget.iconColor,
                             onPressed: _onChangeExpansion,
                             heightType: ButtonHeightType.small,
-                            type: ButtonType.noShape,
-                            icon: switch (widget.initialState) {
+                            icon:widget.icon?? switch (widget.initialState) {
                               ExpansionState.opened =>
                                 Icons.keyboard_arrow_up_rounded,
                               ExpansionState.closed =>

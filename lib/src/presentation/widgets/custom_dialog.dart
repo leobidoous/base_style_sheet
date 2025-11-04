@@ -2,20 +2,17 @@ import 'package:flutter/material.dart'
     show
         Align,
         Alignment,
-        Border,
         BoxConstraints,
         BoxDecoration,
         BoxShadow,
         BuildContext,
         Colors,
         Column,
-        Container,
         EdgeInsets,
         Flexible,
         Icons,
         MainAxisAlignment,
         MainAxisSize,
-        Material,
         MaterialLocalizations,
         Navigator,
         Padding,
@@ -51,9 +48,7 @@ class CustomDialog {
       context: context,
       barrierDismissible: false,
       useRootNavigator: useRootNavigator,
-      routeSettings: RouteSettings(
-        name: routeName ?? '/${child.runtimeType}/',
-      ),
+      routeSettings: RouteSettings(name: routeName ?? '/${child.runtimeType}/'),
       barrierColor: Colors.black.withValues(alpha: 0.8),
       transitionDuration: const Duration(milliseconds: 250),
       barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
@@ -128,97 +123,19 @@ class _CustomDialogState extends State<_CustomDialog> {
   }
 
   BoxDecoration get _decoration => BoxDecoration(
-        borderRadius: context.theme.borderRadiusMD,
-        color: widget.backgroundColor ?? context.colorScheme.surface,
-        boxShadow: [
-          BoxShadow(
-            blurRadius: 5,
-            spreadRadius: -5,
-            color: context.colorScheme.surface.withValues(alpha: 0.5),
-          ),
-        ],
-      );
+    borderRadius: context.theme.borderRadiusMD,
+    color: widget.backgroundColor ?? context.colorScheme.surface,
+    boxShadow: [
+      BoxShadow(
+        blurRadius: 5,
+        spreadRadius: -5,
+        color: context.colorScheme.surface.withValues(alpha: 0.5),
+      ),
+    ],
+  );
 
   @override
   Widget build(BuildContext context) {
-    if (1 == 1) {
-      return Stack(
-        fit: StackFit.expand,
-        children: [
-          Positioned.fill(
-            child: GestureDetector(
-              onTap: widget.isDismissible ? _onClose : null,
-              child: const ColoredBox(color: Colors.transparent),
-            ),
-          ),
-          SafeArea(
-            child: Padding(
-              padding: widget.padding ?? EdgeInsets.all(Spacing.sm.value),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  if (widget.closeMode == CustomDialogCloseMode.outside)
-                    if (widget.showClose)
-                      Padding(
-                        padding: EdgeInsets.all(Spacing.xs.value),
-                        child: Align(
-                          alignment: Alignment.bottomRight,
-                          child: CustomButton.icon(
-                            onPressed: _onClose,
-                            icon: Icons.close_rounded,
-                            type: ButtonType.background,
-                            color: context.colorScheme.surface,
-                            heightType: ButtonHeightType.small,
-                          ),
-                        ),
-                      ),
-                  Flexible(
-                    child: DecoratedBox(
-                      decoration: _decoration,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          if (widget.closeMode == CustomDialogCloseMode.inside)
-                            if (widget.showClose)
-                              Padding(
-                                padding: EdgeInsets.fromLTRB(
-                                  Spacing.xs.value,
-                                  Spacing.xs.value,
-                                  Spacing.xs.value,
-                                  0,
-                                ),
-                                child: Align(
-                                  alignment: Alignment.topRight,
-                                  child: CustomButton.icon(
-                                    onPressed: _onClose,
-                                    icon: Icons.close_rounded,
-                                    type: ButtonType.background,
-                                    color: context.colorScheme.surface,
-                                    heightType: ButtonHeightType.small,
-                                  ),
-                                ),
-                              ),
-                          Flexible(
-                            child: Padding(
-                              padding: widget.padding ??
-                                  EdgeInsets.all(Spacing.sm.value),
-                              child: widget.child,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      );
-    }
     return Stack(
       fit: StackFit.expand,
       children: [
@@ -228,61 +145,83 @@ class _CustomDialogState extends State<_CustomDialog> {
             child: const ColoredBox(color: Colors.transparent),
           ),
         ),
-        SafeArea(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Flexible(
-                child: Material(
-                  color: Colors.transparent,
-                  child: Container(
-                    constraints: widget.constraints,
-                    decoration: BoxDecoration(
-                      borderRadius: context.theme.borderRadiusMD,
-                      border: Border.all(
-                        color: context.colorScheme.surface,
-                        width: 2,
-                      ),
-                      color: context.colorScheme.surface,
-                      boxShadow: [
-                        BoxShadow(
-                          blurRadius: 5,
-                          spreadRadius: -5,
-                          color: context.colorScheme.surface
-                              .withValues(alpha: 0.5),
-                        ),
-                      ],
-                    ),
-                    padding: widget.padding ??
-                        EdgeInsets.all(const Spacing(2).value),
-                    margin: EdgeInsets.all(Spacing.md.value),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Flexible(
+              child: ConstrainedBox(
+                constraints:
+                    widget.constraints ?? BoxConstraints(maxWidth: 640),
+                child: SafeArea(
+                  child: Padding(
+                    padding: widget.padding ?? EdgeInsets.all(Spacing.sm.value),
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
                       mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        if (widget.showClose)
-                          Align(
-                            alignment: Alignment.topRight,
-                            child: Padding(
-                              padding:
-                                  EdgeInsets.only(bottom: Spacing.sm.value),
-                              child: CustomButton.icon(
-                                icon: Icons.close_rounded,
-                                type: ButtonType.noShape,
-                                onPressed: _onClose,
-                                heightType: ButtonHeightType.small,
+                        if (widget.closeMode == CustomDialogCloseMode.outside)
+                          if (widget.showClose)
+                            Padding(
+                              padding: EdgeInsets.all(Spacing.xs.value),
+                              child: Align(
+                                alignment: Alignment.bottomRight,
+                                child: CustomButton.icon(
+                                  onPressed: _onClose,
+                                  icon: Icons.close_rounded,
+                                  type: ButtonType.background,
+                                  color: context.colorScheme.surface,
+                                  heightType: ButtonHeightType.small,
+                                ),
                               ),
                             ),
+                        Flexible(
+                          child: DecoratedBox(
+                            decoration: _decoration,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                if (widget.closeMode ==
+                                    CustomDialogCloseMode.inside)
+                                  if (widget.showClose)
+                                    Padding(
+                                      padding: EdgeInsets.fromLTRB(
+                                        Spacing.xs.value,
+                                        Spacing.xs.value,
+                                        Spacing.xs.value,
+                                        0,
+                                      ),
+                                      child: Align(
+                                        alignment: Alignment.topRight,
+                                        child: CustomButton.icon(
+                                          onPressed: _onClose,
+                                          icon: Icons.close_rounded,
+                                          type: ButtonType.background,
+                                          color: context.colorScheme.surface,
+                                          heightType: ButtonHeightType.small,
+                                        ),
+                                      ),
+                                    ),
+                                Flexible(
+                                  child: Padding(
+                                    padding:
+                                        widget.padding ??
+                                        EdgeInsets.all(Spacing.sm.value),
+                                    child: widget.child,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        Flexible(child: widget.child),
+                        ),
                       ],
                     ),
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ],
     );
