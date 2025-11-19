@@ -89,22 +89,22 @@ class CustomDropdown<T> extends StatefulWidget {
   final Function()? onClear;
   final TextStyle? itemStyle;
   final BuildContext context;
-  final Function(T)? onChanged;
   final InputLabel? labelWidget;
   final bool useParendRenderBox;
   final EdgeInsets? listPadding;
   final double? verticalSpacing;
   final EdgeInsets? childPadding;
   final BorderRadius? borderRadius;
+  final Function(T value)? onChanged;
   final TextStyle? itemSelectedStyle;
   final BoxDecoration? boxDecoration;
   final DropdownHeightType heightType;
   final BoxConstraints? boxConstraints;
   final List<CustomDropdownItem<T>> items;
   final AutovalidateMode autovalidateMode;
-  final Function(String?)? onSearchChanged;
-  final String? Function(String?)? validator;
-  final List<String? Function(String?)>? validators;
+  final String? Function(String? input)? validator;
+  final List<String? Function(String? input)>? validators;
+  final Function(String? input, {bool isReset})? onSearchChanged;
   final PagedListController<dynamic, CustomDropdownItem<T>>? listController;
 
   @override
@@ -335,7 +335,10 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
             },
           ),
         )
-        .whenComplete(_animationController.reverse);
+        .whenComplete(() {
+          widget.onSearchChanged?.call('', isReset: true);
+          _animationController.reverse();
+        });
   }
 
   @override
@@ -496,7 +499,6 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
           hintChild: _hintChild,
           padding: widget.listPadding,
           itemStyle: widget.itemStyle,
-          canSearch: widget.canSearch,
           heightType: widget.heightType,
           isOnTop: _isOnTop(constraints),
           listController: _listController,
@@ -530,8 +532,11 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
               widget.onClear?.call();
               _textSearchFilter = '';
               _valueSelected.value = '';
-              if (widget.onSearchChanged == null) _listController.refresh();
-              widget.onSearchChanged?.call(_textSearchFilter);
+              if (widget.onSearchChanged == null) {
+                _listController.refresh();
+              } else {
+                widget.onSearchChanged?.call(_textSearchFilter, isReset: true);
+              }
             });
           },
           onTap: () {
@@ -541,14 +546,19 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
           },
           onSearchChanged: (input) {
             _textSearchFilter = input ?? '';
-            if (widget.onSearchChanged == null) _listController.refresh();
-            widget.onSearchChanged?.call(_textSearchFilter);
+            if (widget.onSearchChanged == null) {
+              _listController.refresh();
+            } else {
+              widget.onSearchChanged?.call(_textSearchFilter, isReset: false);
+            }
           },
 
           icon: widget.icon,
           fontSize: _fontSize,
           isEnabled: _isEnabled,
           showClear: _showClear,
+          readOnly: widget.readOnly,
+          canSearch: widget.canSearch,
           itemStyle: widget.itemStyle,
           isLoading: widget.isLoading,
           prefixIcon: widget.prefixIcon,
@@ -560,7 +570,6 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
           boxDecoration: widget.boxDecoration,
           valueSelected: _valueSelected.value,
           boxConstraints: widget.boxConstraints,
-          readOnly: widget.readOnly || !widget.canSearch,
           canFocus: _animationController.isForwardOrCompleted,
           onEditingComplete: () {
             if (_listController.value.isNotEmpty) {

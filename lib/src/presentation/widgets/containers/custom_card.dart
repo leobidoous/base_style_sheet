@@ -33,41 +33,49 @@ class CustomCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Opacity(
       opacity: isEnabled ? 1 : .5,
-      child: InkWell(
-        onTap: isEnabled ? onTap : null,
-        hoverColor: Colors.transparent,
-        splashColor: Colors.transparent,
-        highlightColor: Colors.transparent,
-        borderRadius: borderRadius ?? context.theme.borderRadiusMD,
-        child: AbsorbPointer(
-          absorbing: !isEnabled,
-          child: ConstrainedBox(
-            constraints: constraints ?? BoxConstraints(),
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                color: isSelected
-                    ? context.colorScheme.primary
-                    : color ?? context.colorScheme.surface,
-                border: border ??
-                    Border.all(
-                      width: .05,
-                      color: isSelected
+      child: Semantics(
+        button: onTap != null,
+        child: InkWell(
+          onTap: isEnabled ? onTap : null,
+          hoverColor: Colors.transparent,
+          splashColor: Colors.transparent,
+          highlightColor: Colors.transparent,
+          overlayColor: WidgetStatePropertyAll(Colors.transparent),
+          borderRadius: borderRadius ?? context.theme.borderRadiusMD,
+          child: AbsorbPointer(
+            absorbing: !isEnabled,
+            child: ConstrainedBox(
+              constraints: constraints ?? BoxConstraints(),
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  color:
+                      isSelected
                           ? context.colorScheme.primary
-                          : color ??
-                              context.colorScheme.onSurface.withValues(
-                                alpha: .01,
-                              ),
-                    ),
-                borderRadius: borderRadius ?? context.theme.borderRadiusMD,
-                boxShadow: shaddow == null
-                    ? [context.theme.shadowLightmodeLevel0]
-                    : (shaddow?.isEmpty ?? false)
-                        ? null
-                        : shaddow,
-              ),
-              child: ClipRRect(
-                borderRadius: borderRadius ?? context.theme.borderRadiusMD,
-                child: Padding(padding: padding, child: child),
+                          : color ?? context.colorScheme.surface,
+                  border:
+                      border ??
+                      Border.all(
+                        width: .05,
+                        color:
+                            isSelected
+                                ? context.colorScheme.primary
+                                : color ??
+                                    context.colorScheme.onSurface.withValues(
+                                      alpha: .01,
+                                    ),
+                      ),
+                  borderRadius: borderRadius ?? context.theme.borderRadiusMD,
+                  boxShadow:
+                      shaddow == null
+                          ? [context.theme.shadowLightmodeLevel0]
+                          : (shaddow?.isEmpty ?? false)
+                          ? null
+                          : shaddow,
+                ),
+                child: ClipRRect(
+                  borderRadius: borderRadius ?? context.theme.borderRadiusMD,
+                  child: Padding(padding: padding, child: child),
+                ),
               ),
             ),
           ),

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/themes/app_theme_factory.dart';
+import '../../extensions/build_context_extensions.dart';
 import '../buttons/custom_button.dart';
 
 enum ExpansionState { opened, closed }
@@ -60,19 +62,22 @@ class CustomExpansionState<T> extends State<CustomExpansion<T>>
     );
     switch (widget.initialState) {
       case ExpansionState.opened:
-        _animation = Tween<double>(begin: 1, end: 0).animate(
-          _animationController,
-        );
+        _animation = Tween<double>(
+          begin: 1,
+          end: 0,
+        ).animate(_animationController);
         break;
       case ExpansionState.closed:
-        _animation = Tween<double>(begin: 0, end: 1).animate(
-          _animationController,
-        );
+        _animation = Tween<double>(
+          begin: 0,
+          end: 1,
+        ).animate(_animationController);
         break;
     }
-    _rotateAnimation = Tween<double>(begin: 1, end: .5).animate(
-      _animationController,
-    );
+    _rotateAnimation = Tween<double>(
+      begin: 1,
+      end: .5,
+    ).animate(_animationController);
   }
 
   void forward() {
@@ -113,16 +118,16 @@ class CustomExpansionState<T> extends State<CustomExpansion<T>>
         onTap: () {
           widget.onTap != null ? widget.onTap!() : _onChangeExpansion();
         },
-        focusColor: Colors.transparent,
-        hoverColor: Colors.transparent,
-        splashColor: Colors.transparent,
-        highlightColor: Colors.transparent,
+        borderRadius: context.theme.borderRadiusMD,
+        overlayColor: WidgetStatePropertyAll(Colors.transparent),
         child: AnimatedBuilder(
           animation: _animationController,
           child: Semantics(
             button: !widget.allowDismissOnBody,
             child: InkWell(
+              borderRadius: context.theme.borderRadiusMD,
               onTap: !widget.allowDismissOnBody ? () {} : null,
+              overlayColor: WidgetStatePropertyAll(Colors.transparent),
               child: widget.body ?? const SizedBox(),
             ),
           ),
@@ -145,12 +150,14 @@ class CustomExpansionState<T> extends State<CustomExpansion<T>>
                             iconColor: widget.iconColor,
                             onPressed: _onChangeExpansion,
                             heightType: ButtonHeightType.small,
-                            icon:widget.icon?? switch (widget.initialState) {
-                              ExpansionState.opened =>
-                                Icons.keyboard_arrow_up_rounded,
-                              ExpansionState.closed =>
-                                Icons.keyboard_arrow_down_rounded,
-                            },
+                            icon:
+                                widget.icon ??
+                                switch (widget.initialState) {
+                                  ExpansionState.opened =>
+                                    Icons.keyboard_arrow_up_rounded,
+                                  ExpansionState.closed =>
+                                    Icons.keyboard_arrow_down_rounded,
+                                },
                           ),
                         ),
                       ],

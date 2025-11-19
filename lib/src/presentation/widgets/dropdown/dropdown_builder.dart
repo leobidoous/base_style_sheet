@@ -12,7 +12,6 @@ class _DropdownBuilder<T> extends StatelessWidget {
     required this.items,
     required this.isOnTop,
     required this.fontSize,
-    this.canSearch = false,
     this.itemSelectedStyle,
     required this.hintChild,
     required this.onChanged,
@@ -23,7 +22,6 @@ class _DropdownBuilder<T> extends StatelessWidget {
   });
   final bool isOnTop;
   final double? width;
-  final bool canSearch;
   final double fontSize;
   final Widget hintChild;
   final EdgeInsets? padding;

@@ -10,6 +10,7 @@ class _DropdownHintChild extends StatefulWidget {
     this.boxConstraints,
     this.onSearchChanged,
     this.canFocus = false,
+    this.canSearch = true,
     required this.onClear,
     this.onEditingComplete,
     required this.fontSize,
@@ -28,6 +29,7 @@ class _DropdownHintChild extends StatefulWidget {
   final Widget? icon;
   final bool canFocus;
   final bool readOnly;
+  final bool canSearch;
   final bool isLoading;
   final bool isEnabled;
   final bool showClear;
@@ -101,12 +103,12 @@ class _DropdownHintChildState extends State<_DropdownHintChild> {
           onTap: widget.onTap,
           focusNode: _focusNode,
           enableSuggestions: true,
-          readOnly: widget.readOnly,
           enabled: widget.isEnabled,
           autofocus: widget.canFocus,
           borderSide: BorderSide.none,
           hintText: widget.placeholder,
           controller: _editingController,
+          readOnly: widget.readOnly || !widget.canSearch,
           onChanged: (input) {
             widget.onTap?.call();
             widget.onSearchChanged?.call(input);

@@ -3,7 +3,7 @@ description: Um package auxiliar para manter os componentes visuais globais de u
 homepage: https://www.github.com/leobidoous
 repository: https://www.github.com/leobidoous/base_style_sheet
 issue_tracker: https://www.github.com/leobidoous/base_style_sheet/issues
-version: 1.4.2
+version: 1.4.3
 
 environment:
   sdk: ^3.7.2

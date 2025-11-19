@@ -13,6 +13,7 @@ class CustomSnackBar {
     Duration? duration,
     GlobalKey? key,
   }) {
+    if (!context.mounted) return;
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -68,8 +69,11 @@ class CustomSnackBar {
     bool showClose = true,
     GlobalKey? key,
   }) {
+    if (!context.mounted) return;
     FToast().removeQueuedCustomToasts();
-    FToast().init(context).showToast(
+    FToast()
+        .init(context)
+        .showToast(
           isDismissible: true,
           gravity: ToastGravity.TOP,
           toastDuration: duration ?? const Duration(seconds: 5),
@@ -93,9 +97,7 @@ class CustomSnackBar {
               SnackBarType.info => infoColor ?? Colors.orange,
               SnackBarType.success => successColor ?? Colors.green,
             },
-            constraints: BoxConstraints(
-              maxWidth: ScreenSizeType.phone.width,
-            ),
+            constraints: BoxConstraints(maxWidth: ScreenSizeType.phone.width),
             borderRadius: context.theme.borderRadiusSM,
             padding: EdgeInsets.all(Spacing.sm.value),
             child: Row(
@@ -107,7 +109,8 @@ class CustomSnackBar {
                     SnackBarType.success => Icons.check_circle_outline_rounded,
                   },
                   size: AppFontSize.iconButton.value,
-                  color: style?.color ??
+                  color:
+                      style?.color ??
                       switch (type) {
                         SnackBarType.info => Colors.black,
                         SnackBarType() => Colors.white,
@@ -117,7 +120,8 @@ class CustomSnackBar {
                 Expanded(
                   child: Text(
                     message,
-                    style: style ??
+                    style:
+                        style ??
                         context.textTheme.bodyMedium?.copyWith(
                           color: switch (type) {
                             SnackBarType.info => Colors.black,
@@ -130,7 +134,8 @@ class CustomSnackBar {
                   Spacing.xs.horizontal,
                   CustomButton.icon(
                     icon: Icons.close,
-                    iconColor: style?.color ??
+                    iconColor:
+                        style?.color ??
                         switch (type) {
                           SnackBarType.info => Colors.black,
                           SnackBarType() => Colors.white,
