@@ -48,7 +48,8 @@ class RowLabelValue extends StatelessWidget {
   Widget build(BuildContext context) {
     final defaultStyle = style ?? context.textTheme.bodyMedium;
 
-    final defaultStyleBold = styleBold ??
+    final defaultStyleBold =
+        styleBold ??
         context.textTheme.bodyMedium?.copyWith(
           fontWeight: AppFontWeight.bold.value,
         );
@@ -66,7 +67,8 @@ class RowLabelValue extends StatelessWidget {
               Flexible(
                 child: Text(
                   label,
-                  style: labelStyle ??
+                  style:
+                      labelStyle ??
                       (isAllBold || isLabelBold
                           ? defaultStyleBold
                           : defaultStyle),
@@ -78,10 +80,12 @@ class RowLabelValue extends StatelessWidget {
                   onTap: onTapTooltip,
                   child: Icon(
                     tooltipIcon ?? Icons.info_outline_rounded,
-                    size: labelStyle?.fontSize ??
+                    size:
+                        labelStyle?.fontSize ??
                         defaultStyle?.fontSize ??
                         AppFontSize.iconButton.value,
-                    color: tooltipIconColor ??
+                    color:
+                        tooltipIconColor ??
                         style?.color ??
                         defaultStyleBold?.color,
                   ),
@@ -95,7 +99,8 @@ class RowLabelValue extends StatelessWidget {
           child: Text(
             value,
             textAlign: TextAlign.end,
-            style: valueStyle ??
+            style:
+                valueStyle ??
                 (isAllBold || isValueBold ? defaultStyleBold : defaultStyle),
           ),
         ),

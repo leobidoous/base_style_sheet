@@ -45,16 +45,10 @@ class PagedWrapView<E, S> extends StatefulWidget {
   final Widget Function(BuildContext, int) separatorBuilder;
   final Widget Function(BuildContext, S, int) itemBuilder;
   final Widget Function(BuildContext, Function())? noItemsFoundIndicatorBuilder;
-  final Widget Function(
-    BuildContext,
-    E?,
-    Function(),
-  )? newPageErrorIndicatorBuilder;
-  final Widget Function(
-    BuildContext,
-    E?,
-    Function(),
-  )? firstPageErrorIndicatorBuilder;
+  final Widget Function(BuildContext, E?, Function())?
+  newPageErrorIndicatorBuilder;
+  final Widget Function(BuildContext, E?, Function())?
+  firstPageErrorIndicatorBuilder;
   final Widget Function(BuildContext)? newPageProgressIndicatorBuilder;
   final Widget Function(BuildContext)? firstPageProgressIndicatorBuilder;
 
@@ -70,7 +64,8 @@ class _PagedListViewState<E, S> extends State<PagedWrapView<E, S>> {
   void initState() {
     super.initState();
     _listController = widget.listController;
-    _scrollController = widget.scrollController ??
+    _scrollController =
+        widget.scrollController ??
         widget.parentScrollController ??
         ScrollController();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -93,16 +88,16 @@ class _PagedListViewState<E, S> extends State<PagedWrapView<E, S>> {
     await _listController
         .fetchNewItems(pageKey: _listController.config.pageKey)
         .whenComplete(() {
-      if (_listController.hasError) {
-        WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-          _scrollController.animateTo(
-            duration: const Duration(milliseconds: 250),
-            _scrollController.position.maxScrollExtent,
-            curve: Curves.decelerate,
-          );
+          if (_listController.hasError) {
+            WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+              _scrollController.animateTo(
+                duration: const Duration(milliseconds: 250),
+                _scrollController.position.maxScrollExtent,
+                curve: Curves.decelerate,
+              );
+            });
+          }
         });
-      }
-    });
   }
 
   @override
@@ -162,25 +157,28 @@ class _PagedListViewState<E, S> extends State<PagedWrapView<E, S>> {
             thumbColor: context.colorScheme.primary,
             radius: context.theme.borderRadiusXLG.bottomLeft,
             thickness: widget.thickness ?? (kIsWeb ? 0 : null),
-            controller: widget.parentScrollController == null
-                ? _scrollController
-                : null,
+            controller:
+                widget.parentScrollController == null
+                    ? _scrollController
+                    : null,
             child: ListView.separated(
               padding: widget.padding,
               itemCount: state.length,
               reverse: _listController.reverse,
               addAutomaticKeepAlives: false,
               separatorBuilder: widget.separatorBuilder,
-              controller: widget.parentScrollController == null
-                  ? _scrollController
-                  : null,
+              controller:
+                  widget.parentScrollController == null
+                      ? _scrollController
+                      : null,
               shrinkWrap: widget.shrinkWrap,
               scrollDirection: widget.scrollDirection,
-              physics: widget.shrinkWrap
-                  ? const NeverScrollableScrollPhysics()
-                  : const BouncingScrollPhysics(
-                      parent: AlwaysScrollableScrollPhysics(),
-                    ),
+              physics:
+                  widget.shrinkWrap
+                      ? const NeverScrollableScrollPhysics()
+                      : const BouncingScrollPhysics(
+                        parent: AlwaysScrollableScrollPhysics(),
+                      ),
               itemBuilder: (_, index) => _listItem(state, index),
             ),
           ),
@@ -192,32 +190,33 @@ class _PagedListViewState<E, S> extends State<PagedWrapView<E, S>> {
   Widget _listItem(List<S> items, int index) {
     return SafeArea(
       top: false,
-      bottom: (_listController.reverse
+      bottom:
+          (_listController.reverse
               ? items.first == items[index]
               : items.last == items[index]) &&
           widget.safeAreaLastItem,
       child: switch (widget.scrollDirection) {
         Axis.horizontal => Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (_listController.reverse)
-                if (items.last == items[index]) ..._errorAndLoading(index),
-              widget.itemBuilder(context, items[index], index),
-              if (!_listController.reverse)
-                if (items.last == items[index]) ..._errorAndLoading(index),
-            ],
-          ),
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (_listController.reverse)
+              if (items.last == items[index]) ..._errorAndLoading(index),
+            widget.itemBuilder(context, items[index], index),
+            if (!_listController.reverse)
+              if (items.last == items[index]) ..._errorAndLoading(index),
+          ],
+        ),
         Axis.vertical => Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              if (_listController.reverse)
-                if (items.last == items[index]) ..._errorAndLoading(index),
-              widget.itemBuilder(context, items[index], index),
-              if (!_listController.reverse)
-                if (items.last == items[index]) ..._errorAndLoading(index),
-            ],
-          ),
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            if (_listController.reverse)
+              if (items.last == items[index]) ..._errorAndLoading(index),
+            widget.itemBuilder(context, items[index], index),
+            if (!_listController.reverse)
+              if (items.last == items[index]) ..._errorAndLoading(index),
+          ],
+        ),
       },
     );
   }

@@ -44,16 +44,18 @@ class _ColumnLabelValueShimmerState extends State<ColumnLabelValueShimmer> {
                   alignment: Alignment.centerLeft,
                   child: Padding(
                     padding: EdgeInsets.only(
-                      bottom: index == widget.nLabelLines - 1
-                          ? 0
-                          : Spacing.xxs.value,
+                      bottom:
+                          index == widget.nLabelLines - 1
+                              ? 0
+                              : Spacing.xxs.value,
                     ),
                     child: CustomShimmer(
                       height: AppFontSize.bodyMedium.value,
-                      width: index == widget.nLabelLines - 1
-                          ? constrains.maxWidth *
-                              (factor < 3 ? .5 : factor / 10)
-                          : double.infinity,
+                      width:
+                          index == widget.nLabelLines - 1
+                              ? constrains.maxWidth *
+                                  (factor < 3 ? .5 : factor / 10)
+                              : double.infinity,
                     ),
                   ),
                 );
@@ -71,16 +73,18 @@ class _ColumnLabelValueShimmerState extends State<ColumnLabelValueShimmer> {
                   alignment: Alignment.centerLeft,
                   child: Padding(
                     padding: EdgeInsets.only(
-                      bottom: index == widget.nValueLines - 1
-                          ? 0
-                          : Spacing.xxs.value,
+                      bottom:
+                          index == widget.nValueLines - 1
+                              ? 0
+                              : Spacing.xxs.value,
                     ),
                     child: CustomShimmer(
                       height: AppFontSize.bodyMedium.value,
-                      width: index == widget.nValueLines - 1
-                          ? constrains.maxWidth *
-                              (factor < 3 ? .5 : factor / 10)
-                          : double.infinity,
+                      width:
+                          index == widget.nValueLines - 1
+                              ? constrains.maxWidth *
+                                  (factor < 3 ? .5 : factor / 10)
+                              : double.infinity,
                     ),
                   ),
                 );

@@ -43,10 +43,7 @@ class _DropdownBuilder<T> extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        if (isOnTop) ...[
-          hintChild,
-          const CustomDivider(height: 0),
-        ],
+        if (isOnTop) ...[hintChild, const CustomDivider(height: 0)],
         Flexible(
           child: SizedBox(
             width: width,
@@ -64,10 +61,7 @@ class _DropdownBuilder<T> extends StatelessWidget {
             ),
           ),
         ),
-        if (!isOnTop) ...[
-          const CustomDivider(height: 0),
-          hintChild,
-        ],
+        if (!isOnTop) ...[const CustomDivider(height: 0), hintChild],
       ],
     );
   }

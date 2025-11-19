@@ -46,7 +46,8 @@ class ColumnLabelValue extends StatelessWidget {
   Widget build(BuildContext context) {
     final defaultStyle = style ?? context.textTheme.bodyMedium;
 
-    final defaultStyleBold = styleBold ??
+    final defaultStyleBold =
+        styleBold ??
         context.textTheme.bodyMedium?.copyWith(
           fontWeight: AppFontWeight.bold.value,
         );
@@ -61,7 +62,8 @@ class ColumnLabelValue extends StatelessWidget {
             Flexible(
               child: Text(
                 label,
-                style: labelStyle ??
+                style:
+                    labelStyle ??
                     (isAllBold || isLabelBold
                         ? defaultStyleBold
                         : defaultStyle),
@@ -74,7 +76,8 @@ class ColumnLabelValue extends StatelessWidget {
                 child: Icon(
                   tooltipIcon ?? Icons.info_outline_rounded,
                   size: labelStyle?.fontSize ?? defaultStyle?.fontSize,
-                  color: tooltipIconColor ??
+                  color:
+                      tooltipIconColor ??
                       style?.color ??
                       defaultStyleBold?.color,
                 ),
@@ -85,7 +88,8 @@ class ColumnLabelValue extends StatelessWidget {
         spacing?.vertical ?? Spacing.xs.vertical,
         Text(
           value,
-          style: valueStyle ??
+          style:
+              valueStyle ??
               (isAllBold || isValueBold ? defaultStyleBold : defaultStyle),
         ),
       ],

@@ -100,44 +100,44 @@ class _CustomPdfViewState extends State<CustomPdfView>
     return Scaffold(
       appBar: switch (widget.viewMode) {
         CustomPdfViewMode.page => PreferredSize(
-            preferredSize: Size(
-              double.infinity,
-              context.theme.appBarTheme.appBarHeight,
-            ),
-            child: AnimatedBuilder(
-              animation: _animationController,
-              builder: (_, child) {
-                return FadeTransition(
-                  opacity: _animation,
-                  child: SizeTransition(
-                    sizeFactor: _animation,
-                    child: CustomAppBar(
-                      actions: widget.actions,
-                      leadingIcon: Icon(
-                        Icons.close_rounded,
-                        size: AppFontSize.iconButton.value,
-                      ),
+          preferredSize: Size(
+            double.infinity,
+            context.theme.appBarTheme.appBarHeight,
+          ),
+          child: AnimatedBuilder(
+            animation: _animationController,
+            builder: (_, child) {
+              return FadeTransition(
+                opacity: _animation,
+                child: SizeTransition(
+                  sizeFactor: _animation,
+                  child: CustomAppBar(
+                    actions: widget.actions,
+                    leadingIcon: Icon(
+                      Icons.close_rounded,
+                      size: AppFontSize.iconButton.value,
                     ),
                   ),
-                );
-              },
-            ),
+                ),
+              );
+            },
           ),
-        CustomPdfViewMode.view => null
+        ),
+        CustomPdfViewMode.view => null,
       },
       body: Semantics(
         button: true,
         child: InkWell(
           onTap: switch (widget.viewMode) {
             CustomPdfViewMode.page => () {
-                if (_animationController.isDismissed) {
-                  _animationController.forward();
-                  SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
-                } else {
-                  _animationController.reverse();
-                  SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-                }
-              },
+              if (_animationController.isDismissed) {
+                _animationController.forward();
+                SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
+              } else {
+                _animationController.reverse();
+                SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+              }
+            },
             CustomPdfViewMode.view => null,
           },
           child: SafeArea(

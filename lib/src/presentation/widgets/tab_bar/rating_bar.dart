@@ -7,10 +7,7 @@ part 'rating_bar_indicator.dart';
 /// Defines widgets which are to used as rating bar items.
 class RatingWidget {
   /// Creates [RatingWidget] with the given [full] and [empty] widgets.
-  const RatingWidget({
-    required this.full,
-    required this.empty,
-  });
+  const RatingWidget({required this.full, required this.empty});
 
   /// Defines widget to be used as rating bar item
   /// when the item is completely rated.
@@ -50,8 +47,8 @@ class RatingBar extends StatefulWidget {
     this.updateOnDrag = false,
     this.wrapAlignment = WrapAlignment.start,
     super.key,
-  })  : _itemBuilder = null,
-        _ratingWidget = ratingWidget;
+  }) : _itemBuilder = null,
+       _ratingWidget = ratingWidget;
 
   /// Creates [RatingBar] using the [itemBuilder].
   const RatingBar.builder({
@@ -77,8 +74,8 @@ class RatingBar extends StatefulWidget {
     this.updateOnDrag = false,
     this.wrapAlignment = WrapAlignment.start,
     super.key,
-  })  : _itemBuilder = itemBuilder,
-        _ratingWidget = null;
+  }) : _itemBuilder = itemBuilder,
+       _ratingWidget = null;
 
   /// Return current rating whenever rating is updated.
   ///
@@ -255,9 +252,7 @@ class _RatingBarState extends State<RatingBar> {
       resolvedRatingWidget = SizedBox(
         width: widget.itemSize,
         height: widget.itemSize,
-        child: FittedBox(
-          child: ratingWidget?.full ?? item,
-        ),
+        child: FittedBox(child: ratingWidget?.full ?? item),
       );
       iconRating += 1;
     }
@@ -381,15 +376,13 @@ class _NoRatingWidget extends StatelessWidget {
       height: size,
       width: size,
       child: FittedBox(
-        child: enableMask
-            ? ColorFiltered(
-                colorFilter: ColorFilter.mode(
-                  unratedColor,
-                  BlendMode.srcIn,
-                ),
-                child: child,
-              )
-            : child,
+        child:
+            enableMask
+                ? ColorFiltered(
+                  colorFilter: ColorFilter.mode(unratedColor, BlendMode.srcIn),
+                  child: child,
+                )
+                : child,
       ),
     );
   }

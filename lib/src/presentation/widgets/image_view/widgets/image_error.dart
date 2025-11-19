@@ -66,10 +66,7 @@ class _ImageErrorState extends State<ImageError> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
-            'Image Error',
-            style: context.textTheme.titleLarge,
-          ),
+          Text('Image Error', style: context.textTheme.titleLarge),
           Divider(color: context.colorScheme.onSurface),
           Flexible(
             child: CustomScrollContent(

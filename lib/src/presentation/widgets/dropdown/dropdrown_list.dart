@@ -106,19 +106,21 @@ class _DropdownList<T> extends StatelessWidget {
           padding: padding ?? EdgeInsets.symmetric(horizontal: fontSize),
           child: Align(
             alignment: Alignment.centerLeft,
-            child: item.item ??
+            child:
+                item.item ??
                 CustomScrollContent(
                   scrollDirection: Axis.horizontal,
                   child: Text(
                     item.label,
-                    style: item.label == valueSelected
-                        ? itemSelectedStyle ??
-                            context.textTheme.bodyMedium?.copyWith(
-                              fontSize: fontSize,
-                              color: context.colorScheme.primary,
-                              fontWeight: AppFontWeight.bold.value,
-                            )
-                        : itemStyle ?? context.textTheme.bodyMedium,
+                    style:
+                        item.label == valueSelected
+                            ? itemSelectedStyle ??
+                                context.textTheme.bodyMedium?.copyWith(
+                                  fontSize: fontSize,
+                                  color: context.colorScheme.primary,
+                                  fontWeight: AppFontWeight.bold.value,
+                                )
+                            : itemStyle ?? context.textTheme.bodyMedium,
                   ),
                 ),
           ),

@@ -69,9 +69,9 @@ class CustomPinField extends StatefulWidget {
 
 class _CustomPinFieldState extends State<CustomPinField> {
   BoxConstraints get boxConstraints => BoxConstraints(
-        minHeight: AppThemeBase.buttonHeightMD,
-        minWidth: AppThemeBase.buttonHeightMD,
-      );
+    minHeight: AppThemeBase.buttonHeightMD,
+    minWidth: AppThemeBase.buttonHeightMD,
+  );
 
   String? _validator(String? input) {
     String? error;
@@ -85,41 +85,41 @@ class _CustomPinFieldState extends State<CustomPinField> {
   }
 
   TextStyle? get pinTextStyle => context.textTheme.bodyLarge?.copyWith(
-        fontWeight: context.textTheme.fontWeightMedium,
-        color: const Color(0xFF4E4B59),
-      );
+    fontWeight: context.textTheme.fontWeightMedium,
+    color: const Color(0xFF4E4B59),
+  );
 
   PinTheme get defaultTheme => PinTheme(
-        width: const Spacing(7).value,
-        height: const Spacing(7).value,
-        textStyle: pinTextStyle,
-        decoration: BoxDecoration(
-          borderRadius: context.theme.borderRadiusXSM,
-          color: widget.fillColor ?? context.colorScheme.surface,
-          border: Border.all(color: Colors.grey.shade300, width: 1),
-        ),
-      );
+    width: const Spacing(7).value,
+    height: const Spacing(7).value,
+    textStyle: pinTextStyle,
+    decoration: BoxDecoration(
+      borderRadius: context.theme.borderRadiusXSM,
+      color: widget.fillColor ?? context.colorScheme.surface,
+      border: Border.all(color: Colors.grey.shade300, width: 1),
+    ),
+  );
 
   PinTheme get focusedTheme => PinTheme(
-        width: const Spacing(7).value,
-        height: const Spacing(7).value,
-        decoration: BoxDecoration(
-          border: Border.all(color: context.colorScheme.primary, width: 1),
-          color: widget.fillColor ?? context.colorScheme.surface,
-          borderRadius: context.theme.borderRadiusXSM,
-        ),
-      );
+    width: const Spacing(7).value,
+    height: const Spacing(7).value,
+    decoration: BoxDecoration(
+      border: Border.all(color: context.colorScheme.primary, width: 1),
+      color: widget.fillColor ?? context.colorScheme.surface,
+      borderRadius: context.theme.borderRadiusXSM,
+    ),
+  );
 
   PinTheme get errorTheme => PinTheme(
-        width: const Spacing(7).value,
-        height: const Spacing(7).value,
-        textStyle: pinTextStyle,
-        decoration: BoxDecoration(
-          border: Border.all(color: context.colorScheme.error, width: 1),
-          color: widget.fillColor ?? context.colorScheme.surface,
-          borderRadius: context.theme.borderRadiusXSM,
-        ),
-      );
+    width: const Spacing(7).value,
+    height: const Spacing(7).value,
+    textStyle: pinTextStyle,
+    decoration: BoxDecoration(
+      border: Border.all(color: context.colorScheme.error, width: 1),
+      color: widget.fillColor ?? context.colorScheme.surface,
+      borderRadius: context.theme.borderRadiusXSM,
+    ),
+  );
 
   @override
   Widget build(BuildContext context) {

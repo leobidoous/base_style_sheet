@@ -52,16 +52,16 @@ class CustomAlert extends StatelessWidget {
   final Function()? onCancel;
 
   CustomButton get _confirmButtom => CustomButton.text(
-        onPressed: onConfirm,
-        text: btnConfirmLabel,
-        isLoading: confirmIsLoading,
-      );
+    onPressed: onConfirm,
+    text: btnConfirmLabel,
+    isLoading: confirmIsLoading,
+  );
   CustomButton get _cancelButtom => CustomButton.text(
-        onPressed: onCancel,
-        text: btnCancelLabel,
-        isLoading: cancelIsLoading,
-        type: ButtonType.background,
-      );
+    onPressed: onCancel,
+    text: btnCancelLabel,
+    isLoading: cancelIsLoading,
+    type: ButtonType.background,
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -71,10 +71,7 @@ class CustomAlert extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (header != null) ...[
-            header!,
-            verticalSpacing.vertical,
-          ],
+          if (header != null) ...[header!, verticalSpacing.vertical],
           if (svgAsset != null || asset != null) ...[
             CustomImage(
               svgAsset: svgAsset!,
@@ -115,64 +112,68 @@ class CustomAlert extends StatelessWidget {
           ],
           ...switch (buttonsDirection) {
             Axis.horizontal => [
-                Row(
-                  children: [
-                    if (onCancel != null) ...[
-                      Expanded(child: _cancelButtom),
-                      horizontalSpacing.horizontal,
-                    ],
-                    if (onConfirm != null) Expanded(child: _confirmButtom),
+              Row(
+                children: [
+                  if (onCancel != null) ...[
+                    Expanded(child: _cancelButtom),
+                    horizontalSpacing.horizontal,
                   ],
-                ),
-                if (onCancel != null && onConfirm != null && buttons.isNotEmpty)
-                  verticalSpacing.vertical,
-              ],
+                  if (onConfirm != null) Expanded(child: _confirmButtom),
+                ],
+              ),
+              if (onCancel != null && onConfirm != null && buttons.isNotEmpty)
+                verticalSpacing.vertical,
+            ],
             Axis.vertical => [
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    if (onConfirm != null) _confirmButtom,
-                    if (onCancel != null && onConfirm != null)
-                      verticalSpacing.vertical,
-                    if (onCancel != null) _cancelButtom,
-                  ],
-                ),
-                if (onCancel != null && onConfirm != null && buttons.isNotEmpty)
-                  verticalSpacing.vertical,
-              ],
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  if (onConfirm != null) _confirmButtom,
+                  if (onCancel != null && onConfirm != null)
+                    verticalSpacing.vertical,
+                  if (onCancel != null) _cancelButtom,
+                ],
+              ),
+              if (onCancel != null && onConfirm != null && buttons.isNotEmpty)
+                verticalSpacing.vertical,
+            ],
           },
           switch (buttonsDirection) {
             Axis.horizontal => Row(
-                children: buttons
-                    .map(
-                      (e) => Expanded(
-                        child: Padding(
-                          padding: EdgeInsets.only(
-                            right:
-                                buttons.last == e ? 0 : horizontalSpacing.value,
+              children:
+                  buttons
+                      .map(
+                        (e) => Expanded(
+                          child: Padding(
+                            padding: EdgeInsets.only(
+                              right:
+                                  buttons.last == e
+                                      ? 0
+                                      : horizontalSpacing.value,
+                            ),
+                            child: e,
                           ),
-                          child: e,
                         ),
-                      ),
-                    )
-                    .toList(),
-              ),
+                      )
+                      .toList(),
+            ),
             Axis.vertical => Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: buttons
-                    .map(
-                      (b) => Padding(
-                        padding: EdgeInsets.only(
-                          bottom:
-                              buttons.last == b ? 0 : horizontalSpacing.value,
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children:
+                  buttons
+                      .map(
+                        (b) => Padding(
+                          padding: EdgeInsets.only(
+                            bottom:
+                                buttons.last == b ? 0 : horizontalSpacing.value,
+                          ),
+                          child: b,
                         ),
-                        child: b,
-                      ),
-                    )
-                    .toList(),
-              ),
+                      )
+                      .toList(),
+            ),
           },
         ],
       ),

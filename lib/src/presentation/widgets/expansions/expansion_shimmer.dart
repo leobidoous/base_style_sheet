@@ -19,11 +19,7 @@ class ExpansionShimmer extends StatelessWidget {
             width: const Spacing(6).value,
           ),
           Spacing.sm.horizontal,
-          Expanded(
-            child: CustomShimmer(
-              height: const Spacing(2.5).value,
-            ),
-          ),
+          Expanded(child: CustomShimmer(height: const Spacing(2.5).value)),
           Spacing.sm.horizontal,
           CustomShimmer(
             height: const Spacing(3).value,

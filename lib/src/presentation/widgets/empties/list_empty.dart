@@ -52,10 +52,7 @@ class ListEmpty extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: [
-            if (header != null) ...[
-              header!,
-              Spacing.sm.vertical,
-            ],
+            if (header != null) ...[header!, Spacing.sm.vertical],
             Text(
               message,
               textAlign: TextAlign.center,

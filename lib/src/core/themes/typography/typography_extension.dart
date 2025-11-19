@@ -82,6 +82,5 @@ class AppTextStyle extends ThemeExtension<AppTextStyle> {
   ThemeExtension<AppTextStyle> lerp(
     ThemeExtension<AppTextStyle>? other,
     double t,
-  ) =>
-      this;
+  ) => this;
 }

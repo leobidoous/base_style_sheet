@@ -48,7 +48,8 @@ class TextLink extends StatelessWidget {
                   maxLines: maxLines,
                   textAlign: textAlign,
                   overflow: maxLines != null ? TextOverflow.ellipsis : null,
-                  style: styleText ??
+                  style:
+                      styleText ??
                       context.textTheme.bodyMedium?.copyWith(
                         color: context.textTheme.bodyMedium?.color,
                         fontWeight: context.textTheme.fontWeightMedium,
@@ -61,17 +62,19 @@ class TextLink extends StatelessWidget {
                 Spacing.xxs.horizontal,
                 AnimatedSwitcher(
                   duration: const Duration(milliseconds: 250),
-                  child: isLoading
-                      ? CustomLoading(
-                          width: AppFontSize.bodyMedium.value,
-                          height: AppFontSize.bodyMedium.value,
-                        )
-                      : Icon(
-                          icon,
-                          color: styleText?.color ??
-                              context.textTheme.bodyMedium?.color,
-                          size: AppFontSize.bodyMedium.value,
-                        ),
+                  child:
+                      isLoading
+                          ? CustomLoading(
+                            width: AppFontSize.bodyMedium.value,
+                            height: AppFontSize.bodyMedium.value,
+                          )
+                          : Icon(
+                            icon,
+                            color:
+                                styleText?.color ??
+                                context.textTheme.bodyMedium?.color,
+                            size: AppFontSize.bodyMedium.value,
+                          ),
                 ),
               ],
             ],

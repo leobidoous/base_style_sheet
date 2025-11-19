@@ -33,9 +33,7 @@ class CustomRequestError extends StatelessWidget {
       alwaysScrollable: false,
       padding: padding,
       child: ConstrainedBox(
-        constraints: BoxConstraints(
-          maxHeight: maxHeight ?? double.infinity,
-        ),
+        constraints: BoxConstraints(maxHeight: maxHeight ?? double.infinity),
         child: SafeArea(
           top: isSafeArea,
           bottom: isSafeArea,

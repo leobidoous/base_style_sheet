@@ -43,11 +43,12 @@ class LocalTheme extends StatelessWidget {
     return LocalTheme._(
       builder: builder,
       theme: context.isDarkMode ? ThemeFactory.dark() : ThemeFactory.light(),
-      systemUiOverlayStyle: invertSystemUiOverlayStyle
-          ? context.isDarkMode
-              ? SystemUiOverlayStyle.light
-              : SystemUiOverlayStyle.dark
-          : null,
+      systemUiOverlayStyle:
+          invertSystemUiOverlayStyle
+              ? context.isDarkMode
+                  ? SystemUiOverlayStyle.light
+                  : SystemUiOverlayStyle.dark
+              : null,
     );
   }
 
@@ -73,11 +74,12 @@ class LocalTheme extends StatelessWidget {
     return LocalTheme._(
       builder: builder,
       theme: isDark ? ThemeFactory.light() : ThemeFactory.dark(),
-      systemUiOverlayStyle: invertSystemUiOverlayStyle
-          ? isDark
-              ? SystemUiOverlayStyle.dark
-              : SystemUiOverlayStyle.light
-          : null,
+      systemUiOverlayStyle:
+          invertSystemUiOverlayStyle
+              ? isDark
+                  ? SystemUiOverlayStyle.dark
+                  : SystemUiOverlayStyle.light
+              : null,
     );
   }
   final WidgetBuilder builder;

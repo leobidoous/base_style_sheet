@@ -33,7 +33,7 @@ class CustomWebView extends StatefulWidget {
   final void Function(WebResourceError)? onWebResourceError;
   final Map<String, void Function(JavaScriptMessage)?>? onJavaScriptChannels;
   final FutureOr<NavigationDecision> Function(NavigationRequest)?
-      onNavigationRequest;
+  onNavigationRequest;
 
   @override
   CustomWebViewState createState() => CustomWebViewState();
@@ -86,15 +86,18 @@ class CustomWebViewState extends State<CustomWebView> {
             }
             widget.onProgress?.call(value);
           },
-          onPageStarted: widget.onPageStarted ??
+          onPageStarted:
+              widget.onPageStarted ??
               (String url) {
                 debugPrint('Page started loading: $url');
               },
-          onPageFinished: widget.onPageFinished ??
+          onPageFinished:
+              widget.onPageFinished ??
               (String url) {
                 debugPrint('Page finished loading: $url');
               },
-          onWebResourceError: widget.onWebResourceError ??
+          onWebResourceError:
+              widget.onWebResourceError ??
               (WebResourceError error) {
                 debugPrint('''
               Page resource error:
@@ -105,7 +108,8 @@ class CustomWebViewState extends State<CustomWebView> {
           ''');
               },
           onNavigationRequest: widget.onNavigationRequest,
-          onUrlChange: widget.onUrlChange ??
+          onUrlChange:
+              widget.onUrlChange ??
               (UrlChange change) {
                 debugPrint('Url changed: ${change.url}');
               },
@@ -125,8 +129,8 @@ class CustomWebViewState extends State<CustomWebView> {
           .setMediaPlaybackRequiresUserGesture(false);
       (_webViewController.platform as AndroidWebViewController)
           .setOnPlatformPermissionRequest((permissionRequest) {
-        permissionRequest.grant();
-      });
+            permissionRequest.grant();
+          });
     }
   }
 
@@ -145,9 +149,7 @@ class CustomWebViewState extends State<CustomWebView> {
               ),
             );
           }
-          return SafeArea(
-            child: WebViewWidget(controller: _webViewController),
-          );
+          return SafeArea(child: WebViewWidget(controller: _webViewController));
         },
       ),
       bottomNavigationBar: Visibility(

@@ -1,3 +1,8 @@
+## 1.4.3
+
+* Upgrade dependencies to latest versions
+* Update package dependencies for improved stability
+
 ## 1.4.2
 
 * Upgrade major dependencies to latest versions

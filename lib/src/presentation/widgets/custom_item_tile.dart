@@ -7,12 +7,7 @@ import '../extensions/build_context_extensions.dart';
 import 'containers/custom_card.dart';
 
 class CustomItemTile extends StatelessWidget {
-  const CustomItemTile({
-    super.key,
-    this.icon,
-    required this.title,
-    this.onTap,
-  });
+  const CustomItemTile({super.key, this.icon, required this.title, this.onTap});
 
   final String title;
   final IconData? icon;
@@ -25,10 +20,7 @@ class CustomItemTile extends StatelessWidget {
       padding: EdgeInsets.all(const Spacing(2).value),
       child: Row(
         children: [
-          Icon(
-            icon,
-            size: AppFontSize.iconButton.value,
-          ),
+          Icon(icon, size: AppFontSize.iconButton.value),
           Spacing.sm.horizontal,
           Expanded(
             child: Text(

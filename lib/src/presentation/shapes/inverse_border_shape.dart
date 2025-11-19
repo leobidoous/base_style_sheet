@@ -25,10 +25,8 @@ class InverseBorderShape extends ShapeBorder {
   void paint(Canvas canvas, Rect rect, {TextDirection? textDirection}) {}
 
   @override
-  ShapeBorder scale(double t) => InverseBorderShape(
-        radius: radius,
-        pathWidth: 5,
-      );
+  ShapeBorder scale(double t) =>
+      InverseBorderShape(radius: radius, pathWidth: 5);
 
   Path _createPath(Rect rect) {
     final innerRadius = radius + pathWidth;

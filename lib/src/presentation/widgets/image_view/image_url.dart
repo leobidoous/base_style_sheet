@@ -52,16 +52,18 @@ class ImageUrl extends StatelessWidget {
       maxWidthDiskCache: maxWidthDiskCache,
       maxHeightDiskCache: maxHeightDiskCache,
       imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
-      placeholder: placeholder ??
+      placeholder:
+          placeholder ??
           (context, url) => Center(
-                child: CustomShimmer(
-                  width: imageSize?.width ?? 32,
-                  height: imageSize?.height ?? 32,
-                ),
-              ),
-      errorWidget: (context, url, error) =>
-          errorBuilder?.call(error.toString()) ??
-          ImageError(error: error.toString()),
+            child: CustomShimmer(
+              width: imageSize?.width ?? 32,
+              height: imageSize?.height ?? 32,
+            ),
+          ),
+      errorWidget:
+          (context, url, error) =>
+              errorBuilder?.call(error.toString()) ??
+              ImageError(error: error.toString()),
     );
   }
 }

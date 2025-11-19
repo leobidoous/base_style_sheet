@@ -82,11 +82,7 @@ class CustomPhotoView extends StatefulWidget {
           );
         },
         pageBuilder: (context, animation, secondaryAnimation) {
-          return CustomPhotoView(
-            actions: actions,
-            image: image,
-            url: url,
-          );
+          return CustomPhotoView(actions: actions, image: image, url: url);
         },
       ),
     );

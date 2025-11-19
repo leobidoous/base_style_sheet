@@ -69,9 +69,9 @@ extension ThemeDataExtension on ThemeData {
 
 extension InputDecorationThemeExtension on InputDecorationTheme {
   TextStyle? get floatingLabelStyle => labelStyle?.copyWith(
-        height: AppThemeBase.lineHeightTight,
-        fontWeight: AppFontWeight.bold.value,
-      );
+    height: AppThemeBase.lineHeightTight,
+    fontWeight: AppFontWeight.bold.value,
+  );
 }
 
 extension ElevatedButtonThemeDataExtension on ElevatedButtonThemeData {

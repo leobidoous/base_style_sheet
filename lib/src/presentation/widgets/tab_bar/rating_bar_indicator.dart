@@ -77,38 +77,36 @@ class _RatingBarIndicatorState extends State<RatingBarIndicator> {
     return SingleChildScrollView(
       scrollDirection: widget.direction,
       physics: widget.physics,
-      child: widget.direction == Axis.horizontal
-          ? Row(
-              mainAxisSize: MainAxisSize.min,
-              textDirection: textDirection,
-              children: _children,
-            )
-          : Column(
-              mainAxisSize: MainAxisSize.min,
-              textDirection: textDirection,
-              children: _children,
-            ),
+      child:
+          widget.direction == Axis.horizontal
+              ? Row(
+                mainAxisSize: MainAxisSize.min,
+                textDirection: textDirection,
+                children: _children,
+              )
+              : Column(
+                mainAxisSize: MainAxisSize.min,
+                textDirection: textDirection,
+                children: _children,
+              ),
     );
   }
 
   List<Widget> get _children {
-    return List.generate(
-      widget.itemCount,
-      (index) {
-        if (widget.textDirection != null) {
-          if (widget.textDirection == TextDirection.rtl &&
-              Directionality.of(context) != TextDirection.rtl) {
-            return Transform(
-              transform: Matrix4.identity()..setEntry(0, 0, -1.0),
-              alignment: Alignment.center,
-              transformHitTests: false,
-              child: _buildItems(index),
-            );
-          }
+    return List.generate(widget.itemCount, (index) {
+      if (widget.textDirection != null) {
+        if (widget.textDirection == TextDirection.rtl &&
+            Directionality.of(context) != TextDirection.rtl) {
+          return Transform(
+            transform: Matrix4.identity()..setEntry(0, 0, -1.0),
+            alignment: Alignment.center,
+            transformHitTests: false,
+            child: _buildItems(index),
+          );
         }
-        return _buildItems(index);
-      },
-    );
+      }
+      return _buildItems(index);
+    });
   }
 
   Widget _buildItems(int index) {
@@ -121,15 +119,17 @@ class _RatingBarIndicatorState extends State<RatingBarIndicator> {
           fit: StackFit.expand,
           children: [
             FittedBox(
-              child: index + 1 < _ratingNumber
-                  ? widget.itemBuilder(context, index)
-                  : ColorFiltered(
-                      colorFilter: ColorFilter.mode(
-                        widget.unratedColor ?? Theme.of(context).disabledColor,
-                        BlendMode.srcIn,
+              child:
+                  index + 1 < _ratingNumber
+                      ? widget.itemBuilder(context, index)
+                      : ColorFiltered(
+                        colorFilter: ColorFilter.mode(
+                          widget.unratedColor ??
+                              Theme.of(context).disabledColor,
+                          BlendMode.srcIn,
+                        ),
+                        child: widget.itemBuilder(context, index),
                       ),
-                      child: widget.itemBuilder(context, index),
-                    ),
             ),
             if (index + 1 == _ratingNumber)
               if (_isRTL)
@@ -145,9 +145,7 @@ class _RatingBarIndicatorState extends State<RatingBarIndicator> {
               else
                 FittedBox(
                   child: ClipRect(
-                    clipper: _IndicatorClipper(
-                      ratingFraction: _ratingFraction,
-                    ),
+                    clipper: _IndicatorClipper(ratingFraction: _ratingFraction),
                     child: widget.itemBuilder(context, index),
                   ),
                 ),
@@ -159,10 +157,7 @@ class _RatingBarIndicatorState extends State<RatingBarIndicator> {
 }
 
 class _IndicatorClipper extends CustomClipper<Rect> {
-  _IndicatorClipper({
-    required this.ratingFraction,
-    this.rtlMode = false,
-  });
+  _IndicatorClipper({required this.ratingFraction, this.rtlMode = false});
 
   final double ratingFraction;
   final bool rtlMode;
@@ -171,17 +166,12 @@ class _IndicatorClipper extends CustomClipper<Rect> {
   Rect getClip(Size size) {
     return rtlMode
         ? Rect.fromLTRB(
-            size.width - size.width * ratingFraction,
-            0,
-            size.width,
-            size.height,
-          )
-        : Rect.fromLTRB(
-            0,
-            0,
-            size.width * ratingFraction,
-            size.height,
-          );
+          size.width - size.width * ratingFraction,
+          0,
+          size.width,
+          size.height,
+        )
+        : Rect.fromLTRB(0, 0, size.width * ratingFraction, size.height);
   }
 
   @override

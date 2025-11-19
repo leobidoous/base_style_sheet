@@ -44,10 +44,11 @@ class DashRectPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    Paint dashedPaint = Paint()
-      ..color = color
-      ..strokeWidth = strokeWidth
-      ..style = PaintingStyle.stroke;
+    Paint dashedPaint =
+        Paint()
+          ..color = color
+          ..strokeWidth = strokeWidth
+          ..style = PaintingStyle.stroke;
 
     double x = size.width;
     double y = size.height;
@@ -95,23 +96,22 @@ class DashRectPainter extends CustomPainter {
 
     num radians = math.atan(size.height / size.width);
 
-    num dx = math.cos(radians) * gap < 0
-        ? math.cos(radians) * gap * -1
-        : math.cos(radians) * gap;
+    num dx =
+        math.cos(radians) * gap < 0
+            ? math.cos(radians) * gap * -1
+            : math.cos(radians) * gap;
 
-    num dy = math.sin(radians) * gap < 0
-        ? math.sin(radians) * gap * -1
-        : math.sin(radians) * gap;
+    num dy =
+        math.sin(radians) * gap < 0
+            ? math.sin(radians) * gap * -1
+            : math.sin(radians) * gap;
 
     while (currentPoint.x <= b.x && currentPoint.y <= b.y) {
       shouldDraw
           ? path.lineTo(currentPoint.x.toDouble(), currentPoint.y.toDouble())
           : path.moveTo(currentPoint.x.toDouble(), currentPoint.y.toDouble());
       shouldDraw = !shouldDraw;
-      currentPoint = math.Point(
-        currentPoint.x + dx,
-        currentPoint.y + dy,
-      );
+      currentPoint = math.Point(currentPoint.x + dx, currentPoint.y + dy);
     }
     return path;
   }
