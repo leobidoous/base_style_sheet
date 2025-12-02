@@ -14,10 +14,14 @@ class CustomTooltip extends StatelessWidget {
     this.triggerMode,
     this.verticalOffset,
     required this.child,
+    this.margin,
+    this.padding,
   });
 
   final Widget child;
   final String? message;
+  final EdgeInsets? margin;
+  final EdgeInsets? padding;
   final TextAlign? textAlign;
   final GlobalKey? globalKey;
   final double? verticalOffset;
@@ -31,13 +35,15 @@ class CustomTooltip extends StatelessWidget {
       excludeFromSemantics: true,
       key: globalKey ?? ValueKey('Tooltip_$hashCode'),
       verticalOffset: verticalOffset ?? Spacing.md.value,
+      textStyle: context.textTheme.bodyMedium?.copyWith(
+        color: context.colorScheme.onPrimary,
+      ),
       decoration: BoxDecoration(
         color: context.colorScheme.primary,
         borderRadius: context.theme.borderRadiusSM,
       ),
-      textStyle: context.textTheme.bodyMedium?.copyWith(
-        color: context.colorScheme.onPrimary,
-      ),
+      margin: margin,
+      padding: padding,
       richMessage: richMessage,
       triggerMode: triggerMode,
       textAlign: textAlign ?? TextAlign.center,
