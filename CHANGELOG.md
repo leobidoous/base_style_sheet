@@ -1,3 +1,7 @@
+## 1.4.4
+
+* Upgrade dependencies to latest versions
+
 ## 1.4.3
 
 * Upgrade dependencies to latest versions
