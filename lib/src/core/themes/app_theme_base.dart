@@ -65,4 +65,9 @@ class AppThemeBase {
   static double get appBarHeight => 60.responsiveHeight;
   static double get customRadioCircleSize => 15.fontSize;
   static double get disclaimerIconSize => 18.fontSize;
+
+  static Color get infoBoxBackground => const Color(0xFFEDF8FF);
+  static Color get infoBoxIcon => const Color(0xFF2778A3);
+  static Color get infoBoxText => const Color(0xFF6A707B);
+  static Color get reviewItemLabel => const Color(0xFF636366);
 }

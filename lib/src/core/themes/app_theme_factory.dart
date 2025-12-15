@@ -65,6 +65,11 @@ extension ThemeDataExtension on ThemeData {
   double get disclaimerIconSize => AppThemeBase.disclaimerIconSize;
 
   Border get borderNone => Border.all(width: 0, color: Colors.transparent);
+
+  Color get infoBoxBackground => AppThemeBase.infoBoxBackground;
+  Color get infoBoxIcon => AppThemeBase.infoBoxIcon;
+  Color get infoBoxText => AppThemeBase.infoBoxText;
+  Color get reviewItemLabel => AppThemeBase.reviewItemLabel;
 }
 
 extension InputDecorationThemeExtension on InputDecorationTheme {
