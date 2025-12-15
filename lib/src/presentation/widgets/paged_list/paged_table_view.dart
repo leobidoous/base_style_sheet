@@ -20,6 +20,7 @@ class TableColumnConfig<S> {
     this.flex,
     this.width,
     this.onTap,
+    this.boxDecoration,
     required this.header,
     required this.cellBuilder,
     this.alignment = Alignment.centerLeft,
@@ -33,6 +34,7 @@ class TableColumnConfig<S> {
   final double? width;
   final Alignment alignment;
   final Function(S item)? onTap;
+  final BoxDecoration? boxDecoration;
   final Widget Function(BuildContext context, S item, int index) cellBuilder;
 }
 
@@ -299,42 +301,41 @@ class _PagedTableViewState<E, S> extends State<PagedTableView<E, S>> {
     return DataTable(
       clipBehavior: widget.clipBehavior,
       decoration: widget.boxDecoration,
-      columns:
-          widget.columns.asMap().entries.map((entry) {
-            final c = entry.value;
-            final columnWidth =
-                c.width != null
-                    ? FixedColumnWidth(c.width!)
-                    : c.flex != null
-                    ? IntrinsicColumnWidth(flex: c.flex!.toDouble())
-                    : IntrinsicColumnWidth();
-            return DataColumn(
-              onSort: (columnIndex, ascending) {},
-              columnWidth: MaxColumnWidth(
-                columnWidth,
-                IntrinsicColumnWidth(flex: c.flex?.toDouble()),
-              ),
-              label: Text(
-                c.header,
-                style: context.textTheme.labelLarge?.copyWith(
-                  fontWeight: AppFontWeight.semiBold.value,
-                  color: context.colorScheme.onSurface,
-                ),
-              ),
+
+      columns: widget.columns.asMap().entries.map((entry) {
+        final c = entry.value;
+        final columnWidth = c.width != null
+            ? FixedColumnWidth(c.width!)
+            : c.flex != null
+            ? IntrinsicColumnWidth(flex: c.flex!.toDouble())
+            : IntrinsicColumnWidth();
+        return DataColumn(
+          onSort: (columnIndex, ascending) {},
+          columnWidth: MaxColumnWidth(
+            columnWidth,
+            IntrinsicColumnWidth(flex: c.flex?.toDouble()),
+          ),
+          label: Text(
+            c.header,
+            style: context.textTheme.labelLarge?.copyWith(
+              fontWeight: AppFontWeight.semiBold.value,
+              color: context.colorScheme.onSurface,
+            ),
+          ),
+        );
+      }).toList(),
+      rows: state.map((r) {
+        return DataRow(
+          selected: true,
+          color: WidgetStatePropertyAll(context.colorScheme.surface),
+          cells: widget.columns.map((c) {
+            return DataCell(
+              onTap: () => c.onTap?.call(r),
+              c.cellBuilder(context, r, state.indexOf(r)),
             );
           }).toList(),
-      rows:
-          state.map((r) {
-            return DataRow(
-              cells:
-                  widget.columns.map((c) {
-                    return DataCell(
-                      onTap: () => c.onTap?.call(r),
-                      c.cellBuilder(context, r, state.indexOf(r)),
-                    );
-                  }).toList(),
-            );
-          }).toList(),
+        );
+      }).toList(),
     );
   }
 
@@ -366,7 +367,8 @@ class _PagedTableViewState<E, S> extends State<PagedTableView<E, S>> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              CustomButton.icon(
+              CustomButton.iconText(
+                text: 'Anterior',
                 isEnabled:
                     !_listController.isLoading &&
                     !_listController.hasError &&
@@ -386,7 +388,8 @@ class _PagedTableViewState<E, S> extends State<PagedTableView<E, S>> {
               Spacing.sm.horizontal,
               Text((_listController.config.pageKey).toString()),
               Spacing.sm.horizontal,
-              CustomButton.icon(
+              CustomButton.textIcon(
+                text: 'Próximo',
                 isEnabled:
                     !_listController.isLoading &&
                     !_listController.hasError &&
