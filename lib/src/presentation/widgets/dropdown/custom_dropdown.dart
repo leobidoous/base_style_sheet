@@ -254,24 +254,22 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
 
   double _getTopPosition(BoxConstraints constraints) {
     late double dy;
-    dy =
-        _isOnTop(constraints)
-            ? _offset.dy
-            : (widget.verticalSpacing ?? Spacing.sm.value);
+    dy = _isOnTop(constraints)
+        ? _offset.dy
+        : (widget.verticalSpacing ?? Spacing.sm.value);
     return dy + (widget.useSafeArea ? _parentContextOffset.dy : 0);
   }
 
   double _getBottomPosition(BuildContext context, BoxConstraints constraints) {
     late double dy;
-    dy =
-        _isOnTop(constraints)
-            ? (widget.verticalSpacing ?? Spacing.sm.value)
-            : constraints.maxHeight - _offset.dy - _size.height;
+    dy = _isOnTop(constraints)
+        ? (widget.verticalSpacing ?? Spacing.sm.value)
+        : constraints.maxHeight - _offset.dy - _size.height;
     return (_isOnTop(constraints)
             ? dy + (widget.verticalSpacing ?? Spacing.sm.value)
             : Spacing.keyboardHeigth(context) > dy
             ? Spacing.keyboardHeigth(context) +
-                (widget.verticalSpacing ?? Spacing.sm.value)
+                  (widget.verticalSpacing ?? Spacing.sm.value)
             : dy) -
         (widget.useSafeArea ? _parentContextOffset.dy : 0);
   }
@@ -287,24 +285,25 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
   double _getMaxHeight(BuildContext context, BoxConstraints constraints) {
     return widget.maxHeight != null
         ? widget.maxHeight! > constraints.maxHeight
-            ? constraints.maxHeight
-            : widget.maxHeight!
+              ? constraints.maxHeight
+              : widget.maxHeight!
         : _isOnTop(constraints)
         ? constraints.maxHeight -
-            (_getTopPosition(constraints) +
-                (widget.useSafeArea ? _parentContextOffset.dy : 0))
+              (_getTopPosition(constraints) +
+                  (widget.useSafeArea ? _parentContextOffset.dy : 0))
         : constraints.maxHeight -
-            (_getBottomPosition(context, constraints) -
-                (widget.useSafeArea ? _parentContextOffset.dy : 0));
+              (_getBottomPosition(context, constraints) -
+                  (widget.useSafeArea ? _parentContextOffset.dy : 0));
   }
 
   Future<void> _showDropdown() async {
     _animationController.forward();
-    FocusScope.of(widget.context).requestFocus(FocusNode());
+    FocusScope.of(context).requestFocus(FocusNode());
     await Navigator.of(widget.context)
         .push(
           PageRouteBuilder(
             opaque: false,
+            maintainState: false,
             fullscreenDialog: true,
             barrierDismissible: true,
             barrierColor: Colors.transparent,
@@ -373,15 +372,15 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
         initialValue: _valueSelected.value,
         key: ValueKey(_valueSelected.value),
         autovalidateMode: widget.autovalidateMode,
-        forceErrorText:
-            _canForceValidator ? _validator(_valueSelected.value) : null,
+        forceErrorText: _canForceValidator
+            ? _validator(_valueSelected.value)
+            : null,
         builder: (c) {
           return Column(
             mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment:
-                widget.isExpanded
-                    ? CrossAxisAlignment.stretch
-                    : CrossAxisAlignment.start,
+            crossAxisAlignment: widget.isExpanded
+                ? CrossAxisAlignment.stretch
+                : CrossAxisAlignment.start,
             children: [
               Semantics(
                 key: _key,
@@ -440,10 +439,9 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
-                  mainAxisAlignment:
-                      _isOnTop(constraints)
-                          ? MainAxisAlignment.start
-                          : MainAxisAlignment.end,
+                  mainAxisAlignment: _isOnTop(constraints)
+                      ? MainAxisAlignment.start
+                      : MainAxisAlignment.end,
                   children: [
                     Flexible(
                       child: _container(

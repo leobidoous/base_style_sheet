@@ -160,28 +160,24 @@ class _PagedTableViewState<E, S> extends State<PagedTableView<E, S>> {
                 DataTable(
                   clipBehavior: widget.clipBehavior,
                   decoration: widget.boxDecoration,
-                  columns:
-                      widget.columns.map((c) {
-                        return DataColumn(
-                          label: Text(
-                            c.header,
-                            style: context.textTheme.labelLarge?.copyWith(
-                              fontWeight: AppFontWeight.semiBold.value,
-                              color: context.colorScheme.onSurface,
-                            ),
-                          ),
-                        );
-                      }).toList(),
+                  columns: widget.columns.map((c) {
+                    return DataColumn(
+                      label: Text(
+                        c.header,
+                        style: context.textTheme.labelLarge?.copyWith(
+                          fontWeight: AppFontWeight.semiBold.value,
+                          color: context.colorScheme.onSurface,
+                        ),
+                      ),
+                    );
+                  }).toList(),
                   rows: List.generate(_listController.config.pageSize, (i) {
                     return DataRow(
-                      cells:
-                          widget.columns.map((c) {
-                            return DataCell(
-                              CustomShimmer(
-                                height: AppFontSize.bodyMedium.value,
-                              ),
-                            );
-                          }).toList(),
+                      cells: widget.columns.map((c) {
+                        return DataCell(
+                          CustomShimmer(height: AppFontSize.bodyMedium.value),
+                        );
+                      }).toList(),
                     );
                   }),
                 )
@@ -197,18 +193,17 @@ class _PagedTableViewState<E, S> extends State<PagedTableView<E, S>> {
                     DataTable(
                       decoration: widget.boxDecoration,
                       clipBehavior: widget.clipBehavior,
-                      columns:
-                          widget.columns.map((c) {
-                            return DataColumn(
-                              label: Text(
-                                c.header,
-                                style: context.textTheme.labelLarge?.copyWith(
-                                  fontWeight: AppFontWeight.semiBold.value,
-                                  color: context.colorScheme.onSurface,
-                                ),
-                              ),
-                            );
-                          }).toList(),
+                      columns: widget.columns.map((c) {
+                        return DataColumn(
+                          label: Text(
+                            c.header,
+                            style: context.textTheme.labelLarge?.copyWith(
+                              fontWeight: AppFontWeight.semiBold.value,
+                              color: context.colorScheme.onSurface,
+                            ),
+                          ),
+                        );
+                      }).toList(),
                       rows: [],
                     ),
                 DecoratedBox(
@@ -241,18 +236,17 @@ class _PagedTableViewState<E, S> extends State<PagedTableView<E, S>> {
                     DataTable(
                       clipBehavior: widget.clipBehavior,
                       decoration: widget.boxDecoration,
-                      columns:
-                          widget.columns.map((c) {
-                            return DataColumn(
-                              label: Text(
-                                c.header,
-                                style: context.textTheme.labelLarge?.copyWith(
-                                  fontWeight: AppFontWeight.semiBold.value,
-                                  color: context.colorScheme.onSurface,
-                                ),
-                              ),
-                            );
-                          }).toList(),
+                      columns: widget.columns.map((c) {
+                        return DataColumn(
+                          label: Text(
+                            c.header,
+                            style: context.textTheme.labelLarge?.copyWith(
+                              fontWeight: AppFontWeight.semiBold.value,
+                              color: context.colorScheme.onSurface,
+                            ),
+                          ),
+                        );
+                      }).toList(),
                       rows: [],
                     ),
                 DecoratedBox(
@@ -355,10 +349,9 @@ class _PagedTableViewState<E, S> extends State<PagedTableView<E, S>> {
           useParendRenderBox: true,
           isEnabled: !_listController.isLoading,
           value: _listController.config.pageSize.toString(),
-          items:
-              [10, 20, 50].map((e) {
-                return CustomDropdownItem(value: e, label: e.toString());
-              }).toList(),
+          items: [10, 20, 50].map((e) {
+            return CustomDropdownItem(value: e, label: e.toString());
+          }).toList(),
           onChanged: (value) {
             _listController.update([]);
             _listController.fetchNewItems(

@@ -176,8 +176,9 @@ class _PagedListViewState<E, S> extends State<PagedListView<E, S>> {
             TargetPlatform.iOS => widget.thickness,
             TargetPlatform() => 0,
           },
-          controller:
-              widget.parentScrollController == null ? _scrollController : null,
+          controller: widget.parentScrollController == null
+              ? _scrollController
+              : null,
           child: _scrollChild(state),
         );
 
@@ -204,16 +205,16 @@ class _PagedListViewState<E, S> extends State<PagedListView<E, S>> {
           addAutomaticKeepAlives: false,
           reverse: _listController.reverse,
           separatorBuilder: widget.separatorBuilder,
-          controller:
-              widget.parentScrollController == null ? _scrollController : null,
+          controller: widget.parentScrollController == null
+              ? _scrollController
+              : null,
           shrinkWrap: widget.shrinkWrap,
           scrollDirection: widget.scrollDirection,
-          physics:
-              widget.shrinkWrap
-                  ? (widget.physics ?? NeverScrollableScrollPhysics())
-                  : const BouncingScrollPhysics(
-                    parent: AlwaysScrollableScrollPhysics(),
-                  ),
+          physics: widget.shrinkWrap
+              ? (widget.physics ?? NeverScrollableScrollPhysics())
+              : const BouncingScrollPhysics(
+                  parent: AlwaysScrollableScrollPhysics(),
+                ),
           itemBuilder: (_, index) => _listItem(state, index),
         );
       case PagedListMode.wrap:
@@ -224,8 +225,9 @@ class _PagedListViewState<E, S> extends State<PagedListView<E, S>> {
               nCols: widget.nCols,
               padding: widget.padding,
               alignment: WrapAlignment.center,
-              items:
-                  state.map((i) => _listItem(state, state.indexOf(i))).toList(),
+              items: state
+                  .map((i) => _listItem(state, state.indexOf(i)))
+                  .toList(),
             ),
           ],
         );

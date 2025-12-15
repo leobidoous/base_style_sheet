@@ -82,12 +82,13 @@ class _CustomAppBarState extends State<CustomAppBar>
       duration: Durations.medium1,
       vsync: this,
     );
-    _progressAnimation = Tween<double>(
-      begin: 0,
-      end: widget.progress ?? 0,
-    ).animate(
-      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
-    );
+    _progressAnimation = Tween<double>(begin: 0, end: widget.progress ?? 0)
+        .animate(
+          CurvedAnimation(
+            parent: _animationController,
+            curve: Curves.easeInOut,
+          ),
+        );
     _currentProgress = widget.progress ?? 0;
     if (widget.progress != null) {
       _animationController.forward();
@@ -98,12 +99,16 @@ class _CustomAppBarState extends State<CustomAppBar>
   void didUpdateWidget(CustomAppBar oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.progress != widget.progress) {
-      _progressAnimation = Tween<double>(
-        begin: _currentProgress,
-        end: widget.progress ?? 0,
-      ).animate(
-        CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
-      );
+      _progressAnimation =
+          Tween<double>(
+            begin: _currentProgress,
+            end: widget.progress ?? 0,
+          ).animate(
+            CurvedAnimation(
+              parent: _animationController,
+              curve: Curves.easeInOut,
+            ),
+          );
       _currentProgress = widget.progress ?? 0;
       _animationController.reset();
       _animationController.forward();
@@ -126,21 +131,19 @@ class _CustomAppBarState extends State<CustomAppBar>
           child: DecoratedBox(
             decoration: BoxDecoration(
               color: Colors.transparent,
-              border:
-                  widget.enableShadow
-                      ? Border(
-                        bottom: BorderSide(
-                          width: .1,
-                          color: context.colorScheme.onSurface.withValues(
-                            alpha: .1,
-                          ),
+              border: widget.enableShadow
+                  ? Border(
+                      bottom: BorderSide(
+                        width: .1,
+                        color: context.colorScheme.onSurface.withValues(
+                          alpha: .1,
                         ),
-                      )
-                      : null,
-              boxShadow:
-                  widget.enableShadow
-                      ? [context.theme.shadowLightmodeLevel1]
-                      : null,
+                      ),
+                    )
+                  : null,
+              boxShadow: widget.enableShadow
+                  ? [context.theme.shadowLightmodeLevel1]
+                  : null,
             ),
             child: AppBar(
               elevation: 0,
@@ -155,17 +158,16 @@ class _CustomAppBarState extends State<CustomAppBar>
               automaticallyImplyLeading: widget.automaticallyImplyLeading,
               backgroundColor:
                   widget.backgroundColor ?? context.colorScheme.surface,
-              shape:
-                  widget.enableShadow
-                      ? UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: context.colorScheme.onSurface.withValues(
-                            alpha: .1,
-                          ),
-                          width: .1,
+              shape: widget.enableShadow
+                  ? UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: context.colorScheme.onSurface.withValues(
+                          alpha: .1,
                         ),
-                      )
-                      : null,
+                        width: .1,
+                      ),
+                    )
+                  : null,
               title: Padding(
                 padding: widget.titlePadding,
                 child:
@@ -191,26 +193,26 @@ class _CustomAppBarState extends State<CustomAppBar>
                       : 0),
               leading:
                   widget.automaticallyImplyLeading &&
-                              Navigator.of(context).canPop() ||
-                          widget.leadingIcon != null ||
-                          widget.onBackTap != null
-                      ? Align(
-                        child: CustomButton.child(
-                          onPressed:
-                              widget.onBackTap ?? Navigator.of(context).pop,
-                          type: ButtonType.noShape,
-                          padding: EdgeInsets.zero,
-                          heightType: ButtonHeightType.small,
-                          child:
-                              widget.leadingIcon ??
-                              Icon(
-                                Icons.chevron_left_rounded,
-                                size: AppFontSize.iconButton.value,
-                                color: context.textTheme.titleMedium?.color,
-                              ),
-                        ),
-                      )
-                      : const SizedBox(),
+                          Navigator.of(context).canPop() ||
+                      widget.leadingIcon != null ||
+                      widget.onBackTap != null
+                  ? Align(
+                      child: CustomButton.child(
+                        onPressed:
+                            widget.onBackTap ?? Navigator.of(context).pop,
+                        type: ButtonType.noShape,
+                        padding: EdgeInsets.zero,
+                        heightType: ButtonHeightType.small,
+                        child:
+                            widget.leadingIcon ??
+                            Icon(
+                              Icons.chevron_left_rounded,
+                              size: AppFontSize.iconButton.value,
+                              color: context.textTheme.titleMedium?.color,
+                            ),
+                      ),
+                    )
+                  : const SizedBox(),
             ),
           ),
         ),
