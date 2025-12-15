@@ -3,17 +3,16 @@ description: Um package auxiliar para manter os componentes visuais globais de u
 homepage: https://www.github.com/leobidoous
 repository: https://www.github.com/leobidoous/base_style_sheet
 issue_tracker: https://www.github.com/leobidoous/base_style_sheet/issues
-version: 1.4.3
+version: 1.4.4
 
 environment:
-  sdk: ^3.7.2
-  flutter: ">=1.17.0"
+  sdk: ^3.10.0
 
 dependencies:
   flutter:
     sdk: flutter
 
-  pinput: ^5.0.2
+  pinput: ^6.0.1
   shimmer: ^3.0.0
   flutter_svg: ^2.2.1
   file_picker: ^10.3.3
