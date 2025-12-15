@@ -226,7 +226,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
     return error;
   }
 
-  void _onChangedItem(CustomDropdownItem<T> item) {
+  void _onChangedItem(BuildContext context, CustomDropdownItem<T> item) {
     setState(() {
       _textSearchFilter = '';
       _valueSelected.value = item.label;
@@ -347,10 +347,9 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
       builder: (BuildContext context, Widget? child) {
         return Column(
           mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment:
-              widget.isExpanded
-                  ? CrossAxisAlignment.stretch
-                  : CrossAxisAlignment.start,
+          crossAxisAlignment: widget.isExpanded
+              ? CrossAxisAlignment.stretch
+              : CrossAxisAlignment.start,
           children: [
             if (widget.labelWidget != null) ...[
               widget.labelWidget!,
@@ -425,7 +424,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
                     if (Spacing.keyboardIsOpened(context)) {
                       FocusScope.of(context).requestFocus(FocusNode());
                     } else {
-                      Navigator.of(widget.context).pop();
+                      Navigator.of(context).pop();
                     }
                   },
                   child: Container(color: Colors.transparent),
@@ -511,7 +510,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
                 color: context.colorScheme.surface,
                 border: Border.all(color: Colors.grey, width: .5),
               ),
-          onChanged: _onChangedItem,
+          onChanged: (item) => _onChangedItem(context, item),
         );
       },
     );
@@ -572,6 +571,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
           onEditingComplete: () {
             if (_listController.value.isNotEmpty) {
               _onChangedItem(
+                context,
                 _listController.value.firstWhere(
                   (e) => e.label == _valueSelected.value,
                   orElse: () => _listController.value.first,
