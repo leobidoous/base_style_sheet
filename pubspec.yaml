@@ -27,7 +27,7 @@ dependencies:
   webview_flutter_android: ^4.10.2
   custom_refresh_indicator: ^4.0.1
   webview_flutter_wkwebview: ^3.23.1
-  syncfusion_flutter_pdfviewer: ^31.1.21
+  syncfusion_flutter_pdfviewer: ^32.1.19
   cached_network_image_platform_interface: ^4.1.1
 
 dev_dependencies:

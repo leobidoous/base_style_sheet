@@ -215,11 +215,10 @@ class _CustomInputFieldState extends State<CustomInputField> {
                 isCollapsed: widget.isCollapsed,
                 isDense: widget.isDense,
                 filled: widget.fillColor != null,
-                fillColor:
-                    widget.enabled
-                        ? widget.fillColor ?? context.colorScheme.surface
-                        : (widget.fillColor ?? context.colorScheme.surface)
-                            .withValues(alpha: .75),
+                fillColor: widget.enabled
+                    ? widget.fillColor ?? context.colorScheme.surface
+                    : (widget.fillColor ?? context.colorScheme.surface)
+                          .withValues(alpha: .75),
                 hintStyle: context.textTheme.bodyMedium?.copyWith(
                   fontWeight: AppFontWeight.normal.value,
                   color: context.textTheme.bodyMedium?.color?.withValues(
@@ -237,16 +236,14 @@ class _CustomInputFieldState extends State<CustomInputField> {
                 counterText: widget.counterText,
                 prefix: Text(widget.prefix ?? ''),
                 suffixIconConstraints: _boxConstraints.copyWith(
-                  minWidth:
-                      widget.suffixIcon != null
-                          ? _boxConstraints.minWidth
-                          : widget.contentPadding?.right ?? _fontSize,
+                  minWidth: widget.suffixIcon != null
+                      ? _boxConstraints.minWidth
+                      : widget.contentPadding?.right ?? _fontSize,
                 ),
                 prefixIconConstraints: _boxConstraints.copyWith(
-                  minWidth:
-                      widget.prefixIcon != null
-                          ? _boxConstraints.minWidth
-                          : widget.contentPadding?.left ?? _fontSize,
+                  minWidth: widget.prefixIcon != null
+                      ? _boxConstraints.minWidth
+                      : widget.contentPadding?.left ?? _fontSize,
                 ),
                 helperStyle: context.textTheme.labelSmall,
                 suffixIcon: widget.suffixIcon ?? SizedBox(width: _fontSize),

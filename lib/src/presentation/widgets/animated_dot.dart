@@ -78,14 +78,12 @@ class _AnimatedDotState extends State<AnimatedDot>
             curve: Curves.easeIn,
             duration: duration,
             child: SizedBox(
-              height:
-                  widget.selected
-                      ? widget.dotSizeSelected?.height ?? const Spacing(1).value
-                      : widget.dotSize?.height ?? const Spacing(1).value,
-              width:
-                  widget.selected
-                      ? widget.dotSizeSelected?.width ?? const Spacing(2).value
-                      : widget.dotSize?.width ?? const Spacing(1).value,
+              height: widget.selected
+                  ? widget.dotSizeSelected?.height ?? const Spacing(1).value
+                  : widget.dotSize?.height ?? const Spacing(1).value,
+              width: widget.selected
+                  ? widget.dotSizeSelected?.width ?? const Spacing(2).value
+                  : widget.dotSize?.width ?? const Spacing(1).value,
             ),
           ),
         ),

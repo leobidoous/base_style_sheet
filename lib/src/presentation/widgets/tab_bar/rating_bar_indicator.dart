@@ -77,18 +77,17 @@ class _RatingBarIndicatorState extends State<RatingBarIndicator> {
     return SingleChildScrollView(
       scrollDirection: widget.direction,
       physics: widget.physics,
-      child:
-          widget.direction == Axis.horizontal
-              ? Row(
-                mainAxisSize: MainAxisSize.min,
-                textDirection: textDirection,
-                children: _children,
-              )
-              : Column(
-                mainAxisSize: MainAxisSize.min,
-                textDirection: textDirection,
-                children: _children,
-              ),
+      child: widget.direction == Axis.horizontal
+          ? Row(
+              mainAxisSize: MainAxisSize.min,
+              textDirection: textDirection,
+              children: _children,
+            )
+          : Column(
+              mainAxisSize: MainAxisSize.min,
+              textDirection: textDirection,
+              children: _children,
+            ),
     );
   }
 
@@ -119,17 +118,15 @@ class _RatingBarIndicatorState extends State<RatingBarIndicator> {
           fit: StackFit.expand,
           children: [
             FittedBox(
-              child:
-                  index + 1 < _ratingNumber
-                      ? widget.itemBuilder(context, index)
-                      : ColorFiltered(
-                        colorFilter: ColorFilter.mode(
-                          widget.unratedColor ??
-                              Theme.of(context).disabledColor,
-                          BlendMode.srcIn,
-                        ),
-                        child: widget.itemBuilder(context, index),
+              child: index + 1 < _ratingNumber
+                  ? widget.itemBuilder(context, index)
+                  : ColorFiltered(
+                      colorFilter: ColorFilter.mode(
+                        widget.unratedColor ?? Theme.of(context).disabledColor,
+                        BlendMode.srcIn,
                       ),
+                      child: widget.itemBuilder(context, index),
+                    ),
             ),
             if (index + 1 == _ratingNumber)
               if (_isRTL)
@@ -166,11 +163,11 @@ class _IndicatorClipper extends CustomClipper<Rect> {
   Rect getClip(Size size) {
     return rtlMode
         ? Rect.fromLTRB(
-          size.width - size.width * ratingFraction,
-          0,
-          size.width,
-          size.height,
-        )
+            size.width - size.width * ratingFraction,
+            0,
+            size.width,
+            size.height,
+          )
         : Rect.fromLTRB(0, 0, size.width * ratingFraction, size.height);
   }
 

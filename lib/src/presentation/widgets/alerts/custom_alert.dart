@@ -141,38 +141,34 @@ class CustomAlert extends StatelessWidget {
           },
           switch (buttonsDirection) {
             Axis.horizontal => Row(
-              children:
-                  buttons
-                      .map(
-                        (e) => Expanded(
-                          child: Padding(
-                            padding: EdgeInsets.only(
-                              right:
-                                  buttons.last == e
-                                      ? 0
-                                      : horizontalSpacing.value,
-                            ),
-                            child: e,
-                          ),
+              children: buttons
+                  .map(
+                    (e) => Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.only(
+                          right: buttons.last == e
+                              ? 0
+                              : horizontalSpacing.value,
                         ),
-                      )
-                      .toList(),
+                        child: e,
+                      ),
+                    ),
+                  )
+                  .toList(),
             ),
             Axis.vertical => Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
-              children:
-                  buttons
-                      .map(
-                        (b) => Padding(
-                          padding: EdgeInsets.only(
-                            bottom:
-                                buttons.last == b ? 0 : horizontalSpacing.value,
-                          ),
-                          child: b,
-                        ),
-                      )
-                      .toList(),
+              children: buttons
+                  .map(
+                    (b) => Padding(
+                      padding: EdgeInsets.only(
+                        bottom: buttons.last == b ? 0 : horizontalSpacing.value,
+                      ),
+                      child: b,
+                    ),
+                  )
+                  .toList(),
             ),
           },
         ],

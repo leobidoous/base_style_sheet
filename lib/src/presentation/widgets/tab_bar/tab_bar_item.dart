@@ -71,8 +71,9 @@ class _TabBarItemState extends State<TabBarItem>
           AnimatedContainer(
             duration: duration,
             decoration: BoxDecoration(
-              color:
-                  widget.selected ? context.colorScheme.primary : Colors.grey,
+              color: widget.selected
+                  ? context.colorScheme.primary
+                  : Colors.grey,
               borderRadius: context.theme.borderRadiusXSM,
             ),
             margin: EdgeInsets.only(top: Spacing.xxs.value),

@@ -61,19 +61,17 @@ class _CustomLoadingState extends State<CustomLoading>
   void initState() {
     super.initState();
 
-    scaleCtrl =
-        AnimationController(vsync: this, duration: widget.duration)
-          ..addListener(() => setState(() {}))
-          ..repeat(reverse: true);
+    scaleCtrl = AnimationController(vsync: this, duration: widget.duration)
+      ..addListener(() => setState(() {}))
+      ..repeat(reverse: true);
     scale = Tween(
       begin: -1.0,
       end: 1.0,
     ).animate(CurvedAnimation(parent: scaleCtrl, curve: Curves.easeInOut));
 
-    rotateCtrl =
-        AnimationController(vsync: this, duration: widget.duration)
-          ..addListener(() => setState(() {}))
-          ..repeat();
+    rotateCtrl = AnimationController(vsync: this, duration: widget.duration)
+      ..addListener(() => setState(() {}))
+      ..repeat();
     rotate = Tween(
       begin: 0.0,
       end: 360.0,
@@ -90,10 +88,9 @@ class _CustomLoadingState extends State<CustomLoading>
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment:
-          widget.type == LoadingType.linear
-              ? CrossAxisAlignment.stretch
-              : CrossAxisAlignment.center,
+      crossAxisAlignment: widget.type == LoadingType.linear
+          ? CrossAxisAlignment.stretch
+          : CrossAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -149,15 +146,11 @@ class _CustomLoadingState extends State<CustomLoading>
       scale: scale,
       child: SizedBox.fromSize(
         size: Size.square(widget.height * 0.6),
-        child:
-            widget.itemBuilder != null
-                ? widget.itemBuilder!(context, index)
-                : DecoratedBox(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: color,
-                  ),
-                ),
+        child: widget.itemBuilder != null
+            ? widget.itemBuilder!(context, index)
+            : DecoratedBox(
+                decoration: BoxDecoration(shape: BoxShape.circle, color: color),
+              ),
       ),
     );
   }

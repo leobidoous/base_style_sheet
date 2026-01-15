@@ -70,8 +70,9 @@ class CustomRadioTile<T> extends StatelessWidget {
         shape: BoxShape.circle,
         border: Border.all(
           width: 1,
-          color:
-              isSelected ? context.colorScheme.primary : Colors.grey.shade300,
+          color: isSelected
+              ? context.colorScheme.primary
+              : Colors.grey.shade300,
         ),
       ),
       height: const Spacing(2.75).value,
@@ -80,10 +81,9 @@ class CustomRadioTile<T> extends StatelessWidget {
       child: DecoratedBox(
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color:
-              isSelected
-                  ? context.colorScheme.primary
-                  : context.colorScheme.surface,
+          color: isSelected
+              ? context.colorScheme.primary
+              : context.colorScheme.surface,
         ),
       ),
     );

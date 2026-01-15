@@ -72,22 +72,20 @@ class CustomCheckboxTile<T> extends StatelessWidget {
         decoration: BoxDecoration(
           border: Border.all(
             width: 1,
-            color:
-                isSelected
-                    ? context.colorScheme.primary
-                    : context.colorScheme.onSurface.withValues(alpha: .75),
+            color: isSelected
+                ? context.colorScheme.primary
+                : context.colorScheme.onSurface.withValues(alpha: .75),
           ),
           borderRadius: context.theme.borderRadiusXSM,
           color: isSelected ? context.colorScheme.primary : Colors.transparent,
         ),
-        child:
-            isSelected
-                ? Icon(
-                  Icons.check_rounded,
-                  color: context.colorScheme.surface,
-                  size: const Spacing(1.5).value,
-                )
-                : null,
+        child: isSelected
+            ? Icon(
+                Icons.check_rounded,
+                color: context.colorScheme.surface,
+                size: const Spacing(1.5).value,
+              )
+            : null,
       ),
     );
   }

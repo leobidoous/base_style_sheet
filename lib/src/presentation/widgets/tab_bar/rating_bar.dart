@@ -376,13 +376,12 @@ class _NoRatingWidget extends StatelessWidget {
       height: size,
       width: size,
       child: FittedBox(
-        child:
-            enableMask
-                ? ColorFiltered(
-                  colorFilter: ColorFilter.mode(unratedColor, BlendMode.srcIn),
-                  child: child,
-                )
-                : child,
+        child: enableMask
+            ? ColorFiltered(
+                colorFilter: ColorFilter.mode(unratedColor, BlendMode.srcIn),
+                child: child,
+              )
+            : child,
       ),
     );
   }

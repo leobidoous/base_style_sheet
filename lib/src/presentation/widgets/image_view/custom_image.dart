@@ -114,18 +114,16 @@ class CustomImage extends StatelessWidget {
       headers: headers,
       width: imageSize?.width,
       height: imageSize?.height,
-      colorFilter:
-          (imageColor != null)
-              ? ColorFilter.mode(imageColor!, BlendMode.srcIn)
-              : null,
+      colorFilter: (imageColor != null)
+          ? ColorFilter.mode(imageColor!, BlendMode.srcIn)
+          : null,
       errorBuilder: (_, error, stackTrace) => _error(error, stackTrace),
-      placeholderBuilder:
-          (context) => Center(
-            child: CustomShimmer(
-              width: imageSize?.width ?? 32,
-              height: imageSize?.height ?? 32,
-            ),
-          ),
+      placeholderBuilder: (context) => Center(
+        child: CustomShimmer(
+          width: imageSize?.width ?? 32,
+          height: imageSize?.height ?? 32,
+        ),
+      ),
     );
   }
 
@@ -138,10 +136,9 @@ class CustomImage extends StatelessWidget {
       height: imageSize?.height,
       package: packageName,
       errorBuilder: (_, error, stackTrace) => _error(error, stackTrace),
-      colorFilter:
-          (imageColor != null)
-              ? ColorFilter.mode(imageColor!, BlendMode.srcIn)
-              : null,
+      colorFilter: (imageColor != null)
+          ? ColorFilter.mode(imageColor!, BlendMode.srcIn)
+          : null,
     );
   }
 
@@ -150,10 +147,9 @@ class CustomImage extends StatelessWidget {
     return Semantics(
       button: true,
       child: InkWell(
-        onTap:
-            () => CustomPhotoView(
-              image: AssetImage(asset!, package: packageName),
-            ).show(context),
+        onTap: () => CustomPhotoView(
+          image: AssetImage(asset!, package: packageName),
+        ).show(context),
         child: Image.asset(
           asset!,
           fit: fit,

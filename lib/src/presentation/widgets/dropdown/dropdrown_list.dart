@@ -112,15 +112,14 @@ class _DropdownList<T> extends StatelessWidget {
                   scrollDirection: Axis.horizontal,
                   child: Text(
                     item.label,
-                    style:
-                        item.label == valueSelected
-                            ? itemSelectedStyle ??
-                                context.textTheme.bodyMedium?.copyWith(
-                                  fontSize: fontSize,
-                                  color: context.colorScheme.primary,
-                                  fontWeight: AppFontWeight.bold.value,
-                                )
-                            : itemStyle ?? context.textTheme.bodyMedium,
+                    style: item.label == valueSelected
+                        ? itemSelectedStyle ??
+                              context.textTheme.bodyMedium?.copyWith(
+                                fontSize: fontSize,
+                                color: context.colorScheme.primary,
+                                fontWeight: AppFontWeight.bold.value,
+                              )
+                        : itemStyle ?? context.textTheme.bodyMedium,
                   ),
                 ),
           ),

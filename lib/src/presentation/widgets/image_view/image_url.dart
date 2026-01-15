@@ -60,10 +60,9 @@ class ImageUrl extends StatelessWidget {
               height: imageSize?.height ?? 32,
             ),
           ),
-      errorWidget:
-          (context, url, error) =>
-              errorBuilder?.call(error.toString()) ??
-              ImageError(error: error.toString()),
+      errorWidget: (context, url, error) =>
+          errorBuilder?.call(error.toString()) ??
+          ImageError(error: error.toString()),
     );
   }
 }

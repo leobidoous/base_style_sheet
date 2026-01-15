@@ -157,28 +157,25 @@ class _PagedListViewState<E, S> extends State<PagedWrapView<E, S>> {
             thumbColor: context.colorScheme.primary,
             radius: context.theme.borderRadiusXLG.bottomLeft,
             thickness: widget.thickness ?? (kIsWeb ? 0 : null),
-            controller:
-                widget.parentScrollController == null
-                    ? _scrollController
-                    : null,
+            controller: widget.parentScrollController == null
+                ? _scrollController
+                : null,
             child: ListView.separated(
               padding: widget.padding,
               itemCount: state.length,
               reverse: _listController.reverse,
               addAutomaticKeepAlives: false,
               separatorBuilder: widget.separatorBuilder,
-              controller:
-                  widget.parentScrollController == null
-                      ? _scrollController
-                      : null,
+              controller: widget.parentScrollController == null
+                  ? _scrollController
+                  : null,
               shrinkWrap: widget.shrinkWrap,
               scrollDirection: widget.scrollDirection,
-              physics:
-                  widget.shrinkWrap
-                      ? const NeverScrollableScrollPhysics()
-                      : const BouncingScrollPhysics(
-                        parent: AlwaysScrollableScrollPhysics(),
-                      ),
+              physics: widget.shrinkWrap
+                  ? const NeverScrollableScrollPhysics()
+                  : const BouncingScrollPhysics(
+                      parent: AlwaysScrollableScrollPhysics(),
+                    ),
               itemBuilder: (_, index) => _listItem(state, index),
             ),
           ),

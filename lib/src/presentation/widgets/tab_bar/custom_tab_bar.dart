@@ -33,28 +33,26 @@ class _CustomTabBarState extends State<CustomTabBar> {
       alwaysScrollable: true,
       padding: widget.padding ?? EdgeInsets.zero,
       child: Row(
-        children:
-            widget.tabs.map((tab) {
-              return Semantics(
-                button: true,
-                child: InkWell(
-                  onTap: () {
-                    setState(() => tabSelected = widget.tabs.indexOf(tab));
-                    widget.onChange?.call(widget.tabs.indexOf(tab));
-                  },
-                  child: Padding(
-                    padding: EdgeInsets.only(
-                      right:
-                          tab != widget.tabs.last ? const Spacing(2).value : 0,
-                    ),
-                    child: TabBarItem(
-                      title: tab,
-                      selected: tabSelected == widget.tabs.indexOf(tab),
-                    ),
-                  ),
+        children: widget.tabs.map((tab) {
+          return Semantics(
+            button: true,
+            child: InkWell(
+              onTap: () {
+                setState(() => tabSelected = widget.tabs.indexOf(tab));
+                widget.onChange?.call(widget.tabs.indexOf(tab));
+              },
+              child: Padding(
+                padding: EdgeInsets.only(
+                  right: tab != widget.tabs.last ? const Spacing(2).value : 0,
                 ),
-              );
-            }).toList(),
+                child: TabBarItem(
+                  title: tab,
+                  selected: tabSelected == widget.tabs.indexOf(tab),
+                ),
+              ),
+            ),
+          );
+        }).toList(),
       ),
     );
   }

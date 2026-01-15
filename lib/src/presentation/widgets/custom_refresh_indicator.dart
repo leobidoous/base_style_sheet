@@ -73,10 +73,9 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
           animation: controller,
           builder: (context, _) {
             return Stack(
-              alignment:
-                  !widget.reverse
-                      ? Alignment.topCenter
-                      : Alignment.bottomCenter,
+              alignment: !widget.reverse
+                  ? Alignment.topCenter
+                  : Alignment.bottomCenter,
               children: <Widget>[
                 ConstrainedBox(
                   constraints: BoxConstraints(maxHeight: _offsetToArmed),
@@ -84,25 +83,23 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
                     axisAlignment: widget.reverse ? -1 : 1,
                     sizeFactor: controller,
                     child: FadeTransition(
-                      opacity:
-                          widget.refreshLogo != null ? _animation : controller,
+                      opacity: widget.refreshLogo != null
+                          ? _animation
+                          : controller,
                       child: Center(
-                        child:
-                            widget.refreshLogo != null
-                                ? CustomImage(
-                                  shaddow: const [],
-                                  svgAsset: widget.refreshLogo,
-                                  border: context.theme.borderNone,
-                                  backgroundColor: Colors.transparent,
-                                  borderRadius: context.theme.borderRadiusNone,
-                                  imageSize: Size.fromHeight(
-                                    _offsetToArmed * .4,
-                                  ),
-                                )
-                                : CustomLoading(
-                                  width: _offsetToArmed,
-                                  height: _offsetToArmed,
-                                ),
+                        child: widget.refreshLogo != null
+                            ? CustomImage(
+                                shaddow: const [],
+                                svgAsset: widget.refreshLogo,
+                                border: context.theme.borderNone,
+                                backgroundColor: Colors.transparent,
+                                borderRadius: context.theme.borderRadiusNone,
+                                imageSize: Size.fromHeight(_offsetToArmed * .4),
+                              )
+                            : CustomLoading(
+                                width: _offsetToArmed,
+                                height: _offsetToArmed,
+                              ),
                       ),
                     ),
                   ),

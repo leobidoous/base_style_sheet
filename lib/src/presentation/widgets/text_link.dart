@@ -62,19 +62,18 @@ class TextLink extends StatelessWidget {
                 Spacing.xxs.horizontal,
                 AnimatedSwitcher(
                   duration: const Duration(milliseconds: 250),
-                  child:
-                      isLoading
-                          ? CustomLoading(
-                            width: AppFontSize.bodyMedium.value,
-                            height: AppFontSize.bodyMedium.value,
-                          )
-                          : Icon(
-                            icon,
-                            color:
-                                styleText?.color ??
-                                context.textTheme.bodyMedium?.color,
-                            size: AppFontSize.bodyMedium.value,
-                          ),
+                  child: isLoading
+                      ? CustomLoading(
+                          width: AppFontSize.bodyMedium.value,
+                          height: AppFontSize.bodyMedium.value,
+                        )
+                      : Icon(
+                          icon,
+                          color:
+                              styleText?.color ??
+                              context.textTheme.bodyMedium?.color,
+                          size: AppFontSize.bodyMedium.value,
+                        ),
                 ),
               ],
             ],

@@ -35,19 +35,17 @@ class CustomWrap<T> extends StatelessWidget {
             runSpacing: runSpacing,
             runAlignment: runAlignment,
             crossAxisAlignment: crossAxisAlignment,
-            children:
-                items.map((item) {
-                  return SizedBox(
-                    width:
-                        nCols != null
-                            ? ((constrains.maxWidth / nCols!) -
-                                    ((spacing * (nCols! - 1)) / nCols!))
-                                .floor()
-                                .toDouble()
-                            : null,
-                    child: item,
-                  );
-                }).toList(),
+            children: items.map((item) {
+              return SizedBox(
+                width: nCols != null
+                    ? ((constrains.maxWidth / nCols!) -
+                              ((spacing * (nCols! - 1)) / nCols!))
+                          .floor()
+                          .toDouble()
+                    : null,
+                child: item,
+              );
+            }).toList(),
           );
         },
       ),

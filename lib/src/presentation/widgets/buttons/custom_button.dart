@@ -462,18 +462,14 @@ class _CustomButtonState extends State<CustomButton> {
                   topRight:
                       (widget.borderRadius ?? context.theme.borderRadiusXLG)
                           .topRight,
-                  bottomLeft:
-                      widget.isSafe
-                          ? Radius.zero
-                          : (widget.borderRadius ??
-                                  context.theme.borderRadiusXLG)
-                              .bottomLeft,
-                  bottomRight:
-                      widget.isSafe
-                          ? Radius.zero
-                          : (widget.borderRadius ??
-                                  context.theme.borderRadiusXLG)
-                              .bottomRight,
+                  bottomLeft: widget.isSafe
+                      ? Radius.zero
+                      : (widget.borderRadius ?? context.theme.borderRadiusXLG)
+                            .bottomLeft,
+                  bottomRight: widget.isSafe
+                      ? Radius.zero
+                      : (widget.borderRadius ?? context.theme.borderRadiusXLG)
+                            .bottomRight,
                 ),
               ),
             ),
@@ -499,10 +495,9 @@ class _CustomButtonState extends State<CustomButton> {
                 minHeight: _minimumSize.height,
                 minWidth: _minimumSize.width,
               ),
-              child:
-                  widget.alignment == null
-                      ? _child
-                      : Align(alignment: widget.alignment!, child: _child),
+              child: widget.alignment == null
+                  ? _child
+                  : Align(alignment: widget.alignment!, child: _child),
             ),
           ),
         ),
@@ -513,15 +508,14 @@ class _CustomButtonState extends State<CustomButton> {
   AnimatedSwitcher get _child {
     return AnimatedSwitcher(
       duration: const Duration(milliseconds: 500),
-      child:
-          widget.isLoading
-              ? CustomLoading(
-                primaryColor: widget.loadingPrimaryColor,
-                secondaryColor: widget.loadingSecondaryColor,
-                height: const Spacing(1).value,
-                width: const Spacing(1).value,
-              )
-              : widget.child,
+      child: widget.isLoading
+          ? CustomLoading(
+              primaryColor: widget.loadingPrimaryColor,
+              secondaryColor: widget.loadingSecondaryColor,
+              height: const Spacing(1).value,
+              width: const Spacing(1).value,
+            )
+          : widget.child,
     );
   }
 

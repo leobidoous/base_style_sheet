@@ -48,29 +48,26 @@ class CustomCard extends StatelessWidget {
               constraints: constraints ?? BoxConstraints(),
               child: DecoratedBox(
                 decoration: BoxDecoration(
-                  color:
-                      isSelected
-                          ? context.colorScheme.primary
-                          : color ?? context.colorScheme.surface,
+                  color: isSelected
+                      ? context.colorScheme.primary
+                      : color ?? context.colorScheme.surface,
                   border:
                       border ??
                       Border.all(
                         width: .05,
-                        color:
-                            isSelected
-                                ? context.colorScheme.primary
-                                : color ??
-                                    context.colorScheme.onSurface.withValues(
-                                      alpha: .01,
-                                    ),
+                        color: isSelected
+                            ? context.colorScheme.primary
+                            : color ??
+                                  context.colorScheme.onSurface.withValues(
+                                    alpha: .01,
+                                  ),
                       ),
                   borderRadius: borderRadius ?? context.theme.borderRadiusMD,
-                  boxShadow:
-                      shaddow == null
-                          ? [context.theme.shadowLightmodeLevel0]
-                          : (shaddow?.isEmpty ?? false)
-                          ? null
-                          : shaddow,
+                  boxShadow: shaddow == null
+                      ? [context.theme.shadowLightmodeLevel0]
+                      : (shaddow?.isEmpty ?? false)
+                      ? null
+                      : shaddow,
                 ),
                 child: ClipRRect(
                   borderRadius: borderRadius ?? context.theme.borderRadiusMD,
