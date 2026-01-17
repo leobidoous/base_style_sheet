@@ -311,15 +311,18 @@ class _PagedTableViewState<E, S> extends State<PagedTableView<E, S>> {
             : IntrinsicColumnWidth();
         return DataColumn(
           onSort: (columnIndex, ascending) {},
-          columnWidth: MaxColumnWidth(
+          columnWidth: MinColumnWidth(
             columnWidth,
             IntrinsicColumnWidth(flex: c.flex?.toDouble()),
           ),
-          label: Text(
-            c.header,
-            style: context.textTheme.labelLarge?.copyWith(
-              fontWeight: AppFontWeight.semiBold.value,
-              color: context.colorScheme.onSurface,
+          label: CustomScrollContent(
+            scrollDirection: .horizontal,
+            child: Text(
+              c.header,
+              style: context.textTheme.labelLarge?.copyWith(
+                fontWeight: AppFontWeight.semiBold.value,
+                color: context.colorScheme.onSurface,
+              ),
             ),
           ),
         );
@@ -346,6 +349,7 @@ class _PagedTableViewState<E, S> extends State<PagedTableView<E, S>> {
           canSearch: false,
           isExpanded: false,
           useSafeArea: false,
+          heightType: .normal,
           context: widget.context,
           useParendRenderBox: true,
           isEnabled: !_listController.isLoading,
@@ -375,6 +379,7 @@ class _PagedTableViewState<E, S> extends State<PagedTableView<E, S>> {
                     _listController.config.pageKey >
                         _listController.firstPageKey,
                 icon: Icons.chevron_left_rounded,
+                heightType: .normal,
                 onPressed: () {
                   _listController.update([]);
                   _listController.fetchNewItems(
@@ -396,6 +401,7 @@ class _PagedTableViewState<E, S> extends State<PagedTableView<E, S>> {
                     _listController.state.isNotEmpty &&
                     !_listController.config.isLastFetch,
                 icon: Icons.chevron_right_rounded,
+                heightType: .normal,
                 onPressed: () {
                   _listController.update([]);
                   _listController.fetchNewItems(

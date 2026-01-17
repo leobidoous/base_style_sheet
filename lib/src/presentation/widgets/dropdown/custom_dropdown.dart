@@ -71,9 +71,9 @@ class CustomDropdown<T> extends StatefulWidget {
     this.canSearch = false,
     this.isExpanded = true,
     this.useSafeArea = true,
+    this.heightType = .medium,
     this.useParendRenderBox = true,
-    this.heightType = DropdownHeightType.medium,
-    this.autovalidateMode = AutovalidateMode.disabled,
+    this.autovalidateMode = .disabled,
   });
   final Widget? icon;
   final String value;
@@ -133,22 +133,22 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
 
   double get _fontSize {
     switch (widget.heightType) {
-      case DropdownHeightType.medium:
+      case .medium:
         return AppFontSize.bodyMedium.value;
-      case DropdownHeightType.normal:
+      case .normal:
         return (AppFontSize.bodyMedium.value + AppFontSize.bodySmall.value) / 2;
-      case DropdownHeightType.small:
+      case .small:
         return AppFontSize.bodySmall.value;
     }
   }
 
   BorderRadius get _borderRadius {
     switch (widget.heightType) {
-      case DropdownHeightType.medium:
+      case .medium:
         return widget.borderRadius ?? context.theme.borderRadiusLG;
-      case DropdownHeightType.normal:
+      case .normal:
         return widget.borderRadius ?? context.theme.borderRadiusLG;
-      case DropdownHeightType.small:
+      case .small:
         return widget.borderRadius ?? context.theme.borderRadiusLG;
     }
   }
@@ -200,7 +200,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
     _showClear =
         (_valueSelected.value.isNotEmpty || _textSearchFilter.isNotEmpty) &&
         widget.onClear != null;
-    if (widget.autovalidateMode != AutovalidateMode.disabled) {
+    if (widget.autovalidateMode != .disabled) {
       _canForceValidator = _valueSelected.value.isEmpty;
     }
     super.didUpdateWidget(oldWidget);
@@ -242,10 +242,10 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
 
     if (widget.useParendRenderBox) {
       parendRenderBox = widget.context.findRenderObject() as RenderBox;
-      _parentContextOffset = parendRenderBox.localToGlobal(Offset.zero);
+      _parentContextOffset = parendRenderBox.localToGlobal(.zero);
     }
 
-    _offset = renderBox.localToGlobal(Offset.zero, ancestor: parendRenderBox);
+    _offset = renderBox.localToGlobal(.zero, ancestor: parendRenderBox);
   }
 
   bool _isOnTop(BoxConstraints constraints) {
@@ -314,7 +314,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
               return FadeTransition(
                 opacity: animation,
                 child: Column(
-                  mainAxisSize: MainAxisSize.min,
+                  mainAxisSize: .min,
                   children: [Flexible(child: child)],
                 ),
               );
@@ -346,10 +346,8 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
       animation: _animationController,
       builder: (BuildContext context, Widget? child) {
         return Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: widget.isExpanded
-              ? CrossAxisAlignment.stretch
-              : CrossAxisAlignment.start,
+          mainAxisSize: .min,
+          crossAxisAlignment: widget.isExpanded ? .stretch : .start,
           children: [
             if (widget.labelWidget != null) ...[
               widget.labelWidget!,
@@ -358,7 +356,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
             Flexible(
               child: AnimatedOpacity(
                 opacity: _opacityAnimation.value,
-                duration: Duration.zero,
+                duration: .zero,
                 child: child,
               ),
             ),
@@ -376,10 +374,8 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
             : null,
         builder: (c) {
           return Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: widget.isExpanded
-                ? CrossAxisAlignment.stretch
-                : CrossAxisAlignment.start,
+            mainAxisSize: .min,
+            crossAxisAlignment: widget.isExpanded ? .stretch : .start,
             children: [
               Semantics(
                 key: _key,
@@ -387,7 +383,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
               ),
               if (c.hasError) ...[
                 Padding(
-                  padding: EdgeInsets.only(
+                  padding: .only(
                     top: Spacing.xxs.value,
                     left: widget.childPadding?.left ?? Spacing.xs.value,
                     right: widget.childPadding?.right ?? Spacing.xs.value,
@@ -436,11 +432,9 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
                 right: _getRightPosition(constraints),
                 bottom: _getBottomPosition(context, constraints),
                 child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  mainAxisAlignment: _isOnTop(constraints)
-                      ? MainAxisAlignment.start
-                      : MainAxisAlignment.end,
+                  mainAxisSize: .min,
+                  crossAxisAlignment: .stretch,
+                  mainAxisAlignment: _isOnTop(constraints) ? .start : .end,
                   children: [
                     Flexible(
                       child: _container(
@@ -458,28 +452,43 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
     );
   }
 
-  Container _container({
-    required Widget child,
+  Widget _container({
     double? maxHeight,
+    required Widget child,
     bool hasError = false,
   }) {
-    return Container(
+    return DecoratedBox(
       decoration:
           widget.boxDecoration ??
           BoxDecoration(
             color: context.colorScheme.surface,
             borderRadius: _borderRadius,
-            border: Border.all(
+            border: .all(
               color: hasError ? context.colorScheme.error : Colors.grey,
               width: .5,
             ),
           ),
-      constraints: BoxConstraints(
-        maxHeight: maxHeight ?? AppThemeBase.buttonHeightMD,
-      ),
-      child: ClipRRect(
-        borderRadius: widget.boxDecoration?.borderRadius ?? _borderRadius,
-        child: child,
+      child: ConstrainedBox(
+        constraints:
+            widget.boxConstraints ??
+            BoxConstraints(maxHeight: maxHeight ?? AppThemeBase.buttonHeightMD),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return IntrinsicWidth(
+              stepWidth: widget.isExpanded
+                  ? widget.boxConstraints?.maxWidth ?? .infinity
+                  : (widget.boxConstraints?.minWidth ?? 0) <
+                        constraints.minWidth
+                  ? widget.boxConstraints?.minWidth
+                  : null,
+              child: ClipRRect(
+                borderRadius:
+                    widget.boxDecoration?.borderRadius ?? _borderRadius,
+                child: child,
+              ),
+            );
+          },
+        ),
       ),
     );
   }
@@ -508,7 +517,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
               BoxDecoration(
                 borderRadius: _borderRadius,
                 color: context.colorScheme.surface,
-                border: Border.all(color: Colors.grey, width: .5),
+                border: .all(color: Colors.grey, width: .5),
               ),
           onChanged: (item) => _onChangedItem(context, item),
         );
@@ -549,24 +558,19 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
               widget.onSearchChanged?.call(_textSearchFilter, isReset: false);
             }
           },
-
           icon: widget.icon,
           fontSize: _fontSize,
           isEnabled: _isEnabled,
           showClear: _showClear,
           readOnly: widget.readOnly,
           canSearch: widget.canSearch,
-          itemStyle: widget.itemStyle,
           isLoading: widget.isLoading,
           prefixIcon: widget.prefixIcon,
           heightType: widget.heightType,
-          isExpanded: widget.isExpanded,
           placeholder: widget.placeholder,
           rotateAnimation: _rotateAnimation,
-          childPadding: widget.childPadding,
           boxDecoration: widget.boxDecoration,
           valueSelected: _valueSelected.value,
-          boxConstraints: widget.boxConstraints,
           canFocus: _animationController.isForwardOrCompleted,
           onEditingComplete: () {
             if (_listController.value.isNotEmpty) {
