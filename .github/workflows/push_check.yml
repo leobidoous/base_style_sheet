@@ -4,12 +4,12 @@ name: Checking Push
 on: 
   push:
     branches:
-    - main
+    - master
 
   pull_request:
     branches:
     - develop
-    - main
+    - master
 
 jobs:
   Checking-Push:
