@@ -15,8 +15,8 @@ class CustomRequestError extends StatelessWidget {
     this.maxHeight,
     this.btnLabel = '',
     this.isSafeArea = false,
-    this.btnType = ButtonType.primary,
-    this.padding = const EdgeInsets.symmetric(vertical: 16),
+    this.btnType = .primary,
+    this.padding = const .symmetric(vertical: 16),
   });
   final String? message;
   final bool isSafeArea;
@@ -30,39 +30,41 @@ class CustomRequestError extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomScrollContent(
       expanded: false,
-      alwaysScrollable: false,
       padding: padding,
+      alwaysScrollable: false,
       child: ConstrainedBox(
-        constraints: BoxConstraints(maxHeight: maxHeight ?? double.infinity),
+        constraints: BoxConstraints(maxHeight: maxHeight ?? .infinity),
         child: SafeArea(
           top: isSafeArea,
           bottom: isSafeArea,
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
+            mainAxisSize: .min,
+            mainAxisAlignment: .center,
+            crossAxisAlignment: .stretch,
             children: [
               Flexible(
                 child: CustomScrollContent(
                   expanded: false,
                   alwaysScrollable: false,
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    crossAxisAlignment: .stretch,
                     children: [
                       DecoratedBox(
                         decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.red.withValues(alpha: .25),
+                          shape: .circle,
+                          color: context.colorScheme.error.withValues(
+                            alpha: .25,
+                          ),
                         ),
                         child: Padding(
-                          padding: EdgeInsets.all(Spacing.xxs.value),
+                          padding: .all(Spacing.xxs.value),
                           child: DecoratedBox(
-                            decoration: const BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.red,
+                            decoration: BoxDecoration(
+                              shape: .circle,
+                              color: context.colorScheme.error,
                             ),
                             child: Padding(
-                              padding: EdgeInsets.all(Spacing.xs.value),
+                              padding: .all(Spacing.xs.value),
                               child: Icon(
                                 Icons.error_outline_rounded,
                                 color: context.colorScheme.surface,
@@ -75,20 +77,20 @@ class CustomRequestError extends StatelessWidget {
                       Spacing.xs.vertical,
                       Text(
                         'Algo aconteceu aqui',
-                        textAlign: TextAlign.center,
+                        textAlign: .center,
                         style: context.textTheme.titleSmall,
                       ),
                       Spacing.xs.vertical,
                       Text(
                         '''No momento, não é possível utilizar este serviço. Já estamos verificando o que ocorreu. Por favor, tente novamente.''',
-                        textAlign: TextAlign.center,
+                        textAlign: .center,
                         style: context.textTheme.labelMedium,
                       ),
                       if (message != null && message!.isNotEmpty) ...[
                         Spacing.xs.vertical,
                         CustomExpansion(
                           title: Padding(
-                            padding: EdgeInsets.fromLTRB(
+                            padding: .fromLTRB(
                               0,
                               Spacing.xs.value,
                               Spacing.xs.value,
@@ -99,11 +101,11 @@ class CustomRequestError extends StatelessWidget {
                               style: context.textTheme.bodyMedium,
                             ),
                           ),
-                          crossAxisAlignment: CrossAxisAlignment.center,
+                          crossAxisAlignment: .center,
                           body: Center(
-                            child: Text(
+                            child: SelectableText(
                               message!,
-                              textAlign: TextAlign.center,
+                              textAlign: .center,
                               style: context.textTheme.labelMedium?.copyWith(
                                 color: Colors.grey,
                               ),

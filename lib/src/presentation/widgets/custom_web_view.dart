@@ -61,9 +61,11 @@ class CustomWebViewState extends State<CustomWebView> {
 
     _webViewController = WebViewController.fromPlatformCreationParams(
       params,
-      onPermissionRequest: (request) {
-        request.platform.grant();
-      },
+      onPermissionRequest: kIsWeb
+          ? null
+          : (request) {
+              request.platform.grant();
+            },
     );
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -76,46 +78,54 @@ class CustomWebViewState extends State<CustomWebView> {
         break;
     }
 
-    _webViewController
-      ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..setNavigationDelegate(
-        NavigationDelegate(
-          onProgress: (int value) {
-            if (mounted) {
-              setState(() => _progress = value);
-            }
-            widget.onProgress?.call(value);
-          },
-          onPageStarted:
-              widget.onPageStarted ??
-              (String url) {
-                debugPrint('Page started loading: $url');
-              },
-          onPageFinished:
-              widget.onPageFinished ??
-              (String url) {
-                debugPrint('Page finished loading: $url');
-              },
-          onWebResourceError:
-              widget.onWebResourceError ??
-              (WebResourceError error) {
-                debugPrint('''
+    if (!kIsWeb) {
+      _webViewController
+        ..setJavaScriptMode(JavaScriptMode.unrestricted)
+        ..setNavigationDelegate(
+          NavigationDelegate(
+            onProgress: (int value) {
+              if (mounted) {
+                setState(() => _progress = value);
+              }
+              widget.onProgress?.call(value);
+            },
+            onPageStarted:
+                widget.onPageStarted ??
+                (String url) {
+                  debugPrint('Page started loading: $url');
+                },
+            onPageFinished:
+                widget.onPageFinished ??
+                (String url) {
+                  debugPrint('Page finished loading: $url');
+                },
+            onWebResourceError:
+                widget.onWebResourceError ??
+                (WebResourceError error) {
+                  debugPrint('''
               Page resource error:
               code: ${error.errorCode}
               description: ${error.description}
               errorType: ${error.errorType}
               isForMainFrame: ${error.isForMainFrame}
           ''');
-              },
-          onNavigationRequest: widget.onNavigationRequest,
-          onUrlChange:
-              widget.onUrlChange ??
-              (UrlChange change) {
-                debugPrint('Url changed: ${change.url}');
-              },
-        ),
-      )
-      ..loadRequest(Uri.parse(widget.url), headers: widget.headers);
+                },
+            onNavigationRequest: widget.onNavigationRequest,
+            onUrlChange:
+                widget.onUrlChange ??
+                (UrlChange change) {
+                  debugPrint('Url changed: ${change.url}');
+                },
+          ),
+        )
+        ..loadRequest(Uri.parse(widget.url), headers: widget.headers);
+    } else {
+      _webViewController.loadRequest(
+        Uri.parse(widget.url),
+        headers: widget.headers,
+      );
+    }
+
     widget.onJavaScriptChannels?.entries.forEach((e) {
       _webViewController.addJavaScriptChannel(
         e.key,

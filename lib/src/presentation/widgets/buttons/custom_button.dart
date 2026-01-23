@@ -488,8 +488,10 @@ class _CustomButtonState extends State<CustomButton> {
           ),
           clipBehavior: Clip.antiAliasWithSaveLayer,
           child: SafeArea(
-            bottom: widget.isSafe,
             top: false,
+            left: false,
+            right: false,
+            bottom: widget.isSafe,
             child: ConstrainedBox(
               constraints: BoxConstraints(
                 minHeight: _minimumSize.height,

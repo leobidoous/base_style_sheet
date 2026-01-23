@@ -409,6 +409,8 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
         _getWidgetInfos();
         _maxHeight = _getMaxHeight(context, constraints);
         return SafeArea(
+          left: false,
+          right: false,
           top: !_isOnTop(constraints),
           bottom: _isOnTop(constraints),
           child: Stack(

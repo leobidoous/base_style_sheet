@@ -16,14 +16,14 @@ class CustomExpansion<T> extends StatefulWidget {
     this.onForward,
     this.onReverse,
     required this.title,
+    this.padding = .zero,
     this.isEnabled = true,
     this.allowExpand = true,
     this.isSelected = false,
     this.showTrailing = true,
-    this.padding = EdgeInsets.zero,
+    this.initialState = .closed,
     this.allowDismissOnBody = false,
-    this.initialState = ExpansionState.closed,
-    this.crossAxisAlignment = CrossAxisAlignment.stretch,
+    this.crossAxisAlignment = .stretch,
   });
 
   final Widget title;
@@ -133,30 +133,29 @@ class CustomExpansionState<T> extends State<CustomExpansion<T>>
           ),
           builder: (_, child) {
             return Column(
+              mainAxisSize: .min,
               crossAxisAlignment: widget.crossAxisAlignment,
-              mainAxisSize: MainAxisSize.min,
               children: [
                 Padding(
                   padding: widget.padding,
                   child: Row(
-                    mainAxisSize: MainAxisSize.min,
+                    mainAxisSize: .min,
+                    mainAxisAlignment: .spaceBetween,
                     children: [
                       Flexible(child: widget.title),
                       if (widget.showTrailing) ...[
                         RotationTransition(
                           turns: _rotateAnimation,
                           child: CustomButton.icon(
-                            type: ButtonType.noShape,
+                            type: .noShape,
+                            heightType: .small,
                             iconColor: widget.iconColor,
                             onPressed: _onChangeExpansion,
-                            heightType: ButtonHeightType.small,
                             icon:
                                 widget.icon ??
                                 switch (widget.initialState) {
-                                  ExpansionState.opened =>
-                                    Icons.keyboard_arrow_up_rounded,
-                                  ExpansionState.closed =>
-                                    Icons.keyboard_arrow_down_rounded,
+                                  .opened => Icons.keyboard_arrow_up_rounded,
+                                  .closed => Icons.keyboard_arrow_down_rounded,
                                 },
                           ),
                         ),

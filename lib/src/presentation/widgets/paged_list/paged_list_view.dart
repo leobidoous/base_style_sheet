@@ -22,6 +22,8 @@ class PagedListView<E, S> extends StatefulWidget {
     this.physics,
     this.thickness,
     this.refreshLogo,
+    this.mode = .normal,
+    this.padding = .zero,
     this.scrollController,
     this.shrinkWrap = false,
     this.allowRefresh = true,
@@ -29,14 +31,12 @@ class PagedListView<E, S> extends StatefulWidget {
     this.parentScrollController,
     required this.listController,
     this.safeAreaLastItem = true,
-    this.padding = EdgeInsets.zero,
     required this.separatorBuilder,
-    this.mode = PagedListMode.normal,
+    this.scrollDirection = .vertical,
     this.noItemsFoundIndicatorBuilder,
     this.newPageErrorIndicatorBuilder,
     this.firstPageErrorIndicatorBuilder,
     this.newPageProgressIndicatorBuilder,
-    this.scrollDirection = Axis.vertical,
     this.firstPageProgressIndicatorBuilder,
   });
 
@@ -168,13 +168,13 @@ class _PagedListViewState<E, S> extends State<PagedListView<E, S>> {
               );
         }
         final child = RawScrollbar(
-          padding: EdgeInsets.zero,
+          padding: .zero,
           thumbColor: context.colorScheme.primary,
           radius: context.theme.borderRadiusXLG.bottomLeft,
           thickness: switch (defaultTargetPlatform) {
-            TargetPlatform.android => widget.thickness,
-            TargetPlatform.iOS => widget.thickness,
-            TargetPlatform() => 0,
+            .android => widget.thickness,
+            .iOS => widget.thickness,
+            _ => 0,
           },
           controller: widget.parentScrollController == null
               ? _scrollController
@@ -184,7 +184,7 @@ class _PagedListViewState<E, S> extends State<PagedListView<E, S>> {
 
         /// Validate if it is allowed to use
         /// the onRefresh from the listController
-        if (!widget.allowRefresh) return child;
+        if (!widget.allowRefresh || kIsWeb) return child;
 
         return CustomRefreshIndicator(
           refreshLogo: widget.refreshLogo,
@@ -198,7 +198,7 @@ class _PagedListViewState<E, S> extends State<PagedListView<E, S>> {
 
   Widget _scrollChild(List<S> state) {
     switch (widget.mode) {
-      case PagedListMode.normal:
+      case .normal:
         return ListView.separated(
           padding: widget.padding,
           itemCount: state.length,
@@ -217,14 +217,14 @@ class _PagedListViewState<E, S> extends State<PagedListView<E, S>> {
                 ),
           itemBuilder: (_, index) => _listItem(state, index),
         );
-      case PagedListMode.wrap:
+      case .wrap:
         return Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: .stretch,
           children: [
             CustomWrap(
+              alignment: .center,
               nCols: widget.nCols,
               padding: widget.padding,
-              alignment: WrapAlignment.center,
               items: state
                   .map((i) => _listItem(state, state.indexOf(i)))
                   .toList(),
@@ -237,6 +237,8 @@ class _PagedListViewState<E, S> extends State<PagedListView<E, S>> {
   Widget _listItem(List<S> items, int index) {
     return SafeArea(
       top: false,
+      left: false,
+      right: false,
       bottom:
           (_listController.reverse
               ? items.first == items[index]
@@ -244,7 +246,7 @@ class _PagedListViewState<E, S> extends State<PagedListView<E, S>> {
           widget.safeAreaLastItem,
       child: switch (widget.scrollDirection) {
         Axis.horizontal => Row(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisSize: .min,
           children: [
             if (_listController.reverse)
               if (items.last == items[index]) ..._errorOrLoading(index),
@@ -254,10 +256,10 @@ class _PagedListViewState<E, S> extends State<PagedListView<E, S>> {
           ],
         ),
         Axis.vertical => Column(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisSize: .min,
           crossAxisAlignment: switch (widget.mode) {
-            PagedListMode.wrap => CrossAxisAlignment.center,
-            PagedListMode.normal => CrossAxisAlignment.stretch,
+            .wrap => .center,
+            .normal => .stretch,
           },
           children: [
             if (_listController.reverse)
@@ -280,7 +282,7 @@ class _PagedListViewState<E, S> extends State<PagedListView<E, S>> {
               _fetchItemsAndScroll,
             ) ??
             CustomRequestError(
-              padding: EdgeInsets.zero,
+              padding: .zero,
               onPressed: _fetchItemsAndScroll,
               message: _listController.error.toString(),
             )
