@@ -123,17 +123,17 @@ class CustomInputField extends StatefulWidget {
 class _CustomInputFieldState extends State<CustomInputField> {
   BoxConstraints get _boxConstraints {
     switch (widget.heightType) {
-      case InputHeightType.medium:
+      case .medium:
         return BoxConstraints(
           minHeight: AppThemeBase.buttonHeightMD,
           minWidth: AppThemeBase.buttonHeightMD,
         );
-      case InputHeightType.normal:
+      case .normal:
         return BoxConstraints(
           minHeight: AppThemeBase.buttonHeightNM,
           minWidth: AppThemeBase.buttonHeightNM,
         );
-      case InputHeightType.small:
+      case .small:
         return BoxConstraints(
           minHeight: AppThemeBase.buttonHeightSM,
           minWidth: AppThemeBase.buttonHeightSM,
@@ -154,11 +154,11 @@ class _CustomInputFieldState extends State<CustomInputField> {
 
   double get _fontSize {
     switch (widget.heightType) {
-      case InputHeightType.medium:
+      case .medium:
         return AppFontSize.bodyMedium.value;
-      case InputHeightType.normal:
+      case .normal:
         return (AppFontSize.bodyMedium.value + AppFontSize.bodySmall.value) / 2;
-      case InputHeightType.small:
+      case .small:
         return AppFontSize.bodySmall.value;
     }
   }
@@ -183,6 +183,8 @@ class _CustomInputFieldState extends State<CustomInputField> {
               maxLines: widget.maxLines,
               minLines: widget.minLines,
               readOnly: widget.readOnly,
+              smartDashesType: .enabled,
+              textAlignVertical: .center,
               maxLength: widget.maxLength,
               textAlign: widget.textAlign,
               focusNode: widget.focusNode,
@@ -194,16 +196,14 @@ class _CustomInputFieldState extends State<CustomInputField> {
               buildCounter: widget.buildCounter,
               onTapOutside: widget.onTapOutside,
               inputFormatters: widget.inputFormatters,
-              smartDashesType: SmartDashesType.enabled,
               autovalidateMode: widget.autovalidateMode,
               onFieldSubmitted: widget.onFieldSubmitted,
-              textAlignVertical: TextAlignVertical.center,
+              cursorRadius: .circular(Spacing.md.value),
               enableSuggestions: widget.enableSuggestions,
               onEditingComplete: widget.onEditingComplete,
               textCapitalization: widget.textCapitalization,
-              cursorRadius: Radius.circular(Spacing.md.value),
-              enableInteractiveSelection: widget.enableinteractiveSelection,
               textInputAction: widget.textInputAction ?? .done,
+              enableInteractiveSelection: widget.enableinteractiveSelection,
               style: context.textTheme.bodyMedium?.copyWith(
                 fontWeight: AppFontWeight.normal.value,
                 fontSize: _fontSize,

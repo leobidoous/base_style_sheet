@@ -6,10 +6,14 @@ import 'package:flutter/material.dart'
         SafeArea,
         StatelessWidget,
         Text,
-        Widget;
+        Widget,
+        ConstrainedBox,
+        BoxConstraints;
 
 import '../../../core/themes/spacing/spacing.dart';
 import '../../../core/themes/typography/typography_constants.dart';
+import '../../../domain/enums/screen_size_type.dart'
+    show ScreenSizeType, ScreenSizeTypeExt;
 import '../../extensions/build_context_extensions.dart';
 import '../buttons/custom_button.dart';
 import '../custom_scroll_content.dart';
@@ -36,41 +40,47 @@ class ListEmpty extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomScrollContent(
-      expanded: false,
-      padding: padding,
-      alwaysScrollable: false,
-      child: SafeArea(
-        top: isSafeArea,
-        bottom: isSafeArea,
-        child: Column(
-          crossAxisAlignment: .stretch,
-          mainAxisAlignment: .center,
-          mainAxisSize: .min,
-          children: [
-            if (header != null) ...[header!, Spacing.sm.vertical],
-            Text(
-              message,
-              textAlign: .center,
-              style: context.textTheme.bodyMedium?.copyWith(
-                fontWeight: AppFontWeight.semiBold.value,
-              ),
-            ),
-            if (content != null) ...[
-              Spacing.sm.vertical,
+    return ConstrainedBox(
+      constraints: BoxConstraints(maxWidth: ScreenSizeType.phone.width),
+      child: CustomScrollContent(
+        expanded: false,
+        padding: padding,
+        alwaysScrollable: false,
+        child: SafeArea(
+          top: isSafeArea,
+          bottom: isSafeArea,
+          child: Column(
+            mainAxisSize: .min,
+            mainAxisAlignment: .center,
+            crossAxisAlignment: .stretch,
+            children: [
+              if (header != null) ...[header!, Spacing.sm.vertical],
               Text(
-                content!,
+                message,
                 textAlign: .center,
-                style: context.textTheme.bodySmall?.copyWith(
-                  fontWeight: AppFontWeight.light.value,
+                style: context.textTheme.bodyMedium?.copyWith(
+                  fontWeight: AppFontWeight.semiBold.value,
                 ),
               ),
+              if (content != null) ...[
+                Spacing.sm.vertical,
+                Text(
+                  content!,
+                  textAlign: .center,
+                  style: context.textTheme.bodySmall?.copyWith(
+                    fontWeight: AppFontWeight.light.value,
+                  ),
+                ),
+              ],
+              if (onPressed != null && btnLabel.isNotEmpty) ...[
+                Spacing.sm.vertical,
+                CustomButton.text(
+                  onPressed: onPressed,
+                  text: btnLabel,
+                ),
+              ],
             ],
-            if (onPressed != null && btnLabel.isNotEmpty) ...[
-              Spacing.sm.vertical,
-              CustomButton.text(onPressed: onPressed, text: btnLabel),
-            ],
-          ],
+          ),
         ),
       ),
     );

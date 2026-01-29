@@ -9,24 +9,24 @@ import 'custom_loading.dart';
 class TextLink extends StatelessWidget {
   const TextLink({
     super.key,
+    this.icon,
+    this.onTap,
+    this.maxLines,
+    this.styleText,
     required this.text,
     this.underline = true,
     this.isEnabled = true,
     this.isLoading = false,
-    this.onTap,
-    this.icon,
-    this.styleText,
-    this.maxLines,
     this.textAlign = .center,
   });
 
-  final Function()? onTap;
   final String text;
   final int? maxLines;
   final bool underline;
   final bool isEnabled;
   final bool isLoading;
   final IconData? icon;
+  final Function()? onTap;
   final TextAlign? textAlign;
   final TextStyle? styleText;
 

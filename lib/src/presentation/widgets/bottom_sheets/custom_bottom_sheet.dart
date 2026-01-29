@@ -25,7 +25,7 @@ class CustomBottomSheet {
     BoxConstraints? constraints,
     bool useRootNavigator = true,
     bool isScrollControlled = true,
-    CustomBottomSheetCloseMode closeMode = CustomBottomSheetCloseMode.outside,
+    CustomBottomSheetCloseMode closeMode = .outside,
   }) async {
     return await showModalBottomSheet<T?>(
       elevation: 0,

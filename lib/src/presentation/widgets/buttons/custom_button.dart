@@ -40,7 +40,7 @@ class CustomButton extends StatefulWidget {
       borderRadius: borderRadius,
       loadingPrimaryColor: loadingPrimaryColor,
       loadingSecondaryColor: loadingSecondaryColor,
-      padding: padding ?? .symmetric(horizontal: Spacing.sm.value),
+      padding: padding ?? .symmetric(horizontal: Spacing.xs.value),
       child: CustomTooltip(
         verticalOffset: switch (heightType) {
           .medium => Spacing.md.value,
@@ -90,7 +90,7 @@ class CustomButton extends StatefulWidget {
       borderRadius: borderRadius,
       loadingPrimaryColor: loadingPrimaryColor,
       loadingSecondaryColor: loadingSecondaryColor,
-      padding: padding ?? .symmetric(horizontal: Spacing.sm.value),
+      padding: padding ?? .symmetric(horizontal: Spacing.xs.value),
       child: _iconValue(
         icon,
         type: type,
@@ -131,7 +131,7 @@ class CustomButton extends StatefulWidget {
       borderRadius: borderRadius,
       loadingPrimaryColor: loadingPrimaryColor,
       loadingSecondaryColor: loadingSecondaryColor,
-      padding: padding ?? .symmetric(horizontal: Spacing.sm.value),
+      padding: padding ?? .symmetric(horizontal: Spacing.xs.value),
       child: child,
     );
   }
@@ -167,7 +167,7 @@ class CustomButton extends StatefulWidget {
       decoration: decoration,
       borderColor: borderColor,
       borderRadius: borderRadius,
-      padding: padding ?? .symmetric(horizontal: Spacing.sm.value),
+      padding: padding ?? .symmetric(horizontal: Spacing.xs.value),
       color: color,
       isSafe: isSafe,
       loadingPrimaryColor: loadingPrimaryColor,
@@ -239,7 +239,7 @@ class CustomButton extends StatefulWidget {
       borderRadius: borderRadius,
       loadingPrimaryColor: loadingPrimaryColor,
       loadingSecondaryColor: loadingSecondaryColor,
-      padding: padding ?? .symmetric(horizontal: Spacing.sm.value),
+      padding: padding ?? .symmetric(horizontal: Spacing.xs.value),
       child: CustomTooltip(
         verticalOffset: switch (heightType) {
           .medium => Spacing.md.value,
@@ -281,14 +281,14 @@ class CustomButton extends StatefulWidget {
     this.borderRadius,
     required this.child,
     this.isSafe = false,
+    this.padding = .zero,
+    this.type = .primary,
     this.isEnabled = true,
     this.isLoading = false,
     required this.onPressed,
     this.loadingPrimaryColor,
-    this.loadingSecondaryColor,
-    this.padding = .zero,
-    this.type = .primary,
     this.heightType = .normal,
+    this.loadingSecondaryColor,
   }) : assert(
          color != null && type == .background || color == null,
          '[type] must be background',
@@ -377,7 +377,7 @@ class CustomButton extends StatefulWidget {
               text,
               maxLines: 1,
               textAlign: .center,
-              overflow: TextOverflow.ellipsis,
+              overflow: .ellipsis,
               minFontSize: 8,
               style:
                   textStyle ??
@@ -453,7 +453,7 @@ class _CustomButtonState extends State<CustomButton> {
                 child: child ?? SizedBox(),
               );
             },
-            shape: WidgetStateProperty.all(
+            shape: .all(
               RoundedRectangleBorder(
                 borderRadius: .only(
                   topLeft:
@@ -463,28 +463,26 @@ class _CustomButtonState extends State<CustomButton> {
                       (widget.borderRadius ?? context.theme.borderRadiusXLG)
                           .topRight,
                   bottomLeft: widget.isSafe
-                      ? Radius.zero
+                      ? .zero
                       : (widget.borderRadius ?? context.theme.borderRadiusXLG)
                             .bottomLeft,
                   bottomRight: widget.isSafe
-                      ? Radius.zero
+                      ? .zero
                       : (widget.borderRadius ?? context.theme.borderRadiusXLG)
                             .bottomRight,
                 ),
               ),
             ),
-            side: WidgetStateProperty.all(
-              BorderSide(color: _borderColor, width: .5),
-            ),
-            visualDensity: VisualDensity.compact,
-            elevation: WidgetStateProperty.all(0),
-            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            padding: WidgetStateProperty.all(widget.padding),
-            minimumSize: WidgetStateProperty.all(_minimumSize),
-            shadowColor: WidgetStateProperty.all(Colors.transparent),
-            backgroundColor: WidgetStateProperty.all(_backgroundColor),
-            surfaceTintColor: WidgetStateProperty.all(_surfaceTintColor),
-            overlayColor: WidgetStateProperty.all(_surfaceTintColor),
+            side: .all(BorderSide(color: _borderColor, width: .5)),
+            elevation: .all(0),
+            visualDensity: .compact,
+            tapTargetSize: .shrinkWrap,
+            padding: .all(widget.padding),
+            minimumSize: .all(_minimumSize),
+            overlayColor: .all(_surfaceTintColor),
+            shadowColor: .all(Colors.transparent),
+            backgroundColor: .all(_backgroundColor),
+            surfaceTintColor: .all(_surfaceTintColor),
           ),
           clipBehavior: .antiAliasWithSaveLayer,
           child: SafeArea(
@@ -510,14 +508,29 @@ class _CustomButtonState extends State<CustomButton> {
   AnimatedSwitcher get _child {
     return AnimatedSwitcher(
       duration: const Duration(milliseconds: 500),
-      child: widget.isLoading
-          ? CustomLoading(
-              primaryColor: widget.loadingPrimaryColor,
-              secondaryColor: widget.loadingSecondaryColor,
-              height: const Spacing(1).value,
-              width: const Spacing(1).value,
-            )
-          : widget.child,
+      child: Row(
+        mainAxisSize: .min,
+        spacing: Spacing.xs.value,
+        children: [
+          widget.child,
+          if (widget.isLoading)
+            DecoratedBox(
+              decoration: BoxDecoration(
+                color: _surfaceTintColor,
+                shape: .circle,
+              ),
+              child: Padding(
+                padding: .all(Spacing.xs.value),
+                child: CustomLoading(
+                  secondaryColor: widget.loadingSecondaryColor,
+                  primaryColor: widget.loadingPrimaryColor,
+                  height: const Spacing(1).value,
+                  width: const Spacing(1).value,
+                ),
+              ),
+            ),
+        ],
+      ),
     );
   }
 

@@ -8,10 +8,10 @@ class CustomWrap<T> extends StatelessWidget {
     this.runSpacing = 8,
     required this.items,
     this.padding = .zero,
+    this.alignment = .start,
+    this.runAlignment = .start,
     this.useIntrinsicHeight = false,
-    this.alignment = WrapAlignment.start,
-    this.runAlignment = WrapAlignment.start,
-    this.crossAxisAlignment = WrapCrossAlignment.center,
+    this.crossAxisAlignment = .center,
   });
   final int? nCols;
   final double spacing;

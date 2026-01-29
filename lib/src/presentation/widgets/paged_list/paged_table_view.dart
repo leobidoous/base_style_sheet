@@ -45,12 +45,14 @@ class PagedTableView<E, S> extends StatefulWidget {
     this.thickness,
     this.refreshLogo,
     this.boxDecoration,
+    this.padding = .zero,
     required this.columns,
     required this.context,
+    this.scrollController,
     this.shrinkWrap = false,
     this.allowRefresh = true,
+    this.parentScrollController,
     required this.tableController,
-    this.padding = .zero,
     this.allowHorizontalScroll = true,
     this.noItemsFoundIndicatorBuilder,
     this.newPageErrorIndicatorBuilder,
@@ -71,6 +73,8 @@ class PagedTableView<E, S> extends StatefulWidget {
   final bool allowHorizontalScroll;
   final BoxDecoration? boxDecoration;
   final List<TableColumnConfig<S>> columns;
+  final ScrollController? scrollController;
+  final ScrollController? parentScrollController;
   final PagedListController<E, S> tableController;
   final Widget Function(BuildContext context, Function() onRefresh)?
   noItemsFoundIndicatorBuilder;
@@ -88,11 +92,15 @@ class PagedTableView<E, S> extends StatefulWidget {
 
 class _PagedTableViewState<E, S> extends State<PagedTableView<E, S>> {
   late final PagedListController<E, S> _listController;
-  final _scrollController = ScrollController();
+  late final ScrollController _scrollController;
 
   @override
   void initState() {
     super.initState();
+    _scrollController =
+        widget.scrollController ??
+        widget.parentScrollController ??
+        ScrollController();
     _listController = widget.tableController;
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (_listController.config.initWithRequest) _listController.refresh();
@@ -101,7 +109,10 @@ class _PagedTableViewState<E, S> extends State<PagedTableView<E, S>> {
 
   @override
   void dispose() {
-    _scrollController.dispose();
+    if (widget.scrollController == null &&
+        widget.parentScrollController == null) {
+      _scrollController.dispose();
+    }
     super.dispose();
   }
 
