@@ -23,7 +23,7 @@ class PagedWrapView<E, S> extends StatefulWidget {
     this.parentScrollController,
     required this.listController,
     this.safeAreaLastItem = true,
-    this.padding = EdgeInsets.zero,
+    this.padding = .zero,
     required this.separatorBuilder,
     this.noItemsFoundIndicatorBuilder,
     this.newPageErrorIndicatorBuilder,
@@ -153,7 +153,7 @@ class _PagedListViewState<E, S> extends State<PagedWrapView<E, S>> {
           onRefresh: _listController.refresh,
           refreshLogo: widget.refreshLogo,
           child: RawScrollbar(
-            padding: EdgeInsets.zero,
+            padding: .zero,
             thumbColor: context.colorScheme.primary,
             radius: context.theme.borderRadiusXLG.bottomLeft,
             thickness: widget.thickness ?? (kIsWeb ? 0 : null),
@@ -194,7 +194,7 @@ class _PagedListViewState<E, S> extends State<PagedWrapView<E, S>> {
           widget.safeAreaLastItem,
       child: switch (widget.scrollDirection) {
         Axis.horizontal => Row(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisSize: .min,
           children: [
             if (_listController.reverse)
               if (items.last == items[index]) ..._errorAndLoading(index),
@@ -204,8 +204,8 @@ class _PagedListViewState<E, S> extends State<PagedWrapView<E, S>> {
           ],
         ),
         Axis.vertical => Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisSize: .min,
+          crossAxisAlignment: .stretch,
           children: [
             if (_listController.reverse)
               if (items.last == items[index]) ..._errorAndLoading(index),
@@ -229,7 +229,7 @@ class _PagedListViewState<E, S> extends State<PagedWrapView<E, S>> {
               _fetchItemsAndScroll,
             ) ??
             CustomRequestError(
-              padding: EdgeInsets.zero,
+              padding: .zero,
               onPressed: _fetchItemsAndScroll,
               message: _listController.error.toString(),
             ),

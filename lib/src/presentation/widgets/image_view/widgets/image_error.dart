@@ -3,14 +3,11 @@ import 'package:flutter/material.dart'
         BoxDecoration,
         BuildContext,
         Column,
-        CrossAxisAlignment,
         Divider,
-        EdgeInsets,
         Flexible,
         Icon,
         Icons,
         InkWell,
-        MainAxisSize,
         Padding,
         RichText,
         State,
@@ -61,10 +58,10 @@ class _ImageErrorState extends State<ImageError> {
 
   Widget _buildErrorDialog(Object error, StackTrace? stackTrace) {
     return Padding(
-      padding: const EdgeInsets.all(12),
+      padding: const .all(12),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: .stretch,
+        mainAxisSize: .min,
         children: [
           Text('Image Error', style: context.textTheme.titleLarge),
           Divider(color: context.colorScheme.onSurface),

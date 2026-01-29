@@ -114,66 +114,74 @@ class CustomExpansionState<T> extends State<CustomExpansion<T>>
   Widget build(BuildContext context) {
     return Semantics(
       button: true,
-      child: InkWell(
-        onTap: () {
-          widget.onTap != null ? widget.onTap!() : _onChangeExpansion();
-        },
-        borderRadius: context.theme.borderRadiusMD,
-        overlayColor: WidgetStatePropertyAll(Colors.transparent),
-        child: AnimatedBuilder(
-          animation: _animationController,
-          child: Semantics(
-            button: !widget.allowDismissOnBody,
-            child: InkWell(
-              borderRadius: context.theme.borderRadiusMD,
-              onTap: !widget.allowDismissOnBody ? () {} : null,
-              overlayColor: WidgetStatePropertyAll(Colors.transparent),
-              child: widget.body ?? const SizedBox(),
+      child: Opacity(
+        opacity: widget.isEnabled ? 1 : .5,
+        child: AbsorbPointer(
+          absorbing: !widget.isEnabled,
+          child: InkWell(
+            onTap: () {
+              widget.onTap != null ? widget.onTap!() : _onChangeExpansion();
+            },
+            borderRadius: context.theme.borderRadiusMD,
+            overlayColor: WidgetStatePropertyAll(Colors.transparent),
+            child: AnimatedBuilder(
+              animation: _animationController,
+              child: Semantics(
+                button: !widget.allowDismissOnBody,
+                child: InkWell(
+                  borderRadius: context.theme.borderRadiusMD,
+                  onTap: !widget.allowDismissOnBody ? () {} : null,
+                  overlayColor: WidgetStatePropertyAll(Colors.transparent),
+                  child: widget.body ?? const SizedBox(),
+                ),
+              ),
+              builder: (_, child) {
+                return Column(
+                  mainAxisSize: .min,
+                  crossAxisAlignment: widget.crossAxisAlignment,
+                  children: [
+                    Padding(
+                      padding: widget.padding,
+                      child: Row(
+                        mainAxisSize: .min,
+                        mainAxisAlignment: .spaceBetween,
+                        children: [
+                          Flexible(child: widget.title),
+                          if (widget.showTrailing) ...[
+                            RotationTransition(
+                              turns: _rotateAnimation,
+                              child: CustomButton.icon(
+                                type: .noShape,
+                                heightType: .small,
+                                iconColor: widget.iconColor,
+                                onPressed: _onChangeExpansion,
+                                icon:
+                                    widget.icon ??
+                                    switch (widget.initialState) {
+                                      .opened =>
+                                        Icons.keyboard_arrow_up_rounded,
+                                      .closed =>
+                                        Icons.keyboard_arrow_down_rounded,
+                                    },
+                              ),
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
+                    FadeTransition(
+                      opacity: _animation,
+                      child: SizeTransition(
+                        sizeFactor: _animation,
+                        axisAlignment: 1,
+                        child: child!,
+                      ),
+                    ),
+                  ],
+                );
+              },
             ),
           ),
-          builder: (_, child) {
-            return Column(
-              mainAxisSize: .min,
-              crossAxisAlignment: widget.crossAxisAlignment,
-              children: [
-                Padding(
-                  padding: widget.padding,
-                  child: Row(
-                    mainAxisSize: .min,
-                    mainAxisAlignment: .spaceBetween,
-                    children: [
-                      Flexible(child: widget.title),
-                      if (widget.showTrailing) ...[
-                        RotationTransition(
-                          turns: _rotateAnimation,
-                          child: CustomButton.icon(
-                            type: .noShape,
-                            heightType: .small,
-                            iconColor: widget.iconColor,
-                            onPressed: _onChangeExpansion,
-                            icon:
-                                widget.icon ??
-                                switch (widget.initialState) {
-                                  .opened => Icons.keyboard_arrow_up_rounded,
-                                  .closed => Icons.keyboard_arrow_down_rounded,
-                                },
-                          ),
-                        ),
-                      ],
-                    ],
-                  ),
-                ),
-                FadeTransition(
-                  opacity: _animation,
-                  child: SizeTransition(
-                    sizeFactor: _animation,
-                    axisAlignment: 1,
-                    child: child!,
-                  ),
-                ),
-              ],
-            );
-          },
         ),
       ),
     );

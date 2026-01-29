@@ -10,7 +10,7 @@ class BottomSheetDragIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(top: Spacing.xs.value),
+      padding: .only(top: Spacing.xs.value),
       child: DecoratedBox(
         decoration: BoxDecoration(
           color: context.colorScheme.primaryContainer,

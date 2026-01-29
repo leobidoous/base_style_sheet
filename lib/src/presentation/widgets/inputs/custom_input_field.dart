@@ -28,7 +28,7 @@ class CustomInputField extends StatefulWidget {
     this.borderSide,
     this.controller,
     this.errorStyle,
-    this.labelWidget,
+    this.inputLabel,
     this.borderRadius,
     this.maxLines = 1,
     this.onTapOutside,
@@ -48,18 +48,18 @@ class CustomInputField extends StatefulWidget {
     this.autofocus = false,
     this.onEditingComplete,
     this.isCollapsed = true,
+    this.textAlign = .start,
     this.autocorrect = false,
     this.obscureText = false,
+    this.heightType = .medium,
     this.opacityDisabled = 0.5,
     this.autofillHints = const [],
     this.enableSuggestions = false,
     this.inputFormatters = const [],
-    this.textAlign = TextAlign.start,
+    this.floatingLabelBehavior = .always,
+    this.textCapitalization = .sentences,
     this.enableinteractiveSelection = true,
-    this.heightType = InputHeightType.medium,
-    this.textCapitalization = TextCapitalization.sentences,
-    this.floatingLabelBehavior = FloatingLabelBehavior.always,
-    this.autovalidateMode = AutovalidateMode.onUserInteraction,
+    this.autovalidateMode = .onUserInteraction,
   });
 
   final List<String? Function(String?)>? validators;
@@ -104,7 +104,7 @@ class CustomInputField extends StatefulWidget {
   final Function(String)? onFieldSubmitted;
   final Function()? onEditingComplete;
   final Function()? onTap;
-  final InputLabel? labelWidget;
+  final InputLabel? inputLabel;
   final FloatingLabelBehavior floatingLabelBehavior;
   final InputBorder? focusedBorder;
   final BorderSide? borderSide;
@@ -166,11 +166,11 @@ class _CustomInputFieldState extends State<CustomInputField> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+      mainAxisSize: .min,
+      crossAxisAlignment: .stretch,
       children: [
-        if (widget.labelWidget != null) ...[
-          widget.labelWidget!,
+        if (widget.inputLabel != null) ...[
+          widget.inputLabel!,
           Spacing.xxxs.vertical,
         ],
         Flexible(
@@ -203,7 +203,7 @@ class _CustomInputFieldState extends State<CustomInputField> {
               textCapitalization: widget.textCapitalization,
               cursorRadius: Radius.circular(Spacing.md.value),
               enableInteractiveSelection: widget.enableinteractiveSelection,
-              textInputAction: widget.textInputAction ?? TextInputAction.done,
+              textInputAction: widget.textInputAction ?? .done,
               style: context.textTheme.bodyMedium?.copyWith(
                 fontWeight: AppFontWeight.normal.value,
                 fontSize: _fontSize,
@@ -255,7 +255,7 @@ class _CustomInputFieldState extends State<CustomInputField> {
                     ),
                 contentPadding:
                     widget.contentPadding ??
-                    EdgeInsets.symmetric(
+                    .symmetric(
                       horizontal: _fontSize,
                       vertical: widget.maxLines > 1 ? _fontSize : 0,
                     ),

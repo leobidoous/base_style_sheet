@@ -40,14 +40,14 @@ class _DropdownList<T> extends StatelessWidget {
       noItemsFoundIndicatorBuilder: (_, onRefresh) {
         return ListEmpty(
           message: 'Nenhum item encontrado',
-          padding: padding ?? EdgeInsets.all(Spacing.sm.value),
+          padding: padding ?? .all(Spacing.sm.value),
         );
       },
       firstPageProgressIndicatorBuilder: (_) {
         return ListView.separated(
           itemCount: 5,
           shrinkWrap: true,
-          padding: EdgeInsets.zero,
+          padding: .zero,
           separatorBuilder: (_, index) => const CustomDivider(height: 0),
           itemBuilder: (_, index) {
             return CustomCard(
@@ -62,9 +62,9 @@ class _DropdownList<T> extends StatelessWidget {
                   DropdownHeightType.small => AppThemeBase.buttonHeightSM,
                 },
               ),
-              padding: padding ?? EdgeInsets.symmetric(horizontal: fontSize),
+              padding: padding ?? .symmetric(horizontal: fontSize),
               child: Align(
-                alignment: Alignment.centerLeft,
+                alignment: .centerLeft,
                 child: CustomShimmer(height: fontSize),
               ),
             );
@@ -77,7 +77,7 @@ class _DropdownList<T> extends StatelessWidget {
           onPressed: onRefresh,
           message: error?.toString(),
           btnLabel: 'Buscar novamente',
-          padding: padding ?? EdgeInsets.all(Spacing.sm.value),
+          padding: padding ?? .all(Spacing.sm.value),
         );
       },
       firstPageErrorIndicatorBuilder: (_, error, onRefresh) {
@@ -86,7 +86,7 @@ class _DropdownList<T> extends StatelessWidget {
           onPressed: onRefresh,
           btnLabel: 'Buscar novamente',
           message: error?.toString(),
-          padding: padding ?? EdgeInsets.all(Spacing.sm.value),
+          padding: padding ?? .all(Spacing.sm.value),
         );
       },
       itemBuilder: (context, item, index) {
@@ -103,9 +103,9 @@ class _DropdownList<T> extends StatelessWidget {
               DropdownHeightType.small => AppThemeBase.buttonHeightSM,
             },
           ),
-          padding: padding ?? EdgeInsets.symmetric(horizontal: fontSize),
+          padding: padding ?? .symmetric(horizontal: fontSize),
           child: Align(
-            alignment: Alignment.centerLeft,
+            alignment: .centerLeft,
             child:
                 item.item ??
                 CustomScrollContent(

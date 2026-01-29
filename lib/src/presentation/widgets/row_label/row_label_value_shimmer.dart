@@ -24,7 +24,7 @@ class _RowLabelValueShimmerState extends State<RowLabelValueShimmer> {
     return LayoutBuilder(
       builder: (context, constrains) {
         return Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: .spaceBetween,
           children: [
             Flexible(
               flex: 4,

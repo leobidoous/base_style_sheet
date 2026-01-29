@@ -11,7 +11,6 @@ import 'package:flutter/material.dart'
         Colors,
         CurvedAnimation,
         Curves,
-        EdgeInsets,
         FadeTransition,
         FilterQuality,
         Icon,
@@ -168,9 +167,7 @@ class _CustomPhotoViewState extends State<CustomPhotoView>
               return Center(
                 child: CustomRequestError(
                   message: stackTrace.toString(),
-                  padding: EdgeInsets.symmetric(
-                    horizontal: const Spacing(3).value,
-                  ),
+                  padding: .symmetric(horizontal: const Spacing(3).value),
                 ),
               );
             },

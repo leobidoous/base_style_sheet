@@ -25,13 +25,11 @@ class AppBarButton extends StatelessWidget {
 
   static Widget shimmer({bool isLastButtom = true, double? padding}) {
     return Padding(
-      padding: EdgeInsets.only(
-        right: isLastButtom ? (padding ?? Spacing.sm.value) : 0,
-      ),
+      padding: .only(right: isLastButtom ? (padding ?? Spacing.sm.value) : 0),
       child: CustomButton.child(
-        padding: EdgeInsets.zero,
-        type: ButtonType.noShape,
-        heightType: ButtonHeightType.small,
+        padding: .zero,
+        type: .noShape,
+        heightType: .small,
         child: CustomShimmer(
           height: AppFontSize.iconButton.value,
           width: AppFontSize.iconButton.value,
@@ -43,16 +41,14 @@ class AppBarButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(
-        right: isLastButtom ? (padding ?? Spacing.sm.value) : 0,
-      ),
+      padding: .only(right: isLastButtom ? (padding ?? Spacing.sm.value) : 0),
       child: CustomButton.child(
         isEnabled: isEnabled,
-        padding: EdgeInsets.zero,
-        type: ButtonType.noShape,
+        padding: .zero,
+        type: .noShape,
         borderRadius: borderRadius,
         onPressed: isEnabled ? onTap : null,
-        heightType: ButtonHeightType.small,
+        heightType: .small,
         child: child,
       ),
     );

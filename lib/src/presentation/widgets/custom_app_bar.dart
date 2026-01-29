@@ -39,7 +39,7 @@ class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
     this.enableShadow = true,
     this.linearProgressPadding,
     this.scrolledUnderElevation,
-    this.titlePadding = EdgeInsets.zero,
+    this.titlePadding = .zero,
     this.automaticallyImplyLeading = true,
   });
 
@@ -124,8 +124,8 @@ class _CustomAppBarState extends State<CustomAppBar>
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+      mainAxisSize: .min,
+      crossAxisAlignment: .stretch,
       children: [
         Flexible(
           child: DecoratedBox(
@@ -200,9 +200,9 @@ class _CustomAppBarState extends State<CustomAppBar>
                       child: CustomButton.child(
                         onPressed:
                             widget.onBackTap ?? Navigator.of(context).pop,
-                        type: ButtonType.noShape,
-                        padding: EdgeInsets.zero,
-                        heightType: ButtonHeightType.small,
+                        type: .noShape,
+                        padding: .zero,
+                        heightType: .small,
                         child:
                             widget.leadingIcon ??
                             Icon(
@@ -220,7 +220,7 @@ class _CustomAppBarState extends State<CustomAppBar>
           Padding(
             padding:
                 widget.linearProgressPadding ??
-                EdgeInsets.symmetric(horizontal: Spacing.sm.value),
+                .symmetric(horizontal: Spacing.sm.value),
             child: ClipRRect(
               borderRadius: context.theme.borderRadiusXLG,
               child: AnimatedBuilder(

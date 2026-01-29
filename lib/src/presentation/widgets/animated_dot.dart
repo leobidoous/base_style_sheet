@@ -72,8 +72,8 @@ class _AnimatedDotState extends State<AnimatedDot>
             color: widget.selected ? context.colorScheme.primary : Colors.grey,
             borderRadius: context.theme.borderRadiusLG,
           ),
-          clipBehavior: Clip.antiAliasWithSaveLayer,
-          margin: const EdgeInsets.symmetric(horizontal: 2),
+          clipBehavior: .antiAliasWithSaveLayer,
+          margin: const .symmetric(horizontal: 2),
           child: AnimatedSize(
             curve: Curves.easeIn,
             duration: duration,

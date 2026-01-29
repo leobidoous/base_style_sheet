@@ -19,7 +19,7 @@ class DashedRect extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(strokeWidth / 2),
+      padding: .all(strokeWidth / 2),
       child: CustomPaint(
         painter: DashRectPainter(
           strokeWidth: strokeWidth,

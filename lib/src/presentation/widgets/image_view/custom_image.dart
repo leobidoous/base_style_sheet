@@ -56,7 +56,7 @@ class CustomImage extends StatelessWidget {
     this.maxHeightDiskCache,
     this.fit = BoxFit.contain,
     this.enableGestures = false,
-    this.borderRadius = BorderRadius.zero,
+    this.borderRadius = .zero,
   });
 
   final File? file;

@@ -12,7 +12,7 @@ class CustomCheckboxTile<T> extends StatelessWidget {
     this.title,
     this.textTitle,
     this.isSelected = false,
-    this.padding = EdgeInsets.zero,
+    this.padding = .zero,
     this.controlAffinity = ListTileControlAffinity.leading,
   });
 
@@ -34,7 +34,7 @@ class CustomCheckboxTile<T> extends StatelessWidget {
         child: Padding(
           padding: padding,
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+            crossAxisAlignment: .stretch,
             children: [
               Row(
                 children: [

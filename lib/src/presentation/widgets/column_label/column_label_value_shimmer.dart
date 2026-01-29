@@ -11,7 +11,7 @@ class ColumnLabelValueShimmer extends StatefulWidget {
     super.key,
     this.nLabelLines = 1,
     this.nValueLines = 1,
-    this.crossAxisAlignment = CrossAxisAlignment.start,
+    this.crossAxisAlignment = .start,
   });
 
   final int nLabelLines;
@@ -41,9 +41,9 @@ class _ColumnLabelValueShimmerState extends State<ColumnLabelValueShimmer> {
               itemBuilder: (_, index) {
                 final factor = _random.nextInt(10);
                 return Align(
-                  alignment: Alignment.centerLeft,
+                  alignment: .centerLeft,
                   child: Padding(
-                    padding: EdgeInsets.only(
+                    padding: .only(
                       bottom: index == widget.nLabelLines - 1
                           ? 0
                           : Spacing.xxs.value,
@@ -68,9 +68,9 @@ class _ColumnLabelValueShimmerState extends State<ColumnLabelValueShimmer> {
               itemBuilder: (_, index) {
                 final factor = _random.nextInt(10);
                 return Align(
-                  alignment: Alignment.centerLeft,
+                  alignment: .centerLeft,
                   child: Padding(
-                    padding: EdgeInsets.only(
+                    padding: .only(
                       bottom: index == widget.nValueLines - 1
                           ? 0
                           : Spacing.xxs.value,

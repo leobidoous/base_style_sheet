@@ -60,7 +60,7 @@ class CustomAlert extends StatelessWidget {
     onPressed: onCancel,
     text: btnCancelLabel,
     isLoading: cancelIsLoading,
-    type: ButtonType.background,
+    type: .background,
   );
 
   @override
@@ -68,8 +68,8 @@ class CustomAlert extends StatelessWidget {
     return CustomScrollContent(
       expanded: false,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: .stretch,
+        mainAxisSize: .min,
         children: [
           if (header != null) ...[header!, verticalSpacing.vertical],
           if (svgAsset != null || asset != null) ...[
@@ -85,7 +85,7 @@ class CustomAlert extends StatelessWidget {
           if (title != null) ...[
             Text(
               title!,
-              textAlign: TextAlign.center,
+              textAlign: .center,
               style: titleStyle ?? context.textTheme.titleMedium,
             ),
             verticalSpacing.vertical,
@@ -93,7 +93,7 @@ class CustomAlert extends StatelessWidget {
           if (subtitle != null) ...[
             Text(
               subtitle!,
-              textAlign: TextAlign.center,
+              textAlign: .center,
               style: context.textTheme.bodyLarge,
             ),
             verticalSpacing.vertical,
@@ -101,7 +101,7 @@ class CustomAlert extends StatelessWidget {
           if (content != null) ...[
             SelectableText(
               content!,
-              textAlign: TextAlign.center,
+              textAlign: .center,
               style: context.textTheme.bodyMedium,
             ),
             verticalSpacing.vertical,
@@ -126,8 +126,8 @@ class CustomAlert extends StatelessWidget {
             ],
             Axis.vertical => [
               Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: .min,
+                crossAxisAlignment: .stretch,
                 children: [
                   if (onConfirm != null) _confirmButtom,
                   if (onCancel != null && onConfirm != null)
@@ -145,7 +145,7 @@ class CustomAlert extends StatelessWidget {
                   .map(
                     (e) => Expanded(
                       child: Padding(
-                        padding: EdgeInsets.only(
+                        padding: .only(
                           right: buttons.last == e
                               ? 0
                               : horizontalSpacing.value,
@@ -157,12 +157,12 @@ class CustomAlert extends StatelessWidget {
                   .toList(),
             ),
             Axis.vertical => Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisSize: .min,
+              crossAxisAlignment: .stretch,
               children: buttons
                   .map(
                     (b) => Padding(
-                      padding: EdgeInsets.only(
+                      padding: .only(
                         bottom: buttons.last == b ? 0 : horizontalSpacing.value,
                       ),
                       child: b,

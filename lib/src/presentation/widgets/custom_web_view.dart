@@ -154,9 +154,7 @@ class CustomWebViewState extends State<CustomWebView> {
             return const Center(child: CustomLoading());
           } else if (_hasError) {
             return Center(
-              child: CustomRequestError(
-                padding: EdgeInsets.all(Spacing.sm.value),
-              ),
+              child: CustomRequestError(padding: .all(Spacing.sm.value)),
             );
           }
           return SafeArea(child: WebViewWidget(controller: _webViewController));

@@ -9,7 +9,7 @@ class CustomSnackBar {
   static void snackShowMessage({
     required BuildContext context,
     required String message,
-    SnackBarType type = SnackBarType.info,
+    SnackBarType type = .info,
     Duration? duration,
     GlobalKey? key,
   }) {
@@ -22,9 +22,9 @@ class CustomSnackBar {
           children: <Widget>[
             Icon(
               switch (type) {
-                SnackBarType.info => Icons.info_rounded,
-                SnackBarType.success => Icons.check_circle_outline_rounded,
-                SnackBarType.error => Icons.error,
+                .info => Icons.info_rounded,
+                .success => Icons.check_circle_outline_rounded,
+                .error => Icons.error,
               },
               color: Theme.of(context).colorScheme.surface,
               size: AppFontSize.iconButton.value,
@@ -43,9 +43,9 @@ class CustomSnackBar {
           ],
         ),
         backgroundColor: switch (type) {
-          SnackBarType.error => context.colorScheme.error,
-          SnackBarType.info => context.colorScheme.secondary,
-          SnackBarType.success => context.colorScheme.primary,
+          .error => context.colorScheme.error,
+          .info => context.colorScheme.secondary,
+          .success => context.colorScheme.primary,
         },
         duration: duration ?? const Duration(seconds: 5),
         behavior: SnackBarBehavior.floating,
@@ -59,7 +59,7 @@ class CustomSnackBar {
   static void toastShowMessage({
     required BuildContext context,
     required String message,
-    SnackBarType type = SnackBarType.info,
+    SnackBarType type = .info,
     EdgeInsets? padding,
     TextStyle? style,
     Color? infoColor,
@@ -84,7 +84,7 @@ class CustomSnackBar {
               right: 0,
               child: SafeArea(
                 child: Padding(
-                  padding: padding ?? EdgeInsets.all(Spacing.sm.value),
+                  padding: padding ?? .all(Spacing.sm.value),
                   child: child,
                 ),
               ),
@@ -93,27 +93,27 @@ class CustomSnackBar {
           child: CustomCard(
             key: key ?? ValueKey('Toast_${context.hashCode}'),
             color: switch (type) {
-              SnackBarType.error => errorColor ?? Colors.red,
-              SnackBarType.info => infoColor ?? Colors.orange,
-              SnackBarType.success => successColor ?? Colors.green,
+              .error => errorColor ?? Colors.red,
+              .info => infoColor ?? Colors.orange,
+              .success => successColor ?? Colors.green,
             },
             constraints: BoxConstraints(maxWidth: ScreenSizeType.phone.width),
             borderRadius: context.theme.borderRadiusSM,
-            padding: EdgeInsets.all(Spacing.sm.value),
+            padding: .all(Spacing.sm.value),
             child: Row(
               children: <Widget>[
                 Icon(
                   switch (type) {
-                    SnackBarType.error => Icons.error,
-                    SnackBarType.info => Icons.info_rounded,
-                    SnackBarType.success => Icons.check_circle_outline_rounded,
+                    .error => Icons.error,
+                    .info => Icons.info_rounded,
+                    .success => Icons.check_circle_outline_rounded,
                   },
                   size: AppFontSize.iconButton.value,
                   color:
                       style?.color ??
                       switch (type) {
-                        SnackBarType.info => Colors.black,
-                        SnackBarType() => Colors.white,
+                        .info => Colors.black,
+                        _ => Colors.white,
                       },
                 ),
                 Spacing.xs.horizontal,
@@ -124,8 +124,8 @@ class CustomSnackBar {
                         style ??
                         context.textTheme.bodyMedium?.copyWith(
                           color: switch (type) {
-                            SnackBarType.info => Colors.black,
-                            SnackBarType() => Colors.white,
+                            .info => Colors.black,
+                            _ => Colors.white,
                           },
                         ),
                   ),
@@ -137,11 +137,11 @@ class CustomSnackBar {
                     iconColor:
                         style?.color ??
                         switch (type) {
-                          SnackBarType.info => Colors.black,
-                          SnackBarType() => Colors.white,
+                          .info => Colors.black,
+                          _ => Colors.white,
                         },
-                    type: ButtonType.noShape,
-                    heightType: ButtonHeightType.small,
+                    type: .noShape,
+                    heightType: .small,
                     onPressed: FToast().removeQueuedCustomToasts,
                   ),
                 ],

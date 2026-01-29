@@ -22,13 +22,13 @@ class AppThemeBase {
   static double get buttonHeightMD => 48.responsiveHeight;
   static double get buttonHeightLG => 56.responsiveHeight;
 
-  static BorderRadius get borderRadiusNone => BorderRadius.zero;
-  static BorderRadius get borderRadiusXSM => BorderRadius.circular(4);
-  static BorderRadius get borderRadiusSM => BorderRadius.circular(8);
-  static BorderRadius get borderRadiusNM => BorderRadius.circular(12);
-  static BorderRadius get borderRadiusMD => BorderRadius.circular(16);
-  static BorderRadius get borderRadiusLG => BorderRadius.circular(24);
-  static BorderRadius get borderRadiusXLG => BorderRadius.circular(32);
+  static BorderRadius get borderRadiusNone => .zero;
+  static BorderRadius get borderRadiusXSM => .circular(4);
+  static BorderRadius get borderRadiusSM => .circular(8);
+  static BorderRadius get borderRadiusNM => .circular(12);
+  static BorderRadius get borderRadiusMD => .circular(16);
+  static BorderRadius get borderRadiusLG => .circular(24);
+  static BorderRadius get borderRadiusXLG => .circular(32);
 
   static double get borderWidthSM => 1.5.responsiveWidth;
   static double get borderWidthXS => 1.responsiveWidth;

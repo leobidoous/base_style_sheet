@@ -23,7 +23,7 @@ class TableColumnConfig<S> {
     this.boxDecoration,
     required this.header,
     required this.cellBuilder,
-    this.alignment = Alignment.centerLeft,
+    this.alignment = .centerLeft,
   }) : assert(
          width == null || flex == null,
          'Não é possível definir width e flex simultaneamente',
@@ -50,14 +50,14 @@ class PagedTableView<E, S> extends StatefulWidget {
     this.shrinkWrap = false,
     this.allowRefresh = true,
     required this.tableController,
-    this.padding = EdgeInsets.zero,
+    this.padding = .zero,
     this.allowHorizontalScroll = true,
     this.noItemsFoundIndicatorBuilder,
     this.newPageErrorIndicatorBuilder,
     this.firstPageErrorIndicatorBuilder,
     this.newPageProgressIndicatorBuilder,
     this.firstPageProgressIndicatorBuilder,
-    this.clipBehavior = Clip.antiAliasWithSaveLayer,
+    this.clipBehavior = .antiAliasWithSaveLayer,
   });
 
   final bool shrinkWrap;
@@ -111,7 +111,7 @@ class _PagedTableViewState<E, S> extends State<PagedTableView<E, S>> {
       valueListenable: _listController,
       builder: (context, state, child) {
         final child = RawScrollbar(
-          padding: EdgeInsets.zero,
+          padding: .zero,
           controller: _scrollController,
           thumbColor: context.colorScheme.primary,
           radius: context.theme.borderRadiusXLG.bottomLeft,
@@ -155,7 +155,7 @@ class _PagedTableViewState<E, S> extends State<PagedTableView<E, S>> {
       padding: widget.padding,
       scrollController: _scrollController,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        crossAxisAlignment: .stretch,
         children: [
           if (_listController.isLoading)
             widget.firstPageProgressIndicatorBuilder?.call(context) ??
@@ -185,7 +185,7 @@ class _PagedTableViewState<E, S> extends State<PagedTableView<E, S>> {
                 )
           else if (_listController.hasError)
             Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+              crossAxisAlignment: .stretch,
               children: [
                 widget.firstPageErrorIndicatorBuilder?.call(
                       context,
@@ -229,7 +229,7 @@ class _PagedTableViewState<E, S> extends State<PagedTableView<E, S>> {
             )
           else if (state.isEmpty)
             Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+              crossAxisAlignment: .stretch,
               children: [
                 widget.noItemsFoundIndicatorBuilder?.call(
                       context,
@@ -369,7 +369,7 @@ class _PagedTableViewState<E, S> extends State<PagedTableView<E, S>> {
         Spacing.sm.horizontal,
         Expanded(
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisAlignment: .end,
             children: [
               CustomButton.iconText(
                 text: 'Anterior',

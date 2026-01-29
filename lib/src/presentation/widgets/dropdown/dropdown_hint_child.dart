@@ -88,20 +88,20 @@ class _DropdownHintChildState extends State<_DropdownHintChild> {
       autocorrect: true,
       onTap: widget.onTap,
       focusNode: _focusNode,
+      textInputAction: .done,
       enableSuggestions: true,
       enabled: widget.isEnabled,
       autofocus: widget.canFocus,
       hintText: widget.placeholder,
       controller: _editingController,
+      fillColor: widget.boxDecoration?.color,
+      onEditingComplete: widget.onEditingComplete,
+      borderRadius: context.theme.borderRadiusNone,
       readOnly: widget.readOnly || !widget.canSearch,
       onChanged: (input) {
         widget.onTap?.call();
         widget.onSearchChanged?.call(input);
       },
-      textInputAction: .done,
-      fillColor: widget.boxDecoration?.color,
-      onEditingComplete: widget.onEditingComplete,
-      borderRadius: context.theme.borderRadiusNone,
       heightType: switch (widget.heightType) {
         .medium => .medium,
         .normal => .normal,

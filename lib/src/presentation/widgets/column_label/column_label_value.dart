@@ -21,8 +21,8 @@ class ColumnLabelValue extends StatelessWidget {
     this.spacing,
     this.onTapTooltip,
     this.tooltipIconColor,
-    this.mainAxisAlignment = MainAxisAlignment.start,
-    this.crossAxisAlignment = CrossAxisAlignment.start,
+    this.mainAxisAlignment = .start,
+    this.crossAxisAlignment = .start,
   });
 
   final String label;

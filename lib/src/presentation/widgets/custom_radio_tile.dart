@@ -11,10 +11,10 @@ class CustomRadioTile<T> extends StatelessWidget {
     this.enabled = true,
     required this.title,
     required this.value,
+    this.padding = .zero,
     this.isSelected = false,
-    this.padding = EdgeInsets.zero,
-    this.crossAxisAlignment = CrossAxisAlignment.center,
-    this.controlAffinity = ListTileControlAffinity.leading,
+    this.controlAffinity = .leading,
+    this.crossAxisAlignment = .center,
   });
 
   final T value;
@@ -22,8 +22,8 @@ class CustomRadioTile<T> extends StatelessWidget {
   final Widget title;
   final bool isSelected;
   final Widget? subtitle;
-  final Function(T)? onChanged;
   final EdgeInsetsGeometry padding;
+  final Function(T value)? onChanged;
   final CrossAxisAlignment crossAxisAlignment;
   final ListTileControlAffinity controlAffinity;
 
@@ -38,7 +38,7 @@ class CustomRadioTile<T> extends StatelessWidget {
           child: Padding(
             padding: padding,
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+              crossAxisAlignment: .stretch,
               children: [
                 Row(
                   crossAxisAlignment: crossAxisAlignment,
@@ -67,7 +67,7 @@ class CustomRadioTile<T> extends StatelessWidget {
   Widget _radioCheck(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        shape: BoxShape.circle,
+        shape: .circle,
         border: Border.all(
           width: 1,
           color: isSelected
@@ -77,10 +77,10 @@ class CustomRadioTile<T> extends StatelessWidget {
       ),
       height: const Spacing(2.75).value,
       width: const Spacing(2.75).value,
-      padding: EdgeInsets.all(const Spacing(.4).value),
+      padding: .all(const Spacing(.4).value),
       child: DecoratedBox(
         decoration: BoxDecoration(
-          shape: BoxShape.circle,
+          shape: .circle,
           color: isSelected
               ? context.colorScheme.primary
               : context.colorScheme.surface,

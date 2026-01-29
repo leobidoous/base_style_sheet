@@ -73,9 +73,7 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
           animation: controller,
           builder: (context, _) {
             return Stack(
-              alignment: !widget.reverse
-                  ? Alignment.topCenter
-                  : Alignment.bottomCenter,
+              alignment: !widget.reverse ? .topCenter : .bottomCenter,
               children: <Widget>[
                 ConstrainedBox(
                   constraints: BoxConstraints(maxHeight: _offsetToArmed),
@@ -94,7 +92,7 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
                                 border: context.theme.borderNone,
                                 backgroundColor: Colors.transparent,
                                 borderRadius: context.theme.borderRadiusNone,
-                                imageSize: Size.fromHeight(_offsetToArmed * .4),
+                                imageSize: .fromHeight(_offsetToArmed * .4),
                               )
                             : CustomLoading(
                                 width: _offsetToArmed,

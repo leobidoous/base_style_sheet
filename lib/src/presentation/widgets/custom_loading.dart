@@ -3,16 +3,13 @@ import 'package:flutter/material.dart'
     show
         Animation,
         AnimationController,
-        BorderRadius,
         BuildContext,
         ClipRRect,
         Column,
-        CrossAxisAlignment,
         CurvedAnimation,
         Curves,
         DecoratedBox,
         LinearProgressIndicator,
-        MainAxisAlignment,
         SizedBox,
         TickerProviderStateMixin,
         Transform,
@@ -33,18 +30,18 @@ class CustomLoading extends StatefulWidget {
     this.height = 32,
     this.primaryColor,
     this.secondaryColor,
-    this.type = LoadingType.primary,
+    this.type = .primary,
     this.duration = const Duration(milliseconds: 1500),
   });
 
-  final LoadingType type;
   final double width;
   final double height;
   final double? value;
+  final LoadingType type;
   final Duration duration;
-  final Widget Function(BuildContext, int)? itemBuilder;
   final Color? primaryColor;
   final Color? secondaryColor;
+  final Widget Function(BuildContext context, int index)? itemBuilder;
 
   @override
   State<CustomLoading> createState() => _CustomLoadingState();
@@ -88,15 +85,13 @@ class _CustomLoadingState extends State<CustomLoading>
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: widget.type == LoadingType.linear
-          ? CrossAxisAlignment.stretch
-          : CrossAxisAlignment.center,
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: widget.type == .linear ? .stretch : .center,
+      mainAxisSize: .min,
+      mainAxisAlignment: .center,
       children: [
-        if (widget.type == LoadingType.linear)
+        if (widget.type == .linear)
           ClipRRect(
-            borderRadius: BorderRadius.circular(24),
+            borderRadius: .circular(24),
             child: LinearProgressIndicator(
               minHeight: widget.height,
               color: widget.primaryColor,
@@ -104,17 +99,17 @@ class _CustomLoadingState extends State<CustomLoading>
               backgroundColor: widget.secondaryColor,
             ),
           ),
-        if (widget.type == LoadingType.primary)
+        if (widget.type == .primary)
           SizedBox(
             width: widget.width,
             height: widget.height,
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: Spacing.xs.value),
+              padding: .symmetric(horizontal: Spacing.xs.value),
               child: Transform.rotate(
                 angle: rotate.value * 0.0174533,
                 child: Stack(
-                  clipBehavior: Clip.none,
-                  fit: StackFit.expand,
+                  clipBehavior: .none,
+                  fit: .expand,
                   children: <Widget>[
                     Positioned(
                       top: 0.0,
@@ -145,11 +140,11 @@ class _CustomLoadingState extends State<CustomLoading>
     return Transform.scale(
       scale: scale,
       child: SizedBox.fromSize(
-        size: Size.square(widget.height * 0.6),
+        size: .square(widget.height * 0.6),
         child: widget.itemBuilder != null
             ? widget.itemBuilder!(context, index)
             : DecoratedBox(
-                decoration: BoxDecoration(shape: BoxShape.circle, color: color),
+                decoration: BoxDecoration(shape: .circle, color: color),
               ),
       ),
     );

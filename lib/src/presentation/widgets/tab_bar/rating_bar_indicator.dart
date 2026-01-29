@@ -14,7 +14,7 @@ class RatingBarIndicator extends StatefulWidget {
     this.unratedColor,
     this.direction = Axis.horizontal,
     this.itemCount = 5,
-    this.itemPadding = EdgeInsets.zero,
+    this.itemPadding = .zero,
     this.itemSize = 32.0,
     this.physics = const NeverScrollableScrollPhysics(),
     this.rating = 0,
@@ -79,12 +79,12 @@ class _RatingBarIndicatorState extends State<RatingBarIndicator> {
       physics: widget.physics,
       child: widget.direction == Axis.horizontal
           ? Row(
-              mainAxisSize: MainAxisSize.min,
+              mainAxisSize: .min,
               textDirection: textDirection,
               children: _children,
             )
           : Column(
-              mainAxisSize: MainAxisSize.min,
+              mainAxisSize: .min,
               textDirection: textDirection,
               children: _children,
             ),
@@ -98,7 +98,7 @@ class _RatingBarIndicatorState extends State<RatingBarIndicator> {
             Directionality.of(context) != TextDirection.rtl) {
           return Transform(
             transform: Matrix4.identity()..setEntry(0, 0, -1.0),
-            alignment: Alignment.center,
+            alignment: .center,
             transformHitTests: false,
             child: _buildItems(index),
           );
@@ -115,7 +115,7 @@ class _RatingBarIndicatorState extends State<RatingBarIndicator> {
         width: widget.itemSize,
         height: widget.itemSize,
         child: Stack(
-          fit: StackFit.expand,
+          fit: .expand,
           children: [
             FittedBox(
               child: index + 1 < _ratingNumber

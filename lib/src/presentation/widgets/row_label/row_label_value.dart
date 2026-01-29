@@ -55,14 +55,14 @@ class RowLabelValue extends StatelessWidget {
         );
 
     return Row(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: crossAxisAlignment ?? CrossAxisAlignment.center,
-      mainAxisAlignment: mainAxisAlignment ?? MainAxisAlignment.spaceBetween,
+      mainAxisSize: .min,
+      crossAxisAlignment: crossAxisAlignment ?? .center,
+      mainAxisAlignment: mainAxisAlignment ?? .spaceBetween,
       children: [
         Flexible(
           flex: flexLabel ?? 1,
           child: Row(
-            mainAxisSize: MainAxisSize.min,
+            mainAxisSize: .min,
             children: [
               Flexible(
                 child: Text(
@@ -98,7 +98,7 @@ class RowLabelValue extends StatelessWidget {
           flex: flexValue ?? 1,
           child: Text(
             value,
-            textAlign: TextAlign.end,
+            textAlign: .end,
             style:
                 valueStyle ??
                 (isAllBold || isValueBold ? defaultStyleBold : defaultStyle),

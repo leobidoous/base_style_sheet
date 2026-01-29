@@ -15,7 +15,7 @@ class CustomCard extends StatelessWidget {
     required this.child,
     this.isEnabled = true,
     this.isSelected = false,
-    this.padding = EdgeInsets.zero,
+    this.padding = .zero,
   });
 
   final Widget child;

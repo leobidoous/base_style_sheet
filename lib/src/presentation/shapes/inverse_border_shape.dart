@@ -7,7 +7,7 @@ class InverseBorderShape extends ShapeBorder {
   final double pathWidth;
 
   @override
-  EdgeInsetsGeometry get dimensions => EdgeInsets.zero;
+  EdgeInsetsGeometry get dimensions => .zero;
 
   @override
   Path getInnerPath(Rect rect, {TextDirection? textDirection}) {

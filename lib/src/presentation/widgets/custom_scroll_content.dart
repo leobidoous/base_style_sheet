@@ -16,8 +16,8 @@ class CustomScrollContent extends StatelessWidget {
     this.expanded = false,
     this.scrollController,
     this.alwaysScrollable = false,
-    this.padding = EdgeInsets.zero,
-    this.clipBehavior = Clip.hardEdge,
+    this.padding = .zero,
+    this.clipBehavior = .hardEdge,
     this.scrollDirection = Axis.vertical,
   });
 
@@ -55,7 +55,7 @@ class CustomScrollContent extends StatelessWidget {
     if (expanded) {
       if (scrollDirection == Axis.vertical) {
         scroll = RawScrollbar(
-          padding: EdgeInsets.zero,
+          padding: .zero,
           thickness: switch (defaultTargetPlatform) {
             TargetPlatform.android => null,
             TargetPlatform.iOS => null,
@@ -71,13 +71,13 @@ class CustomScrollContent extends StatelessWidget {
             refreshLogo: refreshLogo,
             onRefresh: onRefresh!,
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+              crossAxisAlignment: .stretch,
               children: [Expanded(child: scroll)],
             ),
           );
         }
         return Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: .stretch,
           children: [Expanded(child: scroll)],
         );
       }

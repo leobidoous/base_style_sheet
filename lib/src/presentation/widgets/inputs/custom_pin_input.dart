@@ -12,7 +12,7 @@ import 'input_label.dart';
 class CustomPinField extends StatefulWidget {
   const CustomPinField({
     super.key,
-    this.textCapitalization = TextCapitalization.sentences,
+    this.textCapitalization = .sentences,
     this.initialValue,
     this.maxLength = 4,
     this.labelText = '',
@@ -27,9 +27,9 @@ class CustomPinField extends StatefulWidget {
     this.textInputAction,
     this.enabled = true,
     this.labelWidget,
-    this.keyboardType = TextInputType.number,
+    this.keyboardType = .number,
     this.autovalidateMode = AutovalidateMode.onUserInteraction,
-    this.padding = EdgeInsets.zero,
+    this.padding = .zero,
     this.obscureText = false,
     this.onFieldSubmitted,
     this.inputFormatters = const [],
@@ -126,7 +126,7 @@ class _CustomPinFieldState extends State<CustomPinField> {
     return Padding(
       padding: widget.padding,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        crossAxisAlignment: .stretch,
         children: [
           if (widget.labelWidget != null) ...[
             widget.labelWidget!,
@@ -136,7 +136,7 @@ class _CustomPinFieldState extends State<CustomPinField> {
             length: widget.maxLength,
             autofocus: widget.autofocus,
             forceErrorState: widget.errorText != null,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: .spaceBetween,
             focusNode: widget.focusNode,
             controller: widget.controller,
             defaultPinTheme: defaultTheme,
@@ -154,7 +154,7 @@ class _CustomPinFieldState extends State<CustomPinField> {
                 return const SizedBox();
               }
               return Padding(
-                padding: EdgeInsets.only(top: const Spacing(1).value),
+                padding: .only(top: const Spacing(1).value),
                 child: Text(
                   errorText,
                   maxLines: 2,

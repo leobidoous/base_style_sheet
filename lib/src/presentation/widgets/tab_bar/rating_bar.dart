@@ -40,7 +40,7 @@ class RatingBar extends StatefulWidget {
     this.ignoreGestures = false,
     this.initialRating = 0,
     this.itemCount = 5,
-    this.itemPadding = EdgeInsets.zero,
+    this.itemPadding = .zero,
     this.itemSize = 32.0,
     this.minRating = 0,
     this.tapOnlyMode = false,
@@ -67,7 +67,7 @@ class RatingBar extends StatefulWidget {
     this.ignoreGestures = false,
     this.initialRating = 0,
     this.itemCount = 5,
-    this.itemPadding = EdgeInsets.zero,
+    this.itemPadding = .zero,
     this.itemSize = 32.0,
     this.minRating = 0,
     this.tapOnlyMode = false,
@@ -289,7 +289,7 @@ class _RatingBarState extends State<RatingBar> {
                     widget.glowColor ?? Theme.of(context).colorScheme.secondary;
                 return DecoratedBox(
                   decoration: BoxDecoration(
-                    shape: BoxShape.circle,
+                    shape: .circle,
                     boxShadow: [
                       BoxShadow(
                         color: glowColor.withAlpha(30),

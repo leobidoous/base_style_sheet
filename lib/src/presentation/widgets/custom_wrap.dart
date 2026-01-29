@@ -7,7 +7,7 @@ class CustomWrap<T> extends StatelessWidget {
     this.spacing = 8,
     this.runSpacing = 8,
     required this.items,
-    this.padding = EdgeInsets.zero,
+    this.padding = .zero,
     this.useIntrinsicHeight = false,
     this.alignment = WrapAlignment.start,
     this.runAlignment = WrapAlignment.start,

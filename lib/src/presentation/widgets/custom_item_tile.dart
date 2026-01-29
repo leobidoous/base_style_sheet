@@ -17,7 +17,7 @@ class CustomItemTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomCard(
       onTap: onTap,
-      padding: EdgeInsets.all(const Spacing(2).value),
+      padding: .all(const Spacing(2).value),
       child: Row(
         children: [
           Icon(icon, size: AppFontSize.iconButton.value),

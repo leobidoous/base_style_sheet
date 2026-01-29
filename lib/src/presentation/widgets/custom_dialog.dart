@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart'
     show
         Align,
-        Alignment,
         BoxConstraints,
         BoxDecoration,
         BoxShadow,
@@ -11,8 +10,6 @@ import 'package:flutter/material.dart'
         EdgeInsets,
         Flexible,
         Icons,
-        MainAxisAlignment,
-        MainAxisSize,
         MaterialLocalizations,
         Navigator,
         Padding,
@@ -87,7 +84,7 @@ class CustomDialog {
         message: message,
         btnLabel: btnLabel,
         onPressed: onPressed,
-        padding: EdgeInsets.zero,
+        padding: .zero,
       ),
       constraints: constraints,
       showClose: showClose,
@@ -137,7 +134,7 @@ class _CustomDialogState extends State<_CustomDialog> {
   @override
   Widget build(BuildContext context) {
     return Stack(
-      fit: StackFit.expand,
+      fit: .expand,
       children: [
         Positioned.fill(
           child: GestureDetector(
@@ -146,7 +143,7 @@ class _CustomDialogState extends State<_CustomDialog> {
           ),
         ),
         Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: .center,
           children: [
             Flexible(
               child: ConstrainedBox(
@@ -154,24 +151,24 @@ class _CustomDialogState extends State<_CustomDialog> {
                     widget.constraints ?? BoxConstraints(maxWidth: 640),
                 child: SafeArea(
                   child: Padding(
-                    padding: widget.padding ?? EdgeInsets.all(Spacing.sm.value),
+                    padding: widget.padding ?? .all(Spacing.sm.value),
                     child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      mainAxisSize: .min,
+                      mainAxisAlignment: .center,
+                      crossAxisAlignment: .stretch,
                       children: [
                         if (widget.closeMode == CustomDialogCloseMode.outside)
                           if (widget.showClose)
                             Padding(
-                              padding: EdgeInsets.all(Spacing.xs.value),
+                              padding: .all(Spacing.xs.value),
                               child: Align(
-                                alignment: Alignment.bottomRight,
+                                alignment: .bottomRight,
                                 child: CustomButton.icon(
                                   onPressed: _onClose,
                                   icon: Icons.close_rounded,
-                                  type: ButtonType.background,
+                                  type: .background,
                                   color: context.colorScheme.surface,
-                                  heightType: ButtonHeightType.small,
+                                  heightType: .small,
                                 ),
                               ),
                             ),
@@ -179,27 +176,27 @@ class _CustomDialogState extends State<_CustomDialog> {
                           child: DecoratedBox(
                             decoration: _decoration,
                             child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              mainAxisAlignment: MainAxisAlignment.center,
+                              mainAxisSize: .min,
+                              mainAxisAlignment: .center,
                               children: [
                                 if (widget.closeMode ==
                                     CustomDialogCloseMode.inside)
                                   if (widget.showClose)
                                     Padding(
-                                      padding: EdgeInsets.fromLTRB(
+                                      padding: .fromLTRB(
                                         Spacing.xs.value,
                                         Spacing.xs.value,
                                         Spacing.xs.value,
                                         0,
                                       ),
                                       child: Align(
-                                        alignment: Alignment.topRight,
+                                        alignment: .topRight,
                                         child: CustomButton.icon(
                                           onPressed: _onClose,
                                           icon: Icons.close_rounded,
-                                          type: ButtonType.background,
+                                          type: .background,
                                           color: context.colorScheme.surface,
-                                          heightType: ButtonHeightType.small,
+                                          heightType: .small,
                                         ),
                                       ),
                                     ),
@@ -207,7 +204,7 @@ class _CustomDialogState extends State<_CustomDialog> {
                                   child: Padding(
                                     padding:
                                         widget.padding ??
-                                        EdgeInsets.all(Spacing.sm.value),
+                                        .all(Spacing.sm.value),
                                     child: widget.child,
                                   ),
                                 ),

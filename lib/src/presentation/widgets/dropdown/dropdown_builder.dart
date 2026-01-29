@@ -40,8 +40,8 @@ class _DropdownBuilder<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+      mainAxisSize: .min,
+      crossAxisAlignment: .stretch,
       children: [
         if (isOnTop) ...[hintChild, const CustomDivider(height: 0)],
         Flexible(

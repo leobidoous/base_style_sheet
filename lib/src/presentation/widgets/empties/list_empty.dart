@@ -2,14 +2,10 @@ import 'package:flutter/material.dart'
     show
         BuildContext,
         Column,
-        CrossAxisAlignment,
         EdgeInsets,
-        MainAxisAlignment,
-        MainAxisSize,
         SafeArea,
         StatelessWidget,
         Text,
-        TextAlign,
         Widget;
 
 import '../../../core/themes/spacing/spacing.dart';
@@ -27,7 +23,7 @@ class ListEmpty extends StatelessWidget {
     this.btnLabel = '',
     required this.message,
     this.isSafeArea = false,
-    this.padding = const EdgeInsets.symmetric(vertical: 16),
+    this.padding = const .symmetric(vertical: 16),
   });
 
   final String message;
@@ -48,14 +44,14 @@ class ListEmpty extends StatelessWidget {
         top: isSafeArea,
         bottom: isSafeArea,
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: .stretch,
+          mainAxisAlignment: .center,
+          mainAxisSize: .min,
           children: [
             if (header != null) ...[header!, Spacing.sm.vertical],
             Text(
               message,
-              textAlign: TextAlign.center,
+              textAlign: .center,
               style: context.textTheme.bodyMedium?.copyWith(
                 fontWeight: AppFontWeight.semiBold.value,
               ),
@@ -64,7 +60,7 @@ class ListEmpty extends StatelessWidget {
               Spacing.sm.vertical,
               Text(
                 content!,
-                textAlign: TextAlign.center,
+                textAlign: .center,
                 style: context.textTheme.bodySmall?.copyWith(
                   fontWeight: AppFontWeight.light.value,
                 ),

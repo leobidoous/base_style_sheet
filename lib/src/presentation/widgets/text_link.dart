@@ -17,7 +17,7 @@ class TextLink extends StatelessWidget {
     this.icon,
     this.styleText,
     this.maxLines,
-    this.textAlign = TextAlign.center,
+    this.textAlign = .center,
   });
 
   final Function()? onTap;
@@ -40,7 +40,7 @@ class TextLink extends StatelessWidget {
           borderRadius: context.theme.borderRadiusMD,
           onTap: !isLoading && isEnabled ? onTap : null,
           child: Row(
-            mainAxisSize: MainAxisSize.min,
+            mainAxisSize: .min,
             children: [
               Flexible(
                 child: Text(

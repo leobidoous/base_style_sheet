@@ -52,7 +52,7 @@ class CustomDropdown<T> extends StatefulWidget {
     this.validator,
     this.value = '',
     this.validators,
-    this.labelWidget,
+    this.inputLabel,
     this.listPadding,
     this.borderRadius,
     this.childPadding,
@@ -89,7 +89,7 @@ class CustomDropdown<T> extends StatefulWidget {
   final Function()? onClear;
   final TextStyle? itemStyle;
   final BuildContext context;
-  final InputLabel? labelWidget;
+  final InputLabel? inputLabel;
   final bool useParendRenderBox;
   final EdgeInsets? listPadding;
   final double? verticalSpacing;
@@ -349,8 +349,8 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
           mainAxisSize: .min,
           crossAxisAlignment: widget.isExpanded ? .stretch : .start,
           children: [
-            if (widget.labelWidget != null) ...[
-              widget.labelWidget!,
+            if (widget.inputLabel != null) ...[
+              widget.inputLabel!,
               Spacing.xxxs.vertical,
             ],
             Flexible(
@@ -414,7 +414,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
           top: !_isOnTop(constraints),
           bottom: _isOnTop(constraints),
           child: Stack(
-            fit: StackFit.expand,
+            fit: .expand,
             children: [
               Positioned.fill(
                 child: InkWell(
@@ -463,11 +463,11 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
       decoration:
           widget.boxDecoration ??
           BoxDecoration(
-            color: context.colorScheme.surface,
+            color: widget.isEnabled ? context.colorScheme.surface : null,
             borderRadius: _borderRadius,
             border: .all(
               color: hasError ? context.colorScheme.error : Colors.grey,
-              width: .5,
+              width: widget.isEnabled ? .5 : .25,
             ),
           ),
       child: ConstrainedBox(

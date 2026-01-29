@@ -31,7 +31,7 @@ class _CustomTabBarState extends State<CustomTabBar> {
     return CustomScrollContent(
       scrollDirection: Axis.horizontal,
       alwaysScrollable: true,
-      padding: widget.padding ?? EdgeInsets.zero,
+      padding: widget.padding ?? .zero,
       child: Row(
         children: widget.tabs.map((tab) {
           return Semantics(
@@ -42,7 +42,7 @@ class _CustomTabBarState extends State<CustomTabBar> {
                 widget.onChange?.call(widget.tabs.indexOf(tab));
               },
               child: Padding(
-                padding: EdgeInsets.only(
+                padding: .only(
                   right: tab != widget.tabs.last ? const Spacing(2).value : 0,
                 ),
                 child: TabBarItem(

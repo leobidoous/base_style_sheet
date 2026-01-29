@@ -57,8 +57,8 @@ class _TabBarItemState extends State<TabBarItem>
     return Opacity(
       opacity: widget.selected ? 1 : .5,
       child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: .min,
+        crossAxisAlignment: .start,
         children: [
           Text(
             widget.title,
@@ -76,8 +76,8 @@ class _TabBarItemState extends State<TabBarItem>
                   : Colors.grey,
               borderRadius: context.theme.borderRadiusXSM,
             ),
-            margin: EdgeInsets.only(top: Spacing.xxs.value),
-            clipBehavior: Clip.antiAliasWithSaveLayer,
+            margin: .only(top: Spacing.xxs.value),
+            clipBehavior: .antiAliasWithSaveLayer,
             child: AnimatedSize(
               curve: Curves.easeIn,
               duration: duration,

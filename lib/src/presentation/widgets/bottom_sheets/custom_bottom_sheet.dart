@@ -40,7 +40,7 @@ class CustomBottomSheet {
       routeSettings: RouteSettings(name: routeName ?? '/${child.runtimeType}/'),
       barrierColor: Colors.black.withValues(alpha: 0.8),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
+        borderRadius: .only(
           topLeft: context.theme.borderRadiusMD.topLeft,
           topRight: context.theme.borderRadiusMD.topRight,
         ),
@@ -97,7 +97,7 @@ class _CustomBottomSheetState extends State<_CustomBottomSheet> {
   }
 
   BoxDecoration get _decoration => BoxDecoration(
-    borderRadius: BorderRadius.only(
+    borderRadius: .only(
       topLeft: context.theme.borderRadiusMD.topLeft,
       topRight: context.theme.borderRadiusMD.topRight,
     ),
@@ -114,7 +114,7 @@ class _CustomBottomSheetState extends State<_CustomBottomSheet> {
   @override
   Widget build(BuildContext context) {
     return Stack(
-      fit: StackFit.expand,
+      fit: .expand,
       children: [
         Positioned.fill(
           child: GestureDetector(
@@ -123,8 +123,8 @@ class _CustomBottomSheetState extends State<_CustomBottomSheet> {
           ),
         ),
         Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.end,
+          mainAxisSize: .min,
+          mainAxisAlignment: .end,
           children: [
             Flexible(
               child: ConstrainedBox(
@@ -133,7 +133,7 @@ class _CustomBottomSheetState extends State<_CustomBottomSheet> {
                 child: SafeArea(
                   bottom: false,
                   child: Padding(
-                    padding: EdgeInsets.only(
+                    padding: .only(
                       top: switch (defaultTargetPlatform) {
                         TargetPlatform.android =>
                           context.theme.appBarTheme.appBarHeight,
@@ -144,23 +144,23 @@ class _CustomBottomSheetState extends State<_CustomBottomSheet> {
                       },
                     ),
                     child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      mainAxisSize: .min,
+                      mainAxisAlignment: .end,
+                      crossAxisAlignment: .stretch,
                       children: [
                         if (widget.closeMode ==
                             CustomBottomSheetCloseMode.outside)
                           if (widget.showClose)
                             Padding(
-                              padding: EdgeInsets.all(Spacing.xs.value),
+                              padding: .all(Spacing.xs.value),
                               child: Align(
-                                alignment: Alignment.bottomRight,
+                                alignment: .bottomRight,
                                 child: CustomButton.icon(
                                   onPressed: _onClose,
                                   icon: Icons.close_rounded,
-                                  type: ButtonType.background,
+                                  type: .background,
                                   color: context.colorScheme.surface,
-                                  heightType: ButtonHeightType.small,
+                                  heightType: .small,
                                 ),
                               ),
                             ),
@@ -170,20 +170,18 @@ class _CustomBottomSheetState extends State<_CustomBottomSheet> {
                             child: SafeArea(
                               bottom: widget.useSafeArea,
                               child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: .center,
+                                mainAxisSize: .min,
                                 children: [
                                   Padding(
-                                    padding: EdgeInsets.only(
-                                      top: Spacing.xxxs.value,
-                                    ),
+                                    padding: .only(top: Spacing.xxxs.value),
                                     child: _header,
                                   ),
                                   Flexible(
                                     child: Padding(
                                       padding:
                                           widget.padding ??
-                                          EdgeInsets.fromLTRB(
+                                          .fromLTRB(
                                             Spacing.sm.value,
                                             Spacing.xs.value,
                                             Spacing.sm.value,
@@ -213,17 +211,17 @@ class _CustomBottomSheetState extends State<_CustomBottomSheet> {
     switch (widget.closeMode) {
       case CustomBottomSheetCloseMode.inside:
         return Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: .start,
+          mainAxisAlignment: .spaceBetween,
           children: [
             SizedBox(width: AppThemeBase.buttonHeightMD),
             BottomSheetDragIcon(),
             if (widget.showClose)
               CustomButton.icon(
                 onPressed: _onClose,
-                type: ButtonType.noShape,
+                type: .noShape,
                 icon: Icons.close_rounded,
-                heightType: ButtonHeightType.small,
+                heightType: .small,
               )
             else
               SizedBox(width: AppThemeBase.buttonHeightMD),
