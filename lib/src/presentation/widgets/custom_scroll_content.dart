@@ -57,9 +57,9 @@ class CustomScrollContent extends StatelessWidget {
         scroll = RawScrollbar(
           padding: .zero,
           thickness: switch (defaultTargetPlatform) {
-            TargetPlatform.android => null,
-            TargetPlatform.iOS => null,
-            TargetPlatform() => 0,
+            .android => null,
+            .iOS => null,
+            _ => 0,
           },
           controller: scrollController,
           thumbColor: context.colorScheme.primary,

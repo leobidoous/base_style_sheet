@@ -175,11 +175,15 @@ class _PagedTableViewState<E, S> extends State<PagedTableView<E, S>> {
                   decoration: widget.boxDecoration,
                   columns: widget.columns.map((c) {
                     return DataColumn(
-                      label: Text(
-                        c.header,
-                        style: context.textTheme.labelLarge?.copyWith(
-                          fontWeight: AppFontWeight.semiBold.value,
-                          color: context.colorScheme.onSurface,
+                      label: CustomScrollContent(
+                        scrollDirection: .horizontal,
+                        child: Text(
+                          c.header,
+                          overflow: .ellipsis,
+                          style: context.textTheme.labelLarge?.copyWith(
+                            fontWeight: AppFontWeight.semiBold.value,
+                            color: context.colorScheme.onSurface,
+                          ),
                         ),
                       ),
                     );
@@ -203,22 +207,7 @@ class _PagedTableViewState<E, S> extends State<PagedTableView<E, S>> {
                       (_listController.error as E),
                       _listController.refresh,
                     ) ??
-                    DataTable(
-                      decoration: widget.boxDecoration,
-                      clipBehavior: widget.clipBehavior,
-                      columns: widget.columns.map((c) {
-                        return DataColumn(
-                          label: Text(
-                            c.header,
-                            style: context.textTheme.labelLarge?.copyWith(
-                              fontWeight: AppFontWeight.semiBold.value,
-                              color: context.colorScheme.onSurface,
-                            ),
-                          ),
-                        );
-                      }).toList(),
-                      rows: [],
-                    ),
+                    _dataTablePlaceholder,
                 DecoratedBox(
                   decoration: widget.boxDecoration ?? BoxDecoration(),
                   child: Center(
@@ -246,22 +235,7 @@ class _PagedTableViewState<E, S> extends State<PagedTableView<E, S>> {
                       context,
                       _listController.refresh,
                     ) ??
-                    DataTable(
-                      clipBehavior: widget.clipBehavior,
-                      decoration: widget.boxDecoration,
-                      columns: widget.columns.map((c) {
-                        return DataColumn(
-                          label: Text(
-                            c.header,
-                            style: context.textTheme.labelLarge?.copyWith(
-                              fontWeight: AppFontWeight.semiBold.value,
-                              color: context.colorScheme.onSurface,
-                            ),
-                          ),
-                        );
-                      }).toList(),
-                      rows: [],
-                    ),
+                    _dataTablePlaceholder,
                 DecoratedBox(
                   decoration: widget.boxDecoration ?? BoxDecoration(),
                   child: Center(
@@ -290,7 +264,7 @@ class _PagedTableViewState<E, S> extends State<PagedTableView<E, S>> {
             LayoutBuilder(
               builder: (context, constraints) {
                 return CustomScrollContent(
-                  scrollDirection: Axis.horizontal,
+                  scrollDirection: .horizontal,
                   child: ConstrainedBox(
                     constraints: BoxConstraints(minWidth: constraints.maxWidth),
                     child: _dataTable,
@@ -307,12 +281,36 @@ class _PagedTableViewState<E, S> extends State<PagedTableView<E, S>> {
     );
   }
 
+  Widget get _dataTablePlaceholder {
+    return DataTable(
+      clipBehavior: widget.clipBehavior,
+      decoration: widget.boxDecoration,
+      columns: widget.columns.map((c) {
+        return DataColumn(
+          tooltip: c.header,
+          headingRowAlignment: .start,
+          label: CustomScrollContent(
+            scrollDirection: .horizontal,
+            child: Text(
+              c.header,
+              overflow: .ellipsis,
+              style: context.textTheme.labelLarge?.copyWith(
+                fontWeight: AppFontWeight.semiBold.value,
+                color: context.colorScheme.onSurface,
+              ),
+            ),
+          ),
+        );
+      }).toList(),
+      rows: [],
+    );
+  }
+
   Widget get _dataTable {
     final state = _listController.state;
     return DataTable(
       clipBehavior: widget.clipBehavior,
       decoration: widget.boxDecoration,
-
       columns: widget.columns.asMap().entries.map((entry) {
         final c = entry.value;
         final columnWidth = c.width != null

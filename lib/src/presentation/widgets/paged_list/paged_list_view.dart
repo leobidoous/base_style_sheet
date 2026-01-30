@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 import '../../../core/themes/app_theme_factory.dart';
+import '../../../core/themes/spacing/spacing.dart' show Spacing;
 import '../../../core/themes/typography/typography_constants.dart';
 import '../../controllers/paged_list_controller.dart';
 import '../../extensions/build_context_extensions.dart';
 import '../custom_loading.dart';
 import '../custom_refresh_indicator.dart';
+import '../custom_scroll_content.dart';
 import '../custom_wrap.dart';
 import '../empties/list_empty.dart';
 import '../errors/custom_request_error.dart';
@@ -167,6 +169,7 @@ class _PagedListViewState<E, S> extends State<PagedListView<E, S>> {
                 ),
               );
         }
+
         final child = RawScrollbar(
           padding: .zero,
           thumbColor: context.colorScheme.primary,
@@ -184,7 +187,7 @@ class _PagedListViewState<E, S> extends State<PagedListView<E, S>> {
 
         /// Validate if it is allowed to use
         /// the onRefresh from the listController
-        if (!widget.allowRefresh || kIsWeb) return child;
+        if (!widget.allowRefresh) return child;
 
         return CustomRefreshIndicator(
           refreshLogo: widget.refreshLogo,
@@ -218,18 +221,28 @@ class _PagedListViewState<E, S> extends State<PagedListView<E, S>> {
           itemBuilder: (_, index) => _listItem(state, index),
         );
       case .wrap:
-        return Column(
-          crossAxisAlignment: .stretch,
-          children: [
-            CustomWrap(
-              alignment: .center,
-              nCols: widget.nCols,
-              padding: widget.padding,
-              items: state
-                  .map((i) => _listItem(state, state.indexOf(i)))
-                  .toList(),
-            ),
-          ],
+        return CustomScrollContent(
+          padding: widget.padding,
+          reverse: _listController.reverse,
+          scrollDirection: widget.scrollDirection,
+          scrollController: widget.parentScrollController == null
+              ? _scrollController
+              : null,
+          physics: widget.shrinkWrap
+              ? (widget.physics ?? NeverScrollableScrollPhysics())
+              : const BouncingScrollPhysics(
+                  parent: AlwaysScrollableScrollPhysics(),
+                ),
+          child: CustomWrap(
+            alignment: .start,
+            nCols: widget.nCols,
+            spacing: Spacing.sm.value,
+            crossAxisAlignment: .start,
+            runSpacing: Spacing.sm.value,
+            items: state
+                .map((i) => _listItem(state, state.indexOf(i)))
+                .toList(),
+          ),
         );
     }
   }

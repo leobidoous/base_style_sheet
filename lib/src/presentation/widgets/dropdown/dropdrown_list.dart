@@ -109,7 +109,7 @@ class _DropdownList<T> extends StatelessWidget {
             child:
                 item.item ??
                 CustomScrollContent(
-                  scrollDirection: Axis.horizontal,
+                  scrollDirection: .horizontal,
                   child: Text(
                     item.label,
                     style: item.label == valueSelected

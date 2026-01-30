@@ -29,7 +29,7 @@ class _CustomTabBarState extends State<CustomTabBar> {
   Widget build(BuildContext context) {
     tabSelected = widget.tabSelected;
     return CustomScrollContent(
-      scrollDirection: Axis.horizontal,
+      scrollDirection: .horizontal,
       alwaysScrollable: true,
       padding: widget.padding ?? .zero,
       child: Row(
