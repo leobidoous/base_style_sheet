@@ -16,6 +16,7 @@ import 'package:flutter/material.dart'
         Tween,
         Widget;
 
+import '../../core/themes/app_theme_factory.dart';
 import '../../core/themes/spacing/spacing.dart';
 import '../extensions/build_context_extensions.dart';
 
@@ -29,6 +30,7 @@ class CustomLoading extends StatefulWidget {
     this.itemBuilder,
     this.height = 32,
     this.primaryColor,
+    this.borderRadius,
     this.secondaryColor,
     this.type = .primary,
     this.duration = const Duration(milliseconds: 1500),
@@ -41,6 +43,7 @@ class CustomLoading extends StatefulWidget {
   final Duration duration;
   final Color? primaryColor;
   final Color? secondaryColor;
+  final BorderRadius? borderRadius;
   final Widget Function(BuildContext context, int index)? itemBuilder;
 
   @override
@@ -85,13 +88,13 @@ class _CustomLoadingState extends State<CustomLoading>
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: widget.type == .linear ? .stretch : .center,
       mainAxisSize: .min,
       mainAxisAlignment: .center,
+      crossAxisAlignment: widget.type == .linear ? .stretch : .center,
       children: [
         if (widget.type == .linear)
           ClipRRect(
-            borderRadius: .circular(24),
+            borderRadius: widget.borderRadius ?? context.theme.borderRadiusMD,
             child: LinearProgressIndicator(
               minHeight: widget.height,
               color: widget.primaryColor,

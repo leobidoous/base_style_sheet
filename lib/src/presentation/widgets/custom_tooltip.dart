@@ -55,6 +55,7 @@ class CustomTooltip extends StatelessWidget {
         color: color ?? context.colorScheme.primary,
         boxShadow: boxShadow ?? [context.theme.shadowLightmodeLevel0],
       ),
+
       margin: margin,
       padding: padding,
       richMessage: richMessage,

@@ -34,6 +34,7 @@ export 'package:base_style_sheet/src/presentation/widgets/custom_checkbox_tile.d
 export 'package:base_style_sheet/src/presentation/widgets/custom_dialog.dart';
 export 'package:base_style_sheet/src/presentation/widgets/custom_item_tile.dart';
 export 'package:base_style_sheet/src/presentation/widgets/custom_loading.dart';
+export 'package:base_style_sheet/src/presentation/widgets/custom_masonry_wrap.dart';
 export 'package:base_style_sheet/src/presentation/widgets/custom_radio_tile.dart';
 export 'package:base_style_sheet/src/presentation/widgets/custom_refresh_indicator.dart';
 export 'package:base_style_sheet/src/presentation/widgets/custom_scroll_content.dart';

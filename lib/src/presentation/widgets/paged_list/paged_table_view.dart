@@ -49,6 +49,7 @@ class PagedTableView<E, S> extends StatefulWidget {
     required this.columns,
     required this.context,
     this.scrollController,
+    this.useSafeArea = true,
     this.shrinkWrap = false,
     this.allowRefresh = true,
     this.parentScrollController,
@@ -63,6 +64,7 @@ class PagedTableView<E, S> extends StatefulWidget {
   });
 
   final bool shrinkWrap;
+  final bool useSafeArea;
   final bool allowRefresh;
   final double? thickness;
   final Clip clipBehavior;
@@ -165,118 +167,126 @@ class _PagedTableViewState<E, S> extends State<PagedTableView<E, S>> {
       alwaysScrollable: true,
       padding: widget.padding,
       scrollController: _scrollController,
-      child: Column(
-        crossAxisAlignment: .stretch,
-        children: [
-          if (_listController.isLoading)
-            widget.firstPageProgressIndicatorBuilder?.call(context) ??
-                DataTable(
-                  clipBehavior: widget.clipBehavior,
-                  decoration: widget.boxDecoration,
-                  columns: widget.columns.map((c) {
-                    return DataColumn(
-                      label: CustomScrollContent(
-                        scrollDirection: .horizontal,
-                        child: Text(
-                          c.header,
-                          overflow: .ellipsis,
-                          style: context.textTheme.labelLarge?.copyWith(
-                            fontWeight: AppFontWeight.semiBold.value,
-                            color: context.colorScheme.onSurface,
+      child: SafeArea(
+        left: false,
+        right: false,
+        top: widget.useSafeArea,
+        bottom: widget.useSafeArea,
+        child: Column(
+          crossAxisAlignment: .stretch,
+          children: [
+            if (_listController.isLoading)
+              widget.firstPageProgressIndicatorBuilder?.call(context) ??
+                  DataTable(
+                    clipBehavior: widget.clipBehavior,
+                    decoration: widget.boxDecoration,
+                    columns: widget.columns.map((c) {
+                      return DataColumn(
+                        label: CustomScrollContent(
+                          scrollDirection: .horizontal,
+                          child: Text(
+                            c.header,
+                            overflow: .ellipsis,
+                            style: context.textTheme.labelLarge?.copyWith(
+                              fontWeight: AppFontWeight.semiBold.value,
+                              color: context.colorScheme.onSurface,
+                            ),
                           ),
                         ),
+                      );
+                    }).toList(),
+                    rows: List.generate(_listController.config.pageSize, (i) {
+                      return DataRow(
+                        cells: widget.columns.map((c) {
+                          return DataCell(
+                            CustomShimmer(height: AppFontSize.bodyMedium.value),
+                          );
+                        }).toList(),
+                      );
+                    }),
+                  )
+            else if (_listController.hasError)
+              Column(
+                crossAxisAlignment: .stretch,
+                children: [
+                  widget.firstPageErrorIndicatorBuilder?.call(
+                        context,
+                        (_listController.error as E),
+                        _listController.refresh,
+                      ) ??
+                      _dataTablePlaceholder,
+                  DecoratedBox(
+                    decoration: widget.boxDecoration ?? BoxDecoration(),
+                    child: Center(
+                      child: CustomRequestError(
+                        padding: widget.padding,
+                        btnLabel: 'Tentar novamente',
+                        message: _listController.error.toString(),
+                        onPressed: () {
+                          _listController.update([]);
+                          _listController.fetchNewItems(
+                            pageKey: _listController.config.pageKey,
+                            forceFetch: true,
+                          );
+                        },
                       ),
-                    );
-                  }).toList(),
-                  rows: List.generate(_listController.config.pageSize, (i) {
-                    return DataRow(
-                      cells: widget.columns.map((c) {
-                        return DataCell(
-                          CustomShimmer(height: AppFontSize.bodyMedium.value),
-                        );
-                      }).toList(),
-                    );
-                  }),
-                )
-          else if (_listController.hasError)
-            Column(
-              crossAxisAlignment: .stretch,
-              children: [
-                widget.firstPageErrorIndicatorBuilder?.call(
-                      context,
-                      (_listController.error as E),
-                      _listController.refresh,
-                    ) ??
-                    _dataTablePlaceholder,
-                DecoratedBox(
-                  decoration: widget.boxDecoration ?? BoxDecoration(),
-                  child: Center(
-                    child: CustomRequestError(
-                      padding: widget.padding,
-                      btnLabel: 'Tentar novamente',
-                      message: _listController.error.toString(),
-                      onPressed: () {
-                        _listController.update([]);
-                        _listController.fetchNewItems(
-                          pageKey: _listController.config.pageKey,
-                          forceFetch: true,
-                        );
-                      },
                     ),
                   ),
-                ),
-              ],
-            )
-          else if (state.isEmpty)
-            Column(
-              crossAxisAlignment: .stretch,
-              children: [
-                widget.noItemsFoundIndicatorBuilder?.call(
-                      context,
-                      _listController.refresh,
-                    ) ??
-                    _dataTablePlaceholder,
-                DecoratedBox(
-                  decoration: widget.boxDecoration ?? BoxDecoration(),
-                  child: Center(
-                    child: ListEmpty(
-                      padding: widget.padding,
-                      btnLabel: 'Tentar novamente',
-                      header: Icon(
-                        Icons.screen_search_desktop_outlined,
-                        size: AppFontSize.iconButton.value * 3,
-                        color: context.colorScheme.primary,
+                ],
+              )
+            else if (state.isEmpty)
+              Column(
+                crossAxisAlignment: .stretch,
+                children: [
+                  widget.noItemsFoundIndicatorBuilder?.call(
+                        context,
+                        _listController.refresh,
+                      ) ??
+                      _dataTablePlaceholder,
+                  DecoratedBox(
+                    decoration: widget.boxDecoration ?? BoxDecoration(),
+                    child: Center(
+                      child: ListEmpty(
+                        padding: widget.padding,
+                        btnLabel: 'Tentar novamente',
+                        header: Icon(
+                          Icons.screen_search_desktop_outlined,
+                          size: AppFontSize.iconButton.value * 3,
+                          color: context.colorScheme.primary,
+                        ),
+                        message: 'Nenhum item encontrado.',
+                        onPressed: () {
+                          _listController.update([]);
+                          _listController.fetchNewItems(
+                            pageKey: _listController.config.pageKey,
+                            forceFetch: true,
+                          );
+                        },
                       ),
-                      message: 'Nenhum item encontrado.',
-                      onPressed: () {
-                        _listController.update([]);
-                        _listController.fetchNewItems(
-                          pageKey: _listController.config.pageKey,
-                          forceFetch: true,
-                        );
-                      },
                     ),
                   ),
-                ),
-              ],
-            )
-          else
-            LayoutBuilder(
-              builder: (context, constraints) {
-                return CustomScrollContent(
-                  scrollDirection: .horizontal,
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(minWidth: constraints.maxWidth),
-                    child: _dataTable,
-                  ),
-                );
-              },
-            ),
-          widget.padding.bottom > 0
-              ? SizedBox(height: widget.padding.bottom)
-              : Spacing.sm.vertical,
-          _footer,
-        ],
+                ],
+              )
+            else
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  return CustomScrollContent(
+                    scrollDirection: .horizontal,
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minWidth: constraints.maxWidth,
+                      ),
+                      child: _dataTable,
+                    ),
+                  );
+                },
+              ),
+            widget.padding.bottom > 0
+                ? SizedBox(height: widget.padding.bottom)
+                : Spacing.sm.vertical,
+            _footer,
+          ],
+        ),
       ),
     );
   }

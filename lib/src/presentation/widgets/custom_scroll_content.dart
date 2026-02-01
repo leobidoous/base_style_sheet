@@ -15,10 +15,10 @@ class CustomScrollContent extends StatelessWidget {
     this.reverse = false,
     this.expanded = false,
     this.scrollController,
-    this.alwaysScrollable = false,
     this.padding = .zero,
     this.clipBehavior = .hardEdge,
-    this.scrollDirection = Axis.vertical,
+    this.alwaysScrollable = false,
+    this.scrollDirection = .vertical,
   });
 
   final Widget child;
