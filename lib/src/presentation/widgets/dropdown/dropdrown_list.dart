@@ -57,9 +57,9 @@ class _DropdownList<T> extends StatelessWidget {
               borderRadius: context.theme.borderRadiusNone,
               constraints: BoxConstraints(
                 minHeight: switch (heightType) {
-                  DropdownHeightType.medium => AppThemeBase.buttonHeightMD,
-                  DropdownHeightType.normal => AppThemeBase.buttonHeightNM,
-                  DropdownHeightType.small => AppThemeBase.buttonHeightSM,
+                  .medium => AppThemeBase.buttonHeightMD,
+                  .normal => AppThemeBase.buttonHeightNM,
+                  .small => AppThemeBase.buttonHeightSM,
                 },
               ),
               padding: padding ?? .symmetric(horizontal: fontSize),
@@ -98,9 +98,9 @@ class _DropdownList<T> extends StatelessWidget {
           borderRadius: context.theme.borderRadiusNone,
           constraints: BoxConstraints(
             minHeight: switch (heightType) {
-              DropdownHeightType.medium => AppThemeBase.buttonHeightMD,
-              DropdownHeightType.normal => AppThemeBase.buttonHeightNM,
-              DropdownHeightType.small => AppThemeBase.buttonHeightSM,
+              .medium => AppThemeBase.buttonHeightMD,
+              .normal => AppThemeBase.buttonHeightNM,
+              .small => AppThemeBase.buttonHeightSM,
             },
           ),
           padding: padding ?? .symmetric(horizontal: fontSize),
