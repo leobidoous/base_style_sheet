@@ -367,10 +367,7 @@ class _PagedTableViewState<E, S> extends State<PagedTableView<E, S>> {
         CustomDropdown<int>(
           canSearch: false,
           isExpanded: false,
-          useSafeArea: false,
           heightType: .normal,
-          context: widget.context,
-          useParendRenderBox: true,
           isEnabled: !_listController.isLoading,
           value: _listController.config.pageSize.toString(),
           items: [10, 20, 50].map((e) {

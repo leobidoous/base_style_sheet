@@ -233,15 +233,20 @@ class _PagedListViewState<E, S> extends State<PagedListView<E, S>> {
               : const BouncingScrollPhysics(
                   parent: AlwaysScrollableScrollPhysics(),
                 ),
-          child: CustomWrap(
-            alignment: .start,
-            nCols: widget.nCols,
-            spacing: Spacing.sm.value,
-            crossAxisAlignment: .start,
-            runSpacing: Spacing.sm.value,
-            items: state
-                .map((i) => _listItem(state, state.indexOf(i)))
-                .toList(),
+          child: Column(
+            crossAxisAlignment: .stretch,
+            children: [
+              CustomWrap(
+                alignment: .start,
+                nCols: widget.nCols,
+                spacing: Spacing.sm.value,
+                crossAxisAlignment: .start,
+                runSpacing: Spacing.sm.value,
+                items: state
+                    .map((i) => _listItem(state, state.indexOf(i)))
+                    .toList(),
+              ),
+            ],
           ),
         );
     }

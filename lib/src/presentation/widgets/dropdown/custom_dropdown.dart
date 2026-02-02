@@ -62,7 +62,6 @@ class CustomDropdown<T> extends StatefulWidget {
     this.onSearchChanged,
     this.verticalSpacing,
     this.items = const [],
-    required this.context,
     this.placeholder = '',
     this.isEnabled = true,
     this.readOnly = false,
@@ -70,9 +69,7 @@ class CustomDropdown<T> extends StatefulWidget {
     this.isLoading = false,
     this.canSearch = false,
     this.isExpanded = true,
-    this.useSafeArea = true,
     this.heightType = .medium,
-    this.useParendRenderBox = true,
     this.autovalidateMode = .disabled,
   });
   final Widget? icon;
@@ -82,15 +79,12 @@ class CustomDropdown<T> extends StatefulWidget {
   final bool isEnabled;
   final bool canSearch;
   final bool isExpanded;
-  final bool useSafeArea;
   final double? maxHeight;
   final Widget? prefixIcon;
   final String placeholder;
   final Function()? onClear;
   final TextStyle? itemStyle;
-  final BuildContext context;
   final InputLabel? inputLabel;
-  final bool useParendRenderBox;
   final EdgeInsets? listPadding;
   final double? verticalSpacing;
   final EdgeInsets? childPadding;
@@ -120,9 +114,9 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
   late final Animation<double> _opacityAnimation;
   late final Animation<double> _rotateAnimation;
   final _scrollController = ScrollController();
-  Offset _parentContextOffset = Offset.zero;
   bool _canForceValidator = false;
   String _textSearchFilter = '';
+  OverlayEntry? _overlayEntry;
   final _key = GlobalKey();
   bool _showClear = false;
   late double _maxHeight;
@@ -159,8 +153,8 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
     _valueSelected.value = widget.value;
     _showClear = widget.value.isNotEmpty && widget.onClear != null;
     _animationController = AnimationController(
+      duration: Durations.medium1,
       vsync: this,
-      duration: const Duration(milliseconds: 150),
     );
     _opacityAnimation = Tween<double>(
       begin: 1,
@@ -212,18 +206,8 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
     _animationController.dispose();
     _scrollController.dispose();
     _valueSelected.dispose();
+    _removeOverlay();
     super.dispose();
-  }
-
-  String? _validator(String? input) {
-    String? error = widget.validator?.call(input);
-    widget.validators?.forEach((val) {
-      if (error == null) {
-        error = val(input);
-        return;
-      }
-    });
-    return error;
   }
 
   void _onChangedItem(BuildContext context, CustomDropdownItem<T> item) {
@@ -232,20 +216,49 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
       _valueSelected.value = item.label;
       widget.onChanged?.call(item.value);
     });
-    Navigator.of(context).pop();
+    _removeOverlay();
   }
 
-  void _getWidgetInfos() {
-    final renderBox = _key.currentContext?.findRenderObject() as RenderBox;
-    _size = renderBox.size;
-    RenderBox? parendRenderBox;
+  void _showDropdown() {
+    if (_overlayEntry != null) return;
 
-    if (widget.useParendRenderBox) {
-      parendRenderBox = widget.context.findRenderObject() as RenderBox;
-      _parentContextOffset = parendRenderBox.localToGlobal(.zero);
+    _animationController.forward();
+
+    final overlay = Overlay.of(context);
+
+    _overlayEntry = OverlayEntry(
+      builder: (context) => Material(
+        color: Colors.transparent,
+        child: _dropdownChild(overlay.context),
+      ),
+    );
+
+    overlay.insert(_overlayEntry!);
+  }
+
+  void _removeOverlay() {
+    try {
+      _overlayEntry?.remove();
+      _overlayEntry?.dispose();
+      _overlayEntry = null;
+      FocusScope.of(context).requestFocus(FocusNode());
+      _animationController.isCompleted ? _animationController.reverse() : null;
+    } catch (e) {
+      // Caso o dropdown seja fechado rapidamente após aberto, pode ocorrer
+      // uma exceção ao tentar remover o overlay. Nesse caso, apenas ignoramos.
     }
+  }
 
-    _offset = renderBox.localToGlobal(.zero, ancestor: parendRenderBox);
+  void _getWidgetInfos(BuildContext overlayContext) {
+    try {
+      final renderBox = _key.currentContext?.findRenderObject() as RenderBox;
+      final overlayRenderBox = overlayContext.findRenderObject() as RenderBox?;
+      _size = renderBox.size;
+      _offset = renderBox.localToGlobal(.zero, ancestor: overlayRenderBox);
+    } catch (e) {
+      // Caso o dropdown seja fechado rapidamente após aberto, pode ocorrer
+      // uma exceção ao tentar pegar o renderBox. Nesse caso, apenas ignoramos.
+    }
   }
 
   bool _isOnTop(BoxConstraints constraints) {
@@ -253,11 +266,9 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
   }
 
   double _getTopPosition(BoxConstraints constraints) {
-    late double dy;
-    dy = _isOnTop(constraints)
+    return _isOnTop(constraints)
         ? _offset.dy
         : (widget.verticalSpacing ?? Spacing.sm.value);
-    return dy + (widget.useSafeArea ? _parentContextOffset.dy : 0);
   }
 
   double _getBottomPosition(BuildContext context, BoxConstraints constraints) {
@@ -266,12 +277,11 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
         ? (widget.verticalSpacing ?? Spacing.sm.value)
         : constraints.maxHeight - _offset.dy - _size.height;
     return (_isOnTop(constraints)
-            ? dy + (widget.verticalSpacing ?? Spacing.sm.value)
-            : Spacing.keyboardHeigth(context) > dy
-            ? Spacing.keyboardHeigth(context) +
-                  (widget.verticalSpacing ?? Spacing.sm.value)
-            : dy) -
-        (widget.useSafeArea ? _parentContextOffset.dy : 0);
+        ? dy + (widget.verticalSpacing ?? Spacing.sm.value)
+        : Spacing.keyboardHeigth(context) > dy
+        ? Spacing.keyboardHeigth(context) +
+              (widget.verticalSpacing ?? Spacing.sm.value)
+        : dy);
   }
 
   double get _getLeftPosition {
@@ -283,61 +293,29 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
   }
 
   double _getMaxHeight(BuildContext context, BoxConstraints constraints) {
-    return widget.maxHeight != null
-        ? widget.maxHeight! > constraints.maxHeight
-              ? constraints.maxHeight
-              : widget.maxHeight!
-        : _isOnTop(constraints)
-        ? constraints.maxHeight -
-              (_getTopPosition(constraints) +
-                  (widget.useSafeArea ? _parentContextOffset.dy : 0))
-        : constraints.maxHeight -
-              (_getBottomPosition(context, constraints) -
-                  (widget.useSafeArea ? _parentContextOffset.dy : 0));
+    final mediaQuery = MediaQuery.of(context);
+    final safeAreaTop = mediaQuery.padding.top;
+    final safeAreaBottom = mediaQuery.padding.bottom;
+    final padding = widget.verticalSpacing ?? Spacing.sm.value;
+
+    if (widget.maxHeight != null) return widget.maxHeight!;
+
+    if (_isOnTop(constraints)) {
+      return constraints.maxHeight - _offset.dy - safeAreaBottom - padding;
+    } else {
+      return _offset.dy + _size.height - safeAreaTop - padding;
+    }
   }
 
-  Future<void> _showDropdown() async {
-    _animationController.forward();
-    FocusScope.of(context).requestFocus(FocusNode());
-    await Navigator.of(widget.context)
-        .push(
-          PageRouteBuilder(
-            opaque: false,
-            maintainState: false,
-            fullscreenDialog: true,
-            barrierDismissible: true,
-            barrierColor: Colors.transparent,
-            settings: RouteSettings(name: '/custom_dropdown/$T'),
-            transitionDuration: const Duration(milliseconds: 150),
-            reverseTransitionDuration: const Duration(milliseconds: 150),
-            transitionsBuilder: (_, animation, animation2, child) {
-              return FadeTransition(
-                opacity: animation,
-                child: Column(
-                  mainAxisSize: .min,
-                  children: [Flexible(child: child)],
-                ),
-              );
-            },
-            pageBuilder: (context, animation, secondaryAnimation) {
-              return Material(
-                shape: RoundedRectangleBorder(
-                  borderRadius:
-                      widget.boxDecoration?.borderRadius ?? _borderRadius,
-                ),
-                borderOnForeground: false,
-                color: Colors.transparent,
-                shadowColor: Colors.transparent,
-                surfaceTintColor: Colors.transparent,
-                child: _dropdownChild,
-              );
-            },
-          ),
-        )
-        .whenComplete(() {
-          widget.onSearchChanged?.call('', isReset: true);
-          _animationController.reverse();
-        });
+  String? _validator(String? input) {
+    String? error = widget.validator?.call(input);
+    widget.validators?.forEach((val) {
+      if (error == null) {
+        error = val(input);
+        return;
+      }
+    });
+    return error;
   }
 
   @override
@@ -403,57 +381,6 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
     );
   }
 
-  LayoutBuilder get _dropdownChild {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        _getWidgetInfos();
-        _maxHeight = _getMaxHeight(context, constraints);
-        return SafeArea(
-          left: false,
-          right: false,
-          top: !_isOnTop(constraints),
-          bottom: _isOnTop(constraints),
-          child: Stack(
-            fit: .expand,
-            children: [
-              Positioned.fill(
-                child: InkWell(
-                  onTap: () {
-                    if (Spacing.keyboardIsOpened(context)) {
-                      FocusScope.of(context).requestFocus(FocusNode());
-                    } else {
-                      Navigator.of(context).pop();
-                    }
-                  },
-                  child: Container(color: Colors.transparent),
-                ),
-              ),
-              Positioned(
-                left: _getLeftPosition,
-                top: _getTopPosition(constraints),
-                right: _getRightPosition(constraints),
-                bottom: _getBottomPosition(context, constraints),
-                child: Column(
-                  mainAxisSize: .min,
-                  crossAxisAlignment: .stretch,
-                  mainAxisAlignment: _isOnTop(constraints) ? .start : .end,
-                  children: [
-                    Flexible(
-                      child: _container(
-                        maxHeight: _maxHeight,
-                        child: _dropdownBuilder(constraints),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
   Widget _container({
     double? maxHeight,
     required Widget child,
@@ -473,7 +400,9 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
       child: ConstrainedBox(
         constraints:
             widget.boxConstraints ??
-            BoxConstraints(maxHeight: maxHeight ?? AppThemeBase.buttonHeightMD),
+            BoxConstraints(
+              maxHeight: maxHeight?.abs() ?? AppThemeBase.buttonHeightMD,
+            ),
         child: LayoutBuilder(
           builder: (context, constraints) {
             return IntrinsicWidth(
@@ -492,6 +421,55 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
           },
         ),
       ),
+    );
+  }
+
+  Widget _dropdownChild(BuildContext overlayContext) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        _getWidgetInfos(overlayContext);
+        _maxHeight = _getMaxHeight(context, constraints);
+
+        return Stack(
+          children: [
+            Positioned.fill(
+              child: GestureDetector(
+                onTap: () {
+                  if (Spacing.keyboardIsOpened(context)) {
+                    FocusScope.of(context).requestFocus(FocusNode());
+                  } else {
+                    _removeOverlay();
+                    widget.onSearchChanged?.call('', isReset: true);
+                  }
+                },
+                child: Container(color: Colors.transparent),
+              ),
+            ),
+            Positioned(
+              left: _getLeftPosition,
+              top: _getTopPosition(constraints),
+              right: _getRightPosition(constraints),
+              bottom: _getBottomPosition(overlayContext, constraints),
+              child: GestureDetector(
+                onTap: () {}, // Previne que o tap no dropdown o feche
+                child: Column(
+                  mainAxisSize: .min,
+                  crossAxisAlignment: .stretch,
+                  mainAxisAlignment: _isOnTop(constraints) ? .start : .end,
+                  children: [
+                    Flexible(
+                      child: _container(
+                        maxHeight: _maxHeight,
+                        child: _dropdownBuilder(constraints),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 
