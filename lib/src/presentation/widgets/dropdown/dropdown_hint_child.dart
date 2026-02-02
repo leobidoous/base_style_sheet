@@ -54,7 +54,13 @@ class _DropdownHintChildState extends State<_DropdownHintChild> {
     super.initState();
     _editingController.text = widget.valueSelected;
     WidgetsBinding.instance.addPostFrameCallback((callback) {
-      if (widget.canFocus && widget.canSearch) _focusNode.requestFocus();
+      if (widget.canFocus && widget.canSearch) {
+        _focusNode.requestFocus();
+        _editingController.selection = TextSelection(
+          baseOffset: 0,
+          extentOffset: _editingController.text.length,
+        );
+      }
     });
   }
 
