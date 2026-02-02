@@ -6,7 +6,7 @@ class _DropdownHintChild extends StatefulWidget {
     this.onTap,
     this.prefixIcon,
     this.onSearchChanged,
-    this.canFocus = false,
+    this.canFocus = true,
     this.canSearch = true,
     required this.onClear,
     this.onEditingComplete,
@@ -53,14 +53,9 @@ class _DropdownHintChildState extends State<_DropdownHintChild> {
   void initState() {
     super.initState();
     _editingController.text = widget.valueSelected;
-  }
-
-  @override
-  void didUpdateWidget(covariant _DropdownHintChild oldWidget) {
     WidgetsBinding.instance.addPostFrameCallback((callback) {
-      _editingController.text = widget.valueSelected;
+      if (widget.canFocus && widget.canSearch) _focusNode.requestFocus();
     });
-    super.didUpdateWidget(oldWidget);
   }
 
   @override
@@ -85,7 +80,7 @@ class _DropdownHintChildState extends State<_DropdownHintChild> {
   Widget build(BuildContext context) {
     return CustomInputField(
       borderSide: .none,
-      autocorrect: true,
+      autocorrect: false,
       onTap: widget.onTap,
       focusNode: _focusNode,
       textInputAction: .done,

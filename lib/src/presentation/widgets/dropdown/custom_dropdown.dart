@@ -152,10 +152,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
     super.initState();
     _valueSelected.value = widget.value;
     _showClear = widget.value.isNotEmpty && widget.onClear != null;
-    _animationController = AnimationController(
-      duration: Durations.medium1,
-      vsync: this,
-    );
+    _animationController = AnimationController(duration: .zero, vsync: this);
     _opacityAnimation = Tween<double>(
       begin: 1,
       end: 0,
@@ -429,7 +426,6 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
       builder: (context, constraints) {
         _getWidgetInfos(overlayContext);
         _maxHeight = _getMaxHeight(context, constraints);
-
         return Stack(
           children: [
             Positioned.fill(
@@ -511,19 +507,16 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
       builder: (context, value, child) {
         return _DropdownHintChild(
           onClear: () {
-            if (_animationController.isForwardOrCompleted) {
-              Navigator.of(context).pop();
+            widget.onClear?.call();
+            _textSearchFilter = '';
+            _valueSelected.value = '';
+            if (_animationController.isDismissed) {
+              widget.onSearchChanged?.call(_textSearchFilter, isReset: true);
+            } else {
+              widget.onSearchChanged?.call(_textSearchFilter, isReset: true) ??
+                  _listController.refresh();
+              _removeOverlay();
             }
-            setState(() {
-              widget.onClear?.call();
-              _textSearchFilter = '';
-              _valueSelected.value = '';
-              if (widget.onSearchChanged == null) {
-                _listController.refresh();
-              } else {
-                widget.onSearchChanged?.call(_textSearchFilter, isReset: true);
-              }
-            });
           },
           onTap: () {
             if (_animationController.isDismissed && !widget.readOnly) {
@@ -536,6 +529,17 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
               _listController.refresh();
             } else {
               widget.onSearchChanged?.call(_textSearchFilter, isReset: false);
+            }
+          },
+          onEditingComplete: () {
+            if (_listController.value.isNotEmpty) {
+              _onChangedItem(
+                context,
+                _listController.value.firstWhere(
+                  (e) => e.label == _valueSelected.value,
+                  orElse: () => _listController.value.first,
+                ),
+              );
             }
           },
           icon: widget.icon,
@@ -552,17 +556,6 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
           boxDecoration: widget.boxDecoration,
           valueSelected: _valueSelected.value,
           canFocus: _animationController.isForwardOrCompleted,
-          onEditingComplete: () {
-            if (_listController.value.isNotEmpty) {
-              _onChangedItem(
-                context,
-                _listController.value.firstWhere(
-                  (e) => e.label == _valueSelected.value,
-                  orElse: () => _listController.value.first,
-                ),
-              );
-            }
-          },
         );
       },
     );
