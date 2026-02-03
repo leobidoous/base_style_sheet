@@ -199,16 +199,23 @@ class _CustomAppBarState extends State<CustomAppBar>
                   ? Align(
                       child: CustomButton.child(
                         onPressed:
-                            widget.onBackTap ?? Navigator.of(context).pop,
+                            widget.onBackTap ??
+                            () {
+                              setState(() {
+                                if (Navigator.of(context).canPop()) {
+                                  Navigator.of(context).pop();
+                                }
+                              });
+                            },
                         type: .noShape,
                         padding: .zero,
                         heightType: .small,
                         child:
                             widget.leadingIcon ??
                             Icon(
+                              color: widget.titleColor,
                               Icons.chevron_left_rounded,
                               size: AppFontSize.iconButton.value,
-                              color: context.textTheme.titleMedium?.color,
                             ),
                       ),
                     )
