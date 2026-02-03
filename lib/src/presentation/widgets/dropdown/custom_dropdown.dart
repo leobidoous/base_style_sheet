@@ -238,6 +238,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
       _overlayEntry?.remove();
       _overlayEntry?.dispose();
       _overlayEntry = null;
+      widget.onSearchChanged?.call('', isReset: true);
       FocusScope.of(context).requestFocus(FocusNode());
       _animationController.isCompleted ? _animationController.reverse() : null;
     } catch (e) {
@@ -435,7 +436,6 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
                     FocusScope.of(context).requestFocus(FocusNode());
                   } else {
                     _removeOverlay();
-                    widget.onSearchChanged?.call('', isReset: true);
                   }
                 },
                 child: Container(color: Colors.transparent),
@@ -513,8 +513,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
             if (_animationController.isDismissed) {
               widget.onSearchChanged?.call(_textSearchFilter, isReset: true);
             } else {
-              widget.onSearchChanged?.call(_textSearchFilter, isReset: true) ??
-                  _listController.refresh();
+              if (widget.onSearchChanged == null) _listController.refresh();
               _removeOverlay();
             }
           },
@@ -525,11 +524,8 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
           },
           onSearchChanged: (input) {
             _textSearchFilter = input ?? '';
-            if (widget.onSearchChanged == null) {
-              _listController.refresh();
-            } else {
-              widget.onSearchChanged?.call(_textSearchFilter, isReset: false);
-            }
+            widget.onSearchChanged?.call(_textSearchFilter, isReset: false) ??
+                _listController.refresh();
           },
           onEditingComplete: () {
             if (_listController.value.isNotEmpty) {
