@@ -52,22 +52,24 @@ class CustomExpansionState<T> extends State<CustomExpansion<T>>
   late final Animation<double> _rotateAnimation;
   late final Animation<double> _animation;
 
+  Duration get duration => Durations.medium2;
+
   @override
   void initState() {
     super.initState();
     _animationController = AnimationController(
       vsync: this,
-      duration: Durations.medium2,
-      reverseDuration: Durations.medium2,
+      duration: duration,
+      reverseDuration: duration,
     );
     switch (widget.initialState) {
-      case ExpansionState.opened:
+      case .opened:
         _animation = Tween<double>(
           begin: 1,
           end: 0,
         ).animate(_animationController);
         break;
-      case ExpansionState.closed:
+      case .closed:
         _animation = Tween<double>(
           begin: 0,
           end: 1,

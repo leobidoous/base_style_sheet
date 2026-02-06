@@ -13,9 +13,9 @@ class CustomCard extends StatelessWidget {
     this.constraints,
     this.borderRadius,
     required this.child,
+    this.padding = .zero,
     this.isEnabled = true,
     this.isSelected = false,
-    this.padding = .zero,
   });
 
   final Widget child;

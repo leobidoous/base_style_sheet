@@ -52,6 +52,7 @@ class PagedTableView<E, S> extends StatefulWidget {
     this.useSafeArea = true,
     this.shrinkWrap = false,
     this.allowRefresh = true,
+    this.heightType = .medium,
     this.parentScrollController,
     required this.tableController,
     this.allowHorizontalScroll = true,
@@ -74,6 +75,7 @@ class PagedTableView<E, S> extends StatefulWidget {
   final ScrollPhysics? physics;
   final bool allowHorizontalScroll;
   final BoxDecoration? boxDecoration;
+  final DropdownHeightType heightType;
   final List<TableColumnConfig<S>> columns;
   final ScrollController? scrollController;
   final ScrollController? parentScrollController;
@@ -367,7 +369,7 @@ class _PagedTableViewState<E, S> extends State<PagedTableView<E, S>> {
         CustomDropdown<int>(
           canSearch: false,
           isExpanded: false,
-          heightType: .normal,
+          heightType: widget.heightType,
           isEnabled: !_listController.isLoading,
           value: _listController.config.pageSize.toString(),
           items: [10, 20, 50].map((e) {
@@ -395,7 +397,11 @@ class _PagedTableViewState<E, S> extends State<PagedTableView<E, S>> {
                     _listController.config.pageKey >
                         _listController.firstPageKey,
                 icon: Icons.chevron_left_rounded,
-                heightType: .normal,
+                heightType: switch (widget.heightType) {
+                  .medium => .medium,
+                  .normal => .normal,
+                  .small => .small,
+                },
                 onPressed: () {
                   _listController.update([]);
                   _listController.fetchNewItems(
@@ -417,7 +423,11 @@ class _PagedTableViewState<E, S> extends State<PagedTableView<E, S>> {
                     _listController.state.isNotEmpty &&
                     !_listController.config.isLastFetch,
                 icon: Icons.chevron_right_rounded,
-                heightType: .normal,
+                heightType: switch (widget.heightType) {
+                  .medium => .medium,
+                  .normal => .normal,
+                  .small => .small,
+                },
                 onPressed: () {
                   _listController.update([]);
                   _listController.fetchNewItems(
