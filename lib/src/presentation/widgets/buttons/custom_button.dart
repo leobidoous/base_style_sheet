@@ -512,7 +512,7 @@ class _CustomButtonState extends State<CustomButton> {
         mainAxisSize: .min,
         spacing: Spacing.xs.value,
         children: [
-          widget.child,
+          Flexible(child: widget.child),
           if (widget.isLoading)
             DecoratedBox(
               decoration: BoxDecoration(

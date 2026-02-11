@@ -1,5 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cached_network_image_platform_interface/cached_network_image_platform_interface.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
@@ -33,11 +33,39 @@ class ImageUrl extends StatelessWidget {
   final int? maxHeightDiskCache;
   final Map<String, String>? headers;
   final BaseCacheManager? cacheManager;
-  final Widget Function(String)? errorBuilder;
-  final Widget Function(BuildContext, String)? placeholder;
+  final Widget Function(String err)? errorBuilder;
+  final Widget Function(BuildContext context, String value)? placeholder;
 
   @override
   Widget build(BuildContext context) {
+    // No web, usar Image.network diretamente evita CORS issues
+    if (kIsWeb) {
+      return Image.network(
+        url,
+        fit: fit,
+        headers: headers,
+        width: imageSize?.width,
+        height: imageSize?.height,
+        cacheWidth: memCacheWidth,
+        cacheHeight: memCacheHeight,
+        webHtmlElementStrategy: .prefer,
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress == null) return child;
+          return placeholder?.call(context, url) ??
+              Center(
+                child: CustomShimmer(
+                  width: imageSize?.width ?? 32,
+                  height: imageSize?.height ?? 32,
+                ),
+              );
+        },
+        errorBuilder: (context, error, stackTrace) =>
+            errorBuilder?.call(error.toString()) ??
+            ImageError(error: error.toString()),
+      );
+    }
+
+    // Mobile: usar CachedNetworkImage para cache otimizado
     return CachedNetworkImage(
       fit: fit,
       key: key,
@@ -49,9 +77,9 @@ class ImageUrl extends StatelessWidget {
       cacheManager: cacheManager,
       memCacheWidth: memCacheWidth,
       memCacheHeight: memCacheHeight,
+      imageRenderMethodForWeb: .HtmlImage,
       maxWidthDiskCache: maxWidthDiskCache,
       maxHeightDiskCache: maxHeightDiskCache,
-      imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
       placeholder:
           placeholder ??
           (context, url) => Center(

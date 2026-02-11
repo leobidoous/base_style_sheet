@@ -52,7 +52,7 @@ class PagedTableView<E, S> extends StatefulWidget {
     this.useSafeArea = true,
     this.shrinkWrap = false,
     this.allowRefresh = true,
-    this.heightType = .medium,
+    this.heightType = .normal,
     this.parentScrollController,
     required this.tableController,
     this.allowHorizontalScroll = true,
@@ -331,16 +331,19 @@ class _PagedTableViewState<E, S> extends State<PagedTableView<E, S>> {
             ? IntrinsicColumnWidth(flex: c.flex!.toDouble())
             : IntrinsicColumnWidth();
         return DataColumn(
-          onSort: (columnIndex, ascending) {},
           columnWidth: MinColumnWidth(
             columnWidth,
             IntrinsicColumnWidth(flex: c.flex?.toDouble()),
           ),
+          tooltip: c.header,
+          headingRowAlignment: .start,
           label: CustomScrollContent(
+            alwaysScrollable: true,
             scrollDirection: .horizontal,
             child: Text(
               c.header,
-              style: context.textTheme.labelLarge?.copyWith(
+              overflow: .ellipsis,
+              style: context.textTheme.bodyMedium?.copyWith(
                 fontWeight: AppFontWeight.semiBold.value,
                 color: context.colorScheme.onSurface,
               ),
