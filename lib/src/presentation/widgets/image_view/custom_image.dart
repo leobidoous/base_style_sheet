@@ -3,7 +3,6 @@ import 'dart:io' show File;
 import 'package:flutter/material.dart'
     show
         AssetImage,
-        BlendMode,
         Border,
         BorderRadius,
         BoxFit,
@@ -11,7 +10,6 @@ import 'package:flutter/material.dart'
         BuildContext,
         Center,
         Color,
-        ColorFilter,
         FileImage,
         IgnorePointer,
         Image,
@@ -114,10 +112,8 @@ class CustomImage extends StatelessWidget {
       headers: headers,
       width: imageSize?.width,
       height: imageSize?.height,
-      colorFilter: (imageColor != null)
-          ? ColorFilter.mode(imageColor!, BlendMode.srcIn)
-          : null,
       errorBuilder: (_, error, stackTrace) => _error(error, stackTrace),
+      colorFilter: (imageColor != null) ? .mode(imageColor!, .srcIn) : null,
       placeholderBuilder: (context) => Center(
         child: CustomShimmer(
           width: imageSize?.width ?? 32,
@@ -132,13 +128,11 @@ class CustomImage extends StatelessWidget {
     return SvgPicture.asset(
       svgAsset!,
       fit: fit,
+      package: packageName,
       width: imageSize?.width,
       height: imageSize?.height,
-      package: packageName,
       errorBuilder: (_, error, stackTrace) => _error(error, stackTrace),
-      colorFilter: (imageColor != null)
-          ? ColorFilter.mode(imageColor!, BlendMode.srcIn)
-          : null,
+      colorFilter: (imageColor != null) ? .mode(imageColor!, .srcIn) : null,
     );
   }
 

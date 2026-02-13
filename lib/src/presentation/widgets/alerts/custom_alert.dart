@@ -11,21 +11,21 @@ class CustomAlert extends StatelessWidget {
   const CustomAlert({
     super.key,
     this.title,
-    this.titleStyle,
-    this.svgAsset,
     this.asset,
+    this.header,
     this.content,
     this.subtitle,
     this.onConfirm,
     this.onCancel,
+    this.svgAsset,
+    this.titleStyle,
+    this.packageName,
     this.contentWidget,
+    this.buttons = const [],
     this.btnCancelLabel = '',
     this.btnConfirmLabel = '',
     this.confirmIsLoading = false,
     this.cancelIsLoading = false,
-    this.buttons = const [],
-    this.packageName,
-    this.header,
     this.verticalSpacing = Spacing.sm,
     this.horizontalSpacing = Spacing.sm,
     this.buttonsDirection = Axis.vertical,
@@ -52,11 +52,13 @@ class CustomAlert extends StatelessWidget {
   final Function()? onCancel;
 
   CustomButton get _confirmButtom => CustomButton.text(
+    heightType: .normal,
     onPressed: onConfirm,
     text: btnConfirmLabel,
     isLoading: confirmIsLoading,
   );
   CustomButton get _cancelButtom => CustomButton.text(
+    heightType: .normal,
     onPressed: onCancel,
     text: btnCancelLabel,
     isLoading: cancelIsLoading,

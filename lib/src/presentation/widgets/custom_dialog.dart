@@ -10,6 +10,7 @@ import 'package:flutter/material.dart'
         EdgeInsets,
         Flexible,
         Icons,
+        Material,
         MaterialLocalizations,
         Navigator,
         Padding,
@@ -80,11 +81,13 @@ class CustomDialog {
   }) async {
     return await show(
       context,
-      CustomRequestError(
-        message: message,
-        btnLabel: btnLabel,
-        onPressed: onPressed,
-        padding: .zero,
+      Material(
+        child: CustomRequestError(
+          message: message,
+          btnLabel: btnLabel,
+          onPressed: onPressed,
+          padding: .zero,
+        ),
       ),
       constraints: constraints,
       showClose: showClose,

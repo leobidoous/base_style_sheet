@@ -132,10 +132,10 @@ class _CustomPdfViewState extends State<CustomPdfView>
             CustomPdfViewMode.page => () {
               if (_animationController.isDismissed) {
                 _animationController.forward();
-                SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
+                SystemChrome.setEnabledSystemUIMode(.immersive);
               } else {
                 _animationController.reverse();
-                SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+                SystemChrome.setEnabledSystemUIMode(.edgeToEdge);
               }
             },
             CustomPdfViewMode.view => null,
