@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' show Durations;
 
@@ -66,6 +68,8 @@ class PagedListController<E, S> extends ValueNotifier<List<S>> {
     bool forceNewFetch = false,
     bool initWithRequest = true,
     bool preventNewFetch = false,
+    this.searchDebounce = Duration.zero,
+    this.onSearchChanged,
   }) : assert(searchPercent >= 0 && searchPercent <= 100),
        super(const []) {
     config = _PagedListConfig(
@@ -80,8 +84,18 @@ class PagedListController<E, S> extends ValueNotifier<List<S>> {
   }
 
   bool _wasDisposed = false;
+  Timer? _searchDebounceTimer;
+  String? _lastSearchTerm;
   final ValueNotifier<E?> _error = ValueNotifier(null);
   final ValueNotifier<bool> _loading = ValueNotifier(false);
+
+  /// [searchDebounce] duration to wait before executing search
+  /// Set to Duration.zero to disable debounce
+  final Duration searchDebounce;
+
+  /// [onSearchChanged] callback executed when search term changes
+  /// Use this to update filters externally before refresh
+  final Future<void> Function(String searchTerm)? onSearchChanged;
 
   bool get wasDisposed => _wasDisposed;
 
@@ -144,6 +158,42 @@ class PagedListController<E, S> extends ValueNotifier<List<S>> {
       update(List<S>.empty(growable: true));
       await fetchNewItems(pageKey: firstPageKey, pageSize: config.pageSize);
     }
+  }
+
+  /// Search with debounce
+  /// [searchTerm] the term to search
+  /// [immediate] if true, executes immediately without debounce
+  Future<void> search(String searchTerm, {bool immediate = false}) async {
+    _lastSearchTerm = searchTerm;
+
+    // Cancel previous debounce timer
+    _searchDebounceTimer?.cancel();
+
+    // Execute immediately if requested or debounce is zero
+    if (immediate || searchDebounce == Duration.zero) {
+      await _executeSearch(searchTerm);
+      return;
+    }
+
+    // Schedule search with debounce
+    _searchDebounceTimer = Timer(searchDebounce, () async {
+      // Only execute if this is still the last search term
+      if (_lastSearchTerm == searchTerm) {
+        await _executeSearch(searchTerm);
+      }
+    });
+  }
+
+  Future<void> _executeSearch(String searchTerm) async {
+    // Call external callback if provided
+    if (onSearchChanged != null) {
+      await onSearchChanged!(searchTerm);
+    }
+
+    // Reset and refresh
+    config.reset();
+    update(List<S>.empty(growable: true));
+    await fetchNewItems(pageKey: firstPageKey, pageSize: config.pageSize);
   }
 
   void setListener(
@@ -212,6 +262,7 @@ class PagedListController<E, S> extends ValueNotifier<List<S>> {
         return;
       }
       debugPrint('$runtimeType has been disposed');
+      _searchDebounceTimer?.cancel();
       _error.dispose();
       _loading.dispose();
       _wasDisposed = true;

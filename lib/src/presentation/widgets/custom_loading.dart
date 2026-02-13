@@ -119,7 +119,7 @@ class _CustomLoadingState extends State<CustomLoading>
                       child: _circle(
                         1.0 - scale.value.abs(),
                         0,
-                        widget.primaryColor ?? context.colorScheme.onPrimary,
+                        widget.primaryColor ?? context.colorScheme.primary,
                       ),
                     ),
                     Positioned(

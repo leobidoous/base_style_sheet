@@ -59,7 +59,6 @@ class CustomDropdown<T> extends StatefulWidget {
     this.boxDecoration,
     this.boxConstraints,
     this.listController,
-    this.onSearchChanged,
     this.verticalSpacing,
     this.items = const [],
     this.placeholder = '',
@@ -98,7 +97,6 @@ class CustomDropdown<T> extends StatefulWidget {
   final AutovalidateMode autovalidateMode;
   final String? Function(String? input)? validator;
   final List<String? Function(String? input)>? validators;
-  final Function(String? input, {bool isReset})? onSearchChanged;
   final PagedListController<dynamic, CustomDropdownItem<T>>? listController;
 
   @override
@@ -238,8 +236,14 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
       _overlayEntry?.remove();
       _overlayEntry?.dispose();
       _overlayEntry = null;
-      widget.onSearchChanged?.call('', isReset: true);
-      FocusScope.of(context).requestFocus(FocusNode());
+
+      // Limpa o filtro de busca sem disparar requisição
+      _textSearchFilter = '';
+
+      if (mounted) {
+        FocusScope.of(context).requestFocus(FocusNode());
+      }
+
       _animationController.isCompleted ? _animationController.reverse() : null;
     } catch (e) {
       // Caso o dropdown seja fechado rapidamente após aberto, pode ocorrer
@@ -507,15 +511,10 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
       builder: (context, value, child) {
         return _DropdownHintChild(
           onClear: () {
-            widget.onClear?.call();
+            // Reseta estado interno primeiro
             _textSearchFilter = '';
             _valueSelected.value = '';
-            if (_animationController.isDismissed) {
-              widget.onSearchChanged?.call(_textSearchFilter, isReset: true);
-            } else {
-              if (widget.onSearchChanged == null) _listController.refresh();
-              _removeOverlay();
-            }
+            widget.onClear?.call();
           },
           onTap: () {
             if (_animationController.isDismissed && !widget.readOnly) {
@@ -524,8 +523,9 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
           },
           onSearchChanged: (input) {
             _textSearchFilter = input ?? '';
-            widget.onSearchChanged?.call(_textSearchFilter, isReset: false) ??
-                _listController.refresh();
+            if (mounted && !_listController.wasDisposed) {
+              _listController.search(_textSearchFilter);
+            }
           },
           onEditingComplete: () {
             if (_listController.value.isNotEmpty) {
