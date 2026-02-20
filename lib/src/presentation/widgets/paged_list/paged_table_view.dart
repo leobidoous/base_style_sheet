@@ -180,8 +180,8 @@ class _PagedTableViewState<E, S> extends State<PagedTableView<E, S>> {
             if (_listController.isLoading)
               widget.firstPageProgressIndicatorBuilder?.call(context) ??
                   DataTable(
-                    clipBehavior: widget.clipBehavior,
                     decoration: widget.boxDecoration,
+                    clipBehavior: widget.clipBehavior,
                     columns: widget.columns.map((c) {
                       return DataColumn(
                         label: CustomScrollContent(
@@ -208,66 +208,66 @@ class _PagedTableViewState<E, S> extends State<PagedTableView<E, S>> {
                     }),
                   )
             else if (_listController.hasError)
-              Column(
-                crossAxisAlignment: .stretch,
-                children: [
-                  widget.firstPageErrorIndicatorBuilder?.call(
-                        context,
-                        (_listController.error as E),
-                        _listController.refresh,
-                      ) ??
-                      _dataTablePlaceholder,
-                  DecoratedBox(
-                    decoration: widget.boxDecoration ?? BoxDecoration(),
-                    child: Center(
-                      child: CustomRequestError(
-                        padding: widget.padding,
-                        btnLabel: 'Tentar novamente',
-                        message: _listController.error.toString(),
-                        onPressed: () {
-                          _listController.update([]);
-                          _listController.fetchNewItems(
-                            pageKey: _listController.config.pageKey,
-                            forceFetch: true,
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-                ],
+              DecoratedBox(
+                decoration: widget.boxDecoration ?? BoxDecoration(),
+                child: Column(
+                  crossAxisAlignment: .stretch,
+                  children: [
+                    _dataTablePlaceholder,
+                    widget.firstPageErrorIndicatorBuilder?.call(
+                          context,
+                          (_listController.error as E),
+                          _listController.refresh,
+                        ) ??
+                        Center(
+                          child: CustomRequestError(
+                            padding: widget.padding,
+                            btnLabel: 'Tentar novamente',
+                            message: _listController.error.toString(),
+                            onPressed: () {
+                              _listController.update([]);
+                              _listController.fetchNewItems(
+                                pageKey: _listController.config.pageKey,
+                                forceFetch: true,
+                              );
+                            },
+                          ),
+                        ),
+                  ],
+                ),
               )
             else if (state.isEmpty)
-              Column(
-                crossAxisAlignment: .stretch,
-                children: [
-                  widget.noItemsFoundIndicatorBuilder?.call(
-                        context,
-                        _listController.refresh,
-                      ) ??
-                      _dataTablePlaceholder,
-                  DecoratedBox(
-                    decoration: widget.boxDecoration ?? BoxDecoration(),
-                    child: Center(
-                      child: ListEmpty(
-                        padding: widget.padding,
-                        btnLabel: 'Tentar novamente',
-                        header: Icon(
-                          Icons.screen_search_desktop_outlined,
-                          size: AppFontSize.iconButton.value * 3,
-                          color: context.colorScheme.primary,
+              DecoratedBox(
+                decoration: widget.boxDecoration ?? BoxDecoration(),
+                child: Column(
+                  crossAxisAlignment: .stretch,
+                  children: [
+                    _dataTablePlaceholder,
+                    widget.noItemsFoundIndicatorBuilder?.call(
+                          context,
+                          _listController.refresh,
+                        ) ??
+                        Center(
+                          child: ListEmpty(
+                            padding: widget.padding,
+                            btnLabel: 'Tentar novamente',
+                            header: Icon(
+                              Icons.screen_search_desktop_outlined,
+                              size: AppFontSize.iconButton.value * 3,
+                              color: context.colorScheme.primary,
+                            ),
+                            message: 'Nenhum item encontrado.',
+                            onPressed: () {
+                              _listController.update([]);
+                              _listController.fetchNewItems(
+                                pageKey: _listController.config.pageKey,
+                                forceFetch: true,
+                              );
+                            },
+                          ),
                         ),
-                        message: 'Nenhum item encontrado.',
-                        onPressed: () {
-                          _listController.update([]);
-                          _listController.fetchNewItems(
-                            pageKey: _listController.config.pageKey,
-                            forceFetch: true,
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               )
             else
               LayoutBuilder(
