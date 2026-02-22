@@ -18,6 +18,7 @@ class TextLink extends StatelessWidget {
     this.isEnabled = true,
     this.isLoading = false,
     this.textAlign = .center,
+    this.controlAffinity = .trailing,
   });
 
   final String text;
@@ -29,6 +30,7 @@ class TextLink extends StatelessWidget {
   final Function()? onTap;
   final TextAlign? textAlign;
   final TextStyle? styleText;
+  final ListTileControlAffinity controlAffinity;
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +43,10 @@ class TextLink extends StatelessWidget {
           onTap: !isLoading && isEnabled ? onTap : null,
           child: Row(
             mainAxisSize: .min,
+            spacing: Spacing.xxs.value,
             children: [
+              if (controlAffinity == .leading)
+                if (icon != null) _icon,
               Flexible(
                 child: Text(
                   text,
@@ -58,28 +63,33 @@ class TextLink extends StatelessWidget {
                       ),
                 ),
               ),
-              if (icon != null) ...[
-                Spacing.xxs.horizontal,
-                AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 250),
-                  child: isLoading
-                      ? CustomLoading(
-                          width: AppFontSize.bodyMedium.value,
-                          height: AppFontSize.bodyMedium.value,
-                        )
-                      : Icon(
-                          icon,
-                          color:
-                              styleText?.color ??
-                              context.textTheme.bodyMedium?.color,
-                          size: AppFontSize.bodyMedium.value,
-                        ),
-                ),
-              ],
+              if (controlAffinity == .trailing)
+                if (icon != null) _icon,
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget get _icon {
+    return Builder(
+      builder: (context) {
+        return AnimatedSwitcher(
+          duration: const Duration(milliseconds: 250),
+          child: isLoading
+              ? CustomLoading(
+                  width: AppFontSize.bodyMedium.value,
+                  height: AppFontSize.bodyMedium.value,
+                )
+              : Icon(
+                  icon,
+                  color:
+                      styleText?.color ?? context.textTheme.bodyMedium?.color,
+                  size: AppFontSize.bodyMedium.value,
+                ),
+        );
+      },
     );
   }
 }
