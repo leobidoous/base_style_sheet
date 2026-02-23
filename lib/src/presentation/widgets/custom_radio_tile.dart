@@ -8,18 +8,18 @@ class CustomRadioTile<T> extends StatelessWidget {
     super.key,
     this.subtitle,
     this.onChanged,
-    this.enabled = true,
     required this.title,
     required this.value,
     this.padding = .zero,
+    this.isEnabled = true,
     this.isSelected = false,
     this.controlAffinity = .leading,
     this.crossAxisAlignment = .center,
   });
 
   final T value;
-  final bool enabled;
   final Widget title;
+  final bool isEnabled;
   final bool isSelected;
   final Widget? subtitle;
   final EdgeInsetsGeometry padding;
@@ -30,11 +30,11 @@ class CustomRadioTile<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Opacity(
-      opacity: enabled ? 1 : .5,
+      opacity: isEnabled ? 1 : .5,
       child: Semantics(
         button: true,
         child: InkWell(
-          onTap: enabled ? () => onChanged?.call(value) : null,
+          onTap: isEnabled ? () => onChanged?.call(value) : null,
           child: Padding(
             padding: padding,
             child: Column(

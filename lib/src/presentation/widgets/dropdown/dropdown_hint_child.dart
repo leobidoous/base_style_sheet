@@ -91,7 +91,7 @@ class _DropdownHintChildState extends State<_DropdownHintChild> {
       focusNode: _focusNode,
       textInputAction: .done,
       enableSuggestions: true,
-      enabled: widget.isEnabled,
+      isEnabled: widget.isEnabled,
       autofocus: widget.canFocus,
       hintText: widget.placeholder,
       controller: _editingController,

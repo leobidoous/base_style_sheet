@@ -39,7 +39,7 @@ class CustomInputField extends StatefulWidget {
     this.labelText = '',
     this.errorText = '',
     this.contentPadding,
-    this.enabled = true,
+    this.isEnabled = true,
     this.isDense = false,
     this.textInputAction,
     this.onFieldSubmitted,
@@ -91,7 +91,7 @@ class CustomInputField extends StatefulWidget {
   final bool isCollapsed;
   final int maxLines;
   final bool autofocus;
-  final bool enabled;
+  final bool isEnabled;
   final BorderRadius? borderRadius;
   final bool enableinteractiveSelection;
   final bool readOnly;
@@ -175,11 +175,11 @@ class _CustomInputFieldState extends State<CustomInputField> {
         ],
         Flexible(
           child: Opacity(
-            opacity: widget.enabled ? 1 : .5,
+            opacity: widget.isEnabled ? 1 : .5,
             child: TextFormField(
               key: widget.key,
               onTap: widget.onTap,
-              enabled: widget.enabled,
+              enabled: widget.isEnabled,
               maxLines: widget.maxLines,
               minLines: widget.minLines,
               readOnly: widget.readOnly,
@@ -215,7 +215,7 @@ class _CustomInputFieldState extends State<CustomInputField> {
                 isCollapsed: widget.isCollapsed,
                 isDense: widget.isDense,
                 filled: widget.fillColor != null,
-                fillColor: widget.enabled
+                fillColor: widget.isEnabled
                     ? widget.fillColor ?? context.colorScheme.surface
                     : (widget.fillColor ?? context.colorScheme.surface)
                           .withValues(alpha: .75),
