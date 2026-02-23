@@ -67,19 +67,10 @@ class CustomWebViewState extends State<CustomWebView> {
               request.platform.grant();
             },
     );
-    switch (defaultTargetPlatform) {
-      case TargetPlatform.android:
-        _webViewController.setBackgroundColor(Colors.transparent);
-        break;
-      case TargetPlatform.iOS:
-        _webViewController.setBackgroundColor(Colors.transparent);
-        break;
-      default:
-        break;
-    }
 
     if (!kIsWeb) {
       _webViewController
+        ..setBackgroundColor(Colors.transparent)
         ..setJavaScriptMode(JavaScriptMode.unrestricted)
         ..setNavigationDelegate(
           NavigationDelegate(

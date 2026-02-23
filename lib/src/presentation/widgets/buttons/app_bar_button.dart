@@ -13,11 +13,13 @@ class AppBarButton extends StatelessWidget {
     this.borderRadius,
     required this.child,
     this.isEnabled = true,
+    this.isLoading = false,
     this.isLastButtom = true,
   });
 
   final Widget child;
   final bool isEnabled;
+  final bool isLoading;
   final double? padding;
   final Function()? onTap;
   final bool isLastButtom;
@@ -40,6 +42,8 @@ class AppBarButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (isLoading) return shimmer(isLastButtom: isLastButtom, padding: padding);
+    
     return Padding(
       padding: .only(right: isLastButtom ? (padding ?? Spacing.sm.value) : 0),
       child: CustomButton.child(
