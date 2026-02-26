@@ -45,6 +45,7 @@ class CustomInputField extends StatefulWidget {
     this.onFieldSubmitted,
     this.counterText = '',
     this.readOnly = false,
+    this.isExpanded = true,
     this.autofocus = false,
     this.onEditingComplete,
     this.isCollapsed = true,
@@ -63,51 +64,52 @@ class CustomInputField extends StatefulWidget {
   });
 
   final List<String? Function(String?)>? validators;
-  final Function(PointerDownEvent)? onTapOutside;
+  final FloatingLabelBehavior floatingLabelBehavior;
   final List<TextInputFormatter>? inputFormatters;
+  final Function(PointerDownEvent)? onTapOutside;
   final TextCapitalization textCapitalization;
   final String? Function(String?)? validator;
+  final AutovalidateMode? autovalidateMode;
+  final Function(String)? onFieldSubmitted;
   final TextEditingController? controller;
-  final TextInputType? keyboardType;
   final TextInputAction? textInputAction;
+  final bool enableinteractiveSelection;
+  final Function()? onEditingComplete;
+  final TextInputType? keyboardType;
   final Function(String)? onChanged;
+  final InputBorder? focusedBorder;
+  final InputHeightType heightType;
+  final EdgeInsets? contentPadding;
+  final BorderRadius? borderRadius;
+  final List<String> autofillHints;
+  final double? opacityDisabled;
+  final BorderSide? borderSide;
+  final InputLabel? inputLabel;
+  final bool enableSuggestions;
+  final TextStyle? errorStyle;
+  final FocusNode? focusNode;
   final String? initialValue;
+  final TextAlign textAlign;
   final String? counterText;
   final String? labelText;
-  final Color? fillColor;
   final String? errorText;
   final Widget? suffixIcon;
   final Widget? prefixIcon;
   final String? hintText;
-  final String? prefix;
-  final TextAlign textAlign;
-  final TextStyle? errorStyle;
-  final FocusNode? focusNode;
-  final int? maxLength;
-  final int? minLines;
-  final bool enableSuggestions;
   final bool autocorrect;
-  final bool isDense;
   final bool isCollapsed;
-  final int maxLines;
+  final bool obscureText;
+  final bool isExpanded;
+  final Color? fillColor;
   final bool autofocus;
   final bool isEnabled;
-  final BorderRadius? borderRadius;
-  final bool enableinteractiveSelection;
+  final int? maxLength;
+  final String? prefix;
+  final int? minLines;
   final bool readOnly;
-  final double? opacityDisabled;
-  final InputHeightType heightType;
-  final bool obscureText;
-  final EdgeInsets? contentPadding;
-  final List<String> autofillHints;
-  final AutovalidateMode? autovalidateMode;
-  final Function(String)? onFieldSubmitted;
-  final Function()? onEditingComplete;
+  final bool isDense;
+  final int maxLines;
   final Function()? onTap;
-  final InputLabel? inputLabel;
-  final FloatingLabelBehavior floatingLabelBehavior;
-  final InputBorder? focusedBorder;
-  final BorderSide? borderSide;
   final Widget? Function(
     BuildContext, {
     required int currentLength,
@@ -165,7 +167,7 @@ class _CustomInputFieldState extends State<CustomInputField> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    final child = Column(
       mainAxisSize: .min,
       crossAxisAlignment: .stretch,
       children: [
@@ -277,6 +279,9 @@ class _CustomInputFieldState extends State<CustomInputField> {
         ),
       ],
     );
+    if (widget.isExpanded) return child;
+
+    return IntrinsicWidth(child: child);
   }
 
   InputBorder _border(Color color) {

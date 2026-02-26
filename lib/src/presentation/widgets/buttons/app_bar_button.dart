@@ -43,16 +43,16 @@ class AppBarButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (isLoading) return shimmer(isLastButtom: isLastButtom, padding: padding);
-    
+
     return Padding(
       padding: .only(right: isLastButtom ? (padding ?? Spacing.sm.value) : 0),
       child: CustomButton.child(
-        isEnabled: isEnabled,
-        padding: .zero,
         type: .noShape,
+        padding: .zero,
+        heightType: .small,
+        isEnabled: isEnabled,
         borderRadius: borderRadius,
         onPressed: isEnabled ? onTap : null,
-        heightType: .small,
         child: child,
       ),
     );

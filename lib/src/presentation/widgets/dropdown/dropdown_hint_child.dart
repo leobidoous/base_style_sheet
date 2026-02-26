@@ -15,6 +15,7 @@ class _DropdownHintChild extends StatefulWidget {
     required this.showClear,
     required this.isLoading,
     required this.isEnabled,
+    required this.isExpanded,
     required this.heightType,
     required this.placeholder,
     required this.boxDecoration,
@@ -29,6 +30,7 @@ class _DropdownHintChild extends StatefulWidget {
   final bool isLoading;
   final bool isEnabled;
   final bool showClear;
+  final bool isExpanded;
   final double fontSize;
   final Function()? onTap;
   final Widget? prefixIcon;
@@ -91,9 +93,10 @@ class _DropdownHintChildState extends State<_DropdownHintChild> {
       focusNode: _focusNode,
       textInputAction: .done,
       enableSuggestions: true,
-      isEnabled: widget.isEnabled,
       autofocus: widget.canFocus,
+      isEnabled: widget.isEnabled,
       hintText: widget.placeholder,
+      isExpanded: widget.isExpanded,
       controller: _editingController,
       fillColor: widget.boxDecoration?.color,
       onEditingComplete: widget.onEditingComplete,

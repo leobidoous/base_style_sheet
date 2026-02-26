@@ -12,56 +12,56 @@ import 'input_label.dart';
 class CustomPinField extends StatefulWidget {
   const CustomPinField({
     super.key,
-    this.textCapitalization = .sentences,
-    this.initialValue,
-    this.maxLength = 4,
-    this.labelText = '',
-    this.errorText,
     this.hintText,
-    this.controller,
-    this.validators,
+    this.fillColor,
+    this.errorText,
     this.validator,
     this.onChanged,
     this.focusNode,
-    this.autofocus = true,
-    this.textInputAction,
-    this.enabled = true,
-    this.labelWidget,
-    this.keyboardType = .number,
-    this.autovalidateMode = AutovalidateMode.onUserInteraction,
-    this.padding = .zero,
-    this.obscureText = false,
-    this.onFieldSubmitted,
-    this.inputFormatters = const [],
+    this.controller,
+    this.validators,
     this.onComplete,
-    this.fillColor,
+    this.labelWidget,
+    this.initialValue,
+    this.maxLength = 4,
+    this.labelText = '',
+    this.padding = .zero,
+    this.textInputAction,
+    this.autofocus = true,
+    this.isEnabled = true,
     this.readOnly = false,
+    this.onFieldSubmitted,
+    this.obscureText = false,
+    this.keyboardType = .number,
+    this.inputFormatters = const [],
+    this.textCapitalization = .sentences,
+    this.autovalidateMode = .onUserInteraction,
   });
 
-  final TextCapitalization textCapitalization;
-  final List<String? Function(String?)>? validators;
-  final TextEditingController? controller;
-  final TextInputType keyboardType;
-  final TextInputAction? textInputAction;
-  final Function(String?)? onChanged;
-  final String? initialValue;
   final int maxLength;
+  final bool readOnly;
+  final bool autofocus;
+  final bool isEnabled;
+  final Color? fillColor;
+  final String? hintText;
+  final bool obscureText;
   final String? labelText;
   final String? errorText;
-  final String? hintText;
-  final String? Function(String?)? validator;
-  final FocusNode? focusNode;
-  final bool autofocus;
-  final bool enabled;
-  final bool obscureText;
   final EdgeInsets padding;
-  final AutovalidateMode? autovalidateMode;
-  final List<TextInputFormatter> inputFormatters;
-  final Function(String)? onFieldSubmitted;
-  final bool readOnly;
-  final Function(String)? onComplete;
+  final FocusNode? focusNode;
+  final String? initialValue;
   final InputLabel? labelWidget;
-  final Color? fillColor;
+  final TextInputType keyboardType;
+  final TextInputAction? textInputAction;
+  final TextEditingController? controller;
+  final Function(String input)? onComplete;
+  final AutovalidateMode? autovalidateMode;
+  final Function(String? input)? onChanged;
+  final TextCapitalization textCapitalization;
+  final List<TextInputFormatter> inputFormatters;
+  final Function(String input)? onFieldSubmitted;
+  final String? Function(String? input)? validator;
+  final List<String? Function(String? input)>? validators;
 
   @override
   State<CustomPinField> createState() => _CustomPinFieldState();

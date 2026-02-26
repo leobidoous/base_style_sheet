@@ -405,22 +405,16 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
             BoxConstraints(
               maxHeight: maxHeight?.abs() ?? AppThemeBase.buttonHeightMD,
             ),
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            return IntrinsicWidth(
-              stepWidth: widget.isExpanded
-                  ? widget.boxConstraints?.maxWidth ?? .infinity
-                  : (widget.boxConstraints?.minWidth ?? 0) <
-                        constraints.minWidth
-                  ? widget.boxConstraints?.minWidth
-                  : null,
-              child: ClipRRect(
-                borderRadius:
-                    widget.boxDecoration?.borderRadius ?? _borderRadius,
-                child: child,
-              ),
-            );
-          },
+        child: IntrinsicWidth(
+          stepWidth: widget.isExpanded
+              ? widget.boxConstraints?.maxWidth ?? .infinity
+              : (widget.boxConstraints?.minWidth ?? 0) < context.screenWidth
+              ? widget.boxConstraints?.minWidth
+              : null,
+          child: ClipRRect(
+            borderRadius: widget.boxDecoration?.borderRadius ?? _borderRadius,
+            child: child,
+          ),
         ),
       ),
     );
@@ -546,6 +540,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
           canSearch: widget.canSearch,
           isLoading: widget.isLoading,
           prefixIcon: widget.prefixIcon,
+          isExpanded: widget.isExpanded,
           heightType: widget.heightType,
           placeholder: widget.placeholder,
           rotateAnimation: _rotateAnimation,

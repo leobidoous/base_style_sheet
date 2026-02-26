@@ -248,8 +248,8 @@ class CustomButton extends StatefulWidget {
         },
         message: text,
         child: Row(
-          mainAxisAlignment: .spaceBetween,
           mainAxisSize: .min,
+          mainAxisAlignment: .spaceBetween,
           children: [
             Flexible(
               child: _textValue(

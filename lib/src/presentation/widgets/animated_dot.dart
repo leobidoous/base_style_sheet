@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../core/themes/app_theme_factory.dart';
+import '../../core/themes/responsive/responsive_extension.dart' show Responsive;
 import '../../core/themes/spacing/spacing.dart';
 import '../extensions/build_context_extensions.dart';
 
@@ -13,12 +14,12 @@ class AnimatedDot extends StatefulWidget {
     this.onTap,
     this.dotSize,
     this.dotSizeSelected,
-    this.selected = false,
+    this.isSelected = false,
   });
 
-  final bool selected;
-  final Function()? onTap;
   final Size? dotSize;
+  final bool isSelected;
+  final Function()? onTap;
   final Size? dotSizeSelected;
 
   @override
@@ -34,7 +35,7 @@ class _AnimatedDotState extends State<AnimatedDot>
 
   @override
   void initState() {
-    currentState = widget.selected ? DotState.opened : DotState.closed;
+    currentState = widget.isSelected ? DotState.opened : DotState.closed;
     controller = AnimationController(vsync: this, duration: duration);
     controller.addListener(() {
       final double controllerValue = controller.value;
@@ -56,7 +57,7 @@ class _AnimatedDotState extends State<AnimatedDot>
 
   @override
   void didUpdateWidget(covariant AnimatedDot oldWidget) {
-    currentState = widget.selected ? DotState.opened : DotState.closed;
+    currentState = widget.isSelected ? DotState.opened : DotState.closed;
     super.didUpdateWidget(oldWidget);
   }
 
@@ -66,10 +67,13 @@ class _AnimatedDotState extends State<AnimatedDot>
       button: true,
       child: InkWell(
         onTap: widget.onTap,
+        radius: 100.responsiveHeight,
         child: AnimatedContainer(
           duration: duration,
           decoration: BoxDecoration(
-            color: widget.selected ? context.colorScheme.primary : Colors.grey,
+            color: widget.isSelected
+                ? context.colorScheme.primary
+                : context.colorScheme.onSurface.withValues(alpha: .1),
             borderRadius: context.theme.borderRadiusLG,
           ),
           clipBehavior: .antiAliasWithSaveLayer,
@@ -78,11 +82,11 @@ class _AnimatedDotState extends State<AnimatedDot>
             curve: Curves.easeIn,
             duration: duration,
             child: SizedBox(
-              height: widget.selected
+              height: widget.isSelected
                   ? widget.dotSizeSelected?.height ?? const Spacing(1).value
                   : widget.dotSize?.height ?? const Spacing(1).value,
-              width: widget.selected
-                  ? widget.dotSizeSelected?.width ?? const Spacing(2).value
+              width: widget.isSelected
+                  ? widget.dotSizeSelected?.width ?? const Spacing(4).value
                   : widget.dotSize?.width ?? const Spacing(1).value,
             ),
           ),

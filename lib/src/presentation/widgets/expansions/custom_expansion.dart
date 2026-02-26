@@ -52,7 +52,7 @@ class CustomExpansionState<T> extends State<CustomExpansion<T>>
   late final Animation<double> _rotateAnimation;
   late final Animation<double> _animation;
 
-  Duration get duration => Durations.medium2;
+  Duration get duration => Durations.long1;
 
   @override
   void initState() {

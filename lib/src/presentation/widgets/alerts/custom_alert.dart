@@ -26,9 +26,9 @@ class CustomAlert extends StatelessWidget {
     this.btnConfirmLabel = '',
     this.confirmIsLoading = false,
     this.cancelIsLoading = false,
+    this.buttonsDirection = .vertical,
     this.verticalSpacing = Spacing.sm,
     this.horizontalSpacing = Spacing.sm,
-    this.buttonsDirection = Axis.vertical,
   });
 
   final String? svgAsset;
@@ -56,13 +56,15 @@ class CustomAlert extends StatelessWidget {
     onPressed: onConfirm,
     text: btnConfirmLabel,
     isLoading: confirmIsLoading,
+    isEnabled: !cancelIsLoading,
   );
   CustomButton get _cancelButtom => CustomButton.text(
+    type: .background,
     heightType: .normal,
     onPressed: onCancel,
     text: btnCancelLabel,
     isLoading: cancelIsLoading,
-    type: .background,
+    isEnabled: !confirmIsLoading,
   );
 
   @override
@@ -70,8 +72,8 @@ class CustomAlert extends StatelessWidget {
     return CustomScrollContent(
       expanded: false,
       child: Column(
-        crossAxisAlignment: .stretch,
         mainAxisSize: .min,
+        crossAxisAlignment: .stretch,
         children: [
           if (header != null) ...[header!, verticalSpacing.vertical],
           if (svgAsset != null || asset != null) ...[
