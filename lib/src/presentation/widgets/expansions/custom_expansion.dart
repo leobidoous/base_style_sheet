@@ -9,15 +9,15 @@ enum ExpansionState { opened, closed }
 class CustomExpansion<T> extends StatefulWidget {
   const CustomExpansion({
     super.key,
+    required this.title,
     this.body,
     this.icon,
     this.onTap,
+    this.onChanged,
     this.iconColor,
-    this.onForward,
-    this.onReverse,
-    required this.title,
     this.padding = .zero,
     this.isEnabled = true,
+    this.animationDuration,
     this.allowExpand = true,
     this.isSelected = false,
     this.showTrailing = true,
@@ -34,12 +34,12 @@ class CustomExpansion<T> extends StatefulWidget {
   final Color? iconColor;
   final bool allowExpand;
   final bool showTrailing;
-  final EdgeInsets padding;
   final Function()? onTap;
-  final Function()? onForward;
-  final Function()? onReverse;
+  final EdgeInsets padding;
   final bool allowDismissOnBody;
+  final Duration? animationDuration;
   final ExpansionState initialState;
+  final Function(bool isExpanded)? onChanged;
   final CrossAxisAlignment crossAxisAlignment;
 
   @override
@@ -51,12 +51,17 @@ class CustomExpansionState<T> extends State<CustomExpansion<T>>
   late final AnimationController _animationController;
   late final Animation<double> _rotateAnimation;
   late final Animation<double> _animation;
+  late final Duration _animationDuration;
 
-  Duration get duration => Durations.long1;
+  Duration get duration => _animationDuration;
+  bool get isExpanded => _animationController.isCompleted;
+  bool get isAnimating => _animationController.isAnimating;
+  bool get isDismissed => _animationController.isDismissed;
 
   @override
   void initState() {
     super.initState();
+    _animationDuration = widget.animationDuration ?? Durations.medium1;
     _animationController = AnimationController(
       vsync: this,
       duration: duration,
@@ -83,33 +88,42 @@ class CustomExpansionState<T> extends State<CustomExpansion<T>>
   }
 
   void forward() {
-    _animationController.forward();
+    _animationController.forward().then((onValue) {
+      _onChangedCallback();
+    });
   }
 
   void reverse() {
-    _animationController.reverse();
+    _animationController.reverse().then((onValue) {
+      _onChangedCallback();
+    });
   }
 
-  bool get isExpanded => _animationController.isCompleted;
-  bool get isAnimating => _animationController.isAnimating;
-  bool get isDismissed => _animationController.isDismissed;
+  void _onChangedCallback() {
+    switch (widget.initialState) {
+      case .opened:
+        widget.onChanged?.call(_animationController.isDismissed);
+        break;
+      case .closed:
+        widget.onChanged?.call(_animationController.isCompleted);
+        break;
+    }
+  }
+
+  void _onChanged() {
+    if (!widget.allowExpand) return;
+
+    if (_animationController.isCompleted) {
+      reverse();
+    } else {
+      forward();
+    }
+  }
 
   @override
   void dispose() {
     _animationController.dispose();
     super.dispose();
-  }
-
-  void _onChangeExpansion() {
-    if (!widget.allowExpand) return;
-
-    if (_animationController.isCompleted) {
-      widget.onReverse?.call();
-      _animationController.reverse();
-    } else {
-      widget.onForward?.call();
-      _animationController.forward();
-    }
   }
 
   @override
@@ -122,7 +136,7 @@ class CustomExpansionState<T> extends State<CustomExpansion<T>>
           absorbing: !widget.isEnabled,
           child: InkWell(
             onTap: () {
-              widget.onTap != null ? widget.onTap!() : _onChangeExpansion();
+              widget.onTap != null ? widget.onTap!() : _onChanged();
             },
             borderRadius: context.theme.borderRadiusMD,
             overlayColor: WidgetStatePropertyAll(Colors.transparent),
@@ -156,7 +170,7 @@ class CustomExpansionState<T> extends State<CustomExpansion<T>>
                                 type: .noShape,
                                 heightType: .small,
                                 iconColor: widget.iconColor,
-                                onPressed: _onChangeExpansion,
+                                onPressed: _onChanged,
                                 icon:
                                     widget.icon ??
                                     switch (widget.initialState) {

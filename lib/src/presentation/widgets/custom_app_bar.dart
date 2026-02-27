@@ -80,7 +80,7 @@ class _CustomAppBarState extends State<CustomAppBar>
   @override
   void initState() {
     super.initState();
-    _currentHeight = widget.preferredSize.height;
+    _currentHeight = widget.toolbarHeight ?? widget.preferredSize.height;
     _animationController = AnimationController(
       reverseDuration: _duration,
       duration: _duration,
@@ -182,7 +182,12 @@ class _CustomAppBarState extends State<CustomAppBar>
                   duration: _duration,
                   curve: Curves.easeInOut,
                   reverseDuration: _duration,
-                  child: _appBar,
+                  child: SizedBox(
+                    height: widget.toolbarHeight == null
+                        ? null
+                        : _heightAnimation.value,
+                    child: _appBar,
+                  ),
                 ),
               );
             },
