@@ -7,21 +7,21 @@ import '../extensions/build_context_extensions.dart';
 class CustomCheckboxTile<T> extends StatelessWidget {
   const CustomCheckboxTile({
     super.key,
+    this.title,
     this.subtitle,
     this.onChanged,
-    this.title,
     this.textTitle,
-    this.isSelected = false,
     this.padding = .zero,
-    this.controlAffinity = ListTileControlAffinity.leading,
+    this.isSelected = false,
+    this.controlAffinity = .leading,
   });
 
   final Widget? title;
-  final String? textTitle;
   final bool isSelected;
   final Widget? subtitle;
+  final String? textTitle;
   final EdgeInsets padding;
-  final Function(bool)? onChanged;
+  final Function(bool value)? onChanged;
   final ListTileControlAffinity controlAffinity;
 
   @override
@@ -38,7 +38,7 @@ class CustomCheckboxTile<T> extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  if (controlAffinity == ListTileControlAffinity.leading) ...[
+                  if (controlAffinity == .leading) ...[
                     _boxCheck(context),
                     Spacing.sm.horizontal,
                   ],
@@ -50,7 +50,7 @@ class CustomCheckboxTile<T> extends StatelessWidget {
                           style: context.textTheme.bodyMedium,
                         ),
                   ),
-                  if (controlAffinity == ListTileControlAffinity.trailing) ...[
+                  if (controlAffinity == .trailing) ...[
                     Spacing.sm.horizontal,
                     _boxCheck(context),
                   ],
@@ -70,7 +70,7 @@ class CustomCheckboxTile<T> extends StatelessWidget {
       width: const Spacing(2).value,
       child: DecoratedBox(
         decoration: BoxDecoration(
-          border: Border.all(
+          border: .all(
             width: 1,
             color: isSelected
                 ? context.colorScheme.primary

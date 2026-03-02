@@ -9,12 +9,11 @@ import 'buttons/custom_button.dart';
 
 class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
   factory CustomAppBar.zero({
-    bool enableShadow = false,
     Color? backgroundColor,
+    bool enableShadow = false,
     final EdgeInsets? linearProgressPadding,
   }) {
     return CustomAppBar(
-      toolbarHeight: 0,
       enableShadow: enableShadow,
       backgroundColor: backgroundColor,
       automaticallyImplyLeading: false,

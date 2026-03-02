@@ -9,11 +9,12 @@ import 'custom_loading.dart';
 class TextLink extends StatelessWidget {
   const TextLink({
     super.key,
+    required this.text,
     this.icon,
     this.onTap,
+    this.color,
     this.maxLines,
     this.styleText,
-    required this.text,
     this.underline = true,
     this.isEnabled = true,
     this.isLoading = false,
@@ -23,6 +24,7 @@ class TextLink extends StatelessWidget {
 
   final String text;
   final int? maxLines;
+  final Color? color;
   final bool underline;
   final bool isEnabled;
   final bool isLoading;
@@ -56,10 +58,11 @@ class TextLink extends StatelessWidget {
                   style:
                       styleText ??
                       context.textTheme.bodyMedium?.copyWith(
-                        color: context.textTheme.bodyMedium?.color,
+                        decoration: underline ? .underline : null,
                         fontWeight: context.textTheme.fontWeightMedium,
-                        decoration: underline ? TextDecoration.underline : null,
-                        decorationColor: context.textTheme.bodyMedium?.color,
+                        color: color ?? context.textTheme.bodyMedium?.color,
+                        decorationColor:
+                            color ?? context.textTheme.bodyMedium?.color,
                       ),
                 ),
               ),

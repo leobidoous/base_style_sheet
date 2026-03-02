@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pinput/pinput.dart';
@@ -5,7 +6,6 @@ import 'package:pinput/pinput.dart';
 import '../../../core/themes/app_theme_base.dart';
 import '../../../core/themes/app_theme_factory.dart';
 import '../../../core/themes/spacing/spacing.dart';
-import '../../../core/themes/typography/typography_constants.dart';
 import '../../extensions/build_context_extensions.dart';
 import 'input_label.dart';
 
@@ -96,7 +96,7 @@ class _CustomPinFieldState extends State<CustomPinField> {
     decoration: BoxDecoration(
       borderRadius: context.theme.borderRadiusXSM,
       color: widget.fillColor ?? context.colorScheme.surface,
-      border: Border.all(color: Colors.grey.shade300, width: 1),
+      border: .all(color: Colors.grey.shade300, width: 1),
     ),
   );
 
@@ -104,7 +104,7 @@ class _CustomPinFieldState extends State<CustomPinField> {
     width: const Spacing(7).value,
     height: const Spacing(7).value,
     decoration: BoxDecoration(
-      border: Border.all(color: context.colorScheme.primary, width: 1),
+      border: .all(color: context.colorScheme.primary, width: 1),
       color: widget.fillColor ?? context.colorScheme.surface,
       borderRadius: context.theme.borderRadiusXSM,
     ),
@@ -115,7 +115,7 @@ class _CustomPinFieldState extends State<CustomPinField> {
     height: const Spacing(7).value,
     textStyle: pinTextStyle,
     decoration: BoxDecoration(
-      border: Border.all(color: context.colorScheme.error, width: 1),
+      border: .all(color: context.colorScheme.error, width: 1),
       color: widget.fillColor ?? context.colorScheme.surface,
       borderRadius: context.theme.borderRadiusXSM,
     ),
@@ -132,44 +132,47 @@ class _CustomPinFieldState extends State<CustomPinField> {
             widget.labelWidget!,
             Spacing.xxs.vertical,
           ],
-          Pinput(
-            length: widget.maxLength,
-            autofocus: widget.autofocus,
-            forceErrorState: widget.errorText != null,
-            mainAxisAlignment: .spaceBetween,
-            focusNode: widget.focusNode,
-            controller: widget.controller,
-            defaultPinTheme: defaultTheme,
-            focusedPinTheme: focusedTheme,
-            errorPinTheme: errorTheme,
-            inputFormatters: widget.inputFormatters,
-            pinAnimationType: PinAnimationType.fade,
-            pinputAutovalidateMode: PinputAutovalidateMode.onSubmit,
-            showCursor: true,
-            onSubmitted: widget.onFieldSubmitted,
-            errorText: widget.errorText,
-            onChanged: widget.onChanged,
-            errorBuilder: (errorText, pin) {
-              if (errorText == null || errorText.isEmpty) {
-                return const SizedBox();
-              }
-              return Padding(
-                padding: .only(top: const Spacing(1).value),
-                child: Text(
-                  errorText,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: pinTextStyle?.copyWith(
-                    fontSize: AppFontSize.labelMedium.value,
-                    color: context.colorScheme.error,
+          Opacity(
+            opacity: widget.isEnabled ? 1 : .5,
+            child: Pinput(
+              showCursor: true,
+              pinAnimationType: .fade,
+              length: widget.maxLength,
+              enabled: widget.isEnabled,
+              errorPinTheme: errorTheme,
+              focusNode: widget.focusNode,
+              autofocus: widget.autofocus,
+              errorText: widget.errorText,
+              onChanged: widget.onChanged,
+              controller: widget.controller,
+              defaultPinTheme: defaultTheme,
+              focusedPinTheme: focusedTheme,
+              mainAxisAlignment: .spaceBetween,
+              pinputAutovalidateMode: .onSubmit,
+              onSubmitted: widget.onFieldSubmitted,
+              inputFormatters: widget.inputFormatters,
+              forceErrorState: widget.errorText != null,
+              errorBuilder: (errorText, pin) {
+                if (errorText == null || errorText.isEmpty) {
+                  return const SizedBox();
+                }
+                return Padding(
+                  padding: .only(top: const Spacing(1).value),
+                  child: AutoSizeText(
+                    errorText,
+                    maxLines: 2,
+                    overflow: .ellipsis,
+                    style: context.textTheme.labelSmall?.copyWith(
+                      color: context.colorScheme.error,
+                    ),
                   ),
-                ),
-              );
-            },
-            validator: widget.validator ?? _validator,
-            onCompleted: widget.onComplete,
-            closeKeyboardWhenCompleted: true,
-            keyboardType: widget.keyboardType,
+                );
+              },
+              validator: widget.validator ?? _validator,
+              onCompleted: widget.onComplete,
+              closeKeyboardWhenCompleted: true,
+              keyboardType: widget.keyboardType,
+            ),
           ),
         ],
       ),
