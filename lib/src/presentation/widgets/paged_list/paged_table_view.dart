@@ -131,8 +131,8 @@ class _PagedTableViewState<E, S> extends State<PagedTableView<E, S>> {
           thumbColor: context.colorScheme.primary,
           radius: context.theme.borderRadiusXLG.bottomLeft,
           thickness: switch (defaultTargetPlatform) {
-            TargetPlatform.android => widget.thickness,
-            TargetPlatform.iOS => widget.thickness,
+            .android => widget.thickness,
+            .iOS => widget.thickness,
             TargetPlatform() => 0,
           },
           child: _table(state),

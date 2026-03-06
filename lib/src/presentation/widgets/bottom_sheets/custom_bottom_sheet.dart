@@ -135,10 +135,8 @@ class _CustomBottomSheetState extends State<_CustomBottomSheet> {
                   child: Padding(
                     padding: .only(
                       top: switch (defaultTargetPlatform) {
-                        TargetPlatform.android =>
-                          context.theme.appBarTheme.appBarHeight,
-                        TargetPlatform.iOS =>
-                          context.theme.appBarTheme.appBarHeight,
+                        .android => context.theme.appBarTheme.appBarHeight,
+                        .iOS => context.theme.appBarTheme.appBarHeight,
                         TargetPlatform() =>
                           widget.padding?.top ?? Spacing.sm.value,
                       },

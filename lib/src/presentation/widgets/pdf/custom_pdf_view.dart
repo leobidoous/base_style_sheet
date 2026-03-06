@@ -18,8 +18,8 @@ class CustomPdfView extends StatefulWidget {
     this.url,
     this.file,
     this.headers,
+    this.viewMode = .page,
     this.actions = const [],
-    this.viewMode = CustomPdfViewMode.page,
   });
 
   final File? file;
