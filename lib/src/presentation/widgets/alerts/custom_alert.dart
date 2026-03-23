@@ -74,8 +74,9 @@ class CustomAlert extends StatelessWidget {
       child: Column(
         mainAxisSize: .min,
         crossAxisAlignment: .stretch,
+        spacing: verticalSpacing.value,
         children: [
-          if (header != null) ...[header!, verticalSpacing.vertical],
+          ?header,
           if (svgAsset != null || asset != null) ...[
             CustomImage(
               svgAsset: svgAsset!,
@@ -84,97 +85,58 @@ class CustomAlert extends StatelessWidget {
               imageSize: Size(double.infinity, 100.responsiveHeight),
               backgroundColor: Colors.transparent,
             ),
-            verticalSpacing.vertical,
           ],
-          if (title != null) ...[
+          if (title != null)
             Text(
               title!,
               textAlign: .center,
               style: titleStyle ?? context.textTheme.titleMedium,
             ),
-            verticalSpacing.vertical,
-          ],
-          if (subtitle != null) ...[
+          if (subtitle != null)
             Text(
               subtitle!,
               textAlign: .center,
               style: context.textTheme.bodyLarge,
             ),
-            verticalSpacing.vertical,
-          ],
-          if (content != null) ...[
+          if (content != null)
             SelectableText(
               content!,
               textAlign: .center,
               style: context.textTheme.bodyMedium,
             ),
-            verticalSpacing.vertical,
-          ],
-          if (contentWidget != null) ...[
-            contentWidget!,
-            verticalSpacing.vertical,
-          ],
-          ...switch (buttonsDirection) {
-            Axis.horizontal => [
-              Row(
+          ?contentWidget,
+          if (onCancel != null || onConfirm != null)
+            switch (buttonsDirection) {
+              Axis.horizontal => Row(
+                spacing: verticalSpacing.value,
                 children: [
-                  if (onCancel != null) ...[
-                    Expanded(child: _cancelButtom),
-                    horizontalSpacing.horizontal,
-                  ],
+                  if (onCancel != null) Expanded(child: _cancelButtom),
                   if (onConfirm != null) Expanded(child: _confirmButtom),
                 ],
               ),
-              if (onCancel != null && onConfirm != null && buttons.isNotEmpty)
-                verticalSpacing.vertical,
-            ],
-            Axis.vertical => [
-              Column(
+              Axis.vertical => Column(
                 mainAxisSize: .min,
                 crossAxisAlignment: .stretch,
+                spacing: verticalSpacing.value,
                 children: [
                   if (onConfirm != null) _confirmButtom,
-                  if (onCancel != null && onConfirm != null)
-                    verticalSpacing.vertical,
                   if (onCancel != null) _cancelButtom,
                 ],
               ),
-              if (onCancel != null && onConfirm != null && buttons.isNotEmpty)
-                verticalSpacing.vertical,
-            ],
-          },
-          switch (buttonsDirection) {
-            Axis.horizontal => Row(
-              children: buttons
-                  .map(
-                    (e) => Expanded(
-                      child: Padding(
-                        padding: .only(
-                          right: buttons.last == e
-                              ? 0
-                              : horizontalSpacing.value,
-                        ),
-                        child: e,
-                      ),
-                    ),
-                  )
-                  .toList(),
-            ),
-            Axis.vertical => Column(
-              mainAxisSize: .min,
-              crossAxisAlignment: .stretch,
-              children: buttons
-                  .map(
-                    (b) => Padding(
-                      padding: .only(
-                        bottom: buttons.last == b ? 0 : horizontalSpacing.value,
-                      ),
-                      child: b,
-                    ),
-                  )
-                  .toList(),
-            ),
-          },
+            },
+          if (buttons.isNotEmpty)
+            switch (buttonsDirection) {
+              Axis.horizontal => Row(
+                spacing: horizontalSpacing.value,
+                children: buttons.map((e) => Expanded(child: e)).toList(),
+              ),
+              Axis.vertical => Column(
+                mainAxisSize: .min,
+                crossAxisAlignment: .stretch,
+                spacing: horizontalSpacing.value,
+                children: buttons.map((b) => b).toList(),
+              ),
+            },
         ],
       ),
     );
