@@ -56,32 +56,30 @@ class CustomAlert extends StatelessWidget {
   final Function()? onCancel;
 
   Widget get _confirmButtom {
-    final button = CustomButton.text(
-      heightType: .normal,
-      onPressed: onConfirm,
-      text: btnConfirmLabel,
-      isLoading: confirmIsLoading,
-      isEnabled: !cancelIsLoading,
+    return KeyedSubtree(
+      key: btnConfirmKey,
+      child: CustomButton.text(
+        heightType: .normal,
+        onPressed: onConfirm,
+        text: btnConfirmLabel,
+        isLoading: confirmIsLoading,
+        isEnabled: !cancelIsLoading,
+      ),
     );
-    if (btnConfirmKey != null) {
-      return KeyedSubtree(key: btnConfirmKey, child: button);
-    }
-    return button;
   }
 
   Widget get _cancelButtom {
-    final button = CustomButton.text(
-      type: .background,
-      heightType: .normal,
-      onPressed: onCancel,
-      text: btnCancelLabel,
-      isLoading: cancelIsLoading,
-      isEnabled: !confirmIsLoading,
+    return KeyedSubtree(
+      key: btnCancelKey,
+      child: CustomButton.text(
+        type: .background,
+        heightType: .normal,
+        onPressed: onCancel,
+        text: btnCancelLabel,
+        isLoading: cancelIsLoading,
+        isEnabled: !confirmIsLoading,
+      ),
     );
-    if (btnCancelKey != null) {
-      return KeyedSubtree(key: btnCancelKey, child: button);
-    }
-    return button;
   }
 
   @override
