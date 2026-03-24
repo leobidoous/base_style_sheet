@@ -32,7 +32,7 @@ class InputLabel extends StatelessWidget {
             ),
         ],
       ),
-      overflow: TextOverflow.ellipsis,
+      overflow: .ellipsis,
       style: context.textTheme.bodyMedium?.copyWith(
         fontWeight: AppFontWeight.medium.value,
         color: color,

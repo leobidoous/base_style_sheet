@@ -1,59 +1,57 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/themes/responsive/responsive_extension.dart';
 import '../../../core/themes/spacing/spacing.dart';
 import '../../extensions/build_context_extensions.dart';
 import '../buttons/custom_button.dart';
 import '../custom_scroll_content.dart';
-import '../image_view/custom_image.dart';
 
 class CustomAlert extends StatelessWidget {
   const CustomAlert({
     super.key,
     this.title,
-    this.asset,
     this.header,
     this.content,
     this.subtitle,
     this.onConfirm,
     this.onCancel,
-    this.svgAsset,
     this.titleStyle,
-    this.packageName,
+    this.btnConfirmKey,
+    this.btnCancelKey,
     this.contentWidget,
     this.buttons = const [],
     this.btnCancelLabel = '',
     this.btnConfirmLabel = '',
-    this.btnConfirmKey,
-    this.btnCancelKey,
     this.confirmIsLoading = false,
     this.cancelIsLoading = false,
+    this.titleTextAlign = .center,
+    this.contentTextAlign = .center,
+    this.subtitleTextAlign = .center,
     this.buttonsDirection = .vertical,
     this.verticalSpacing = Spacing.sm,
     this.horizontalSpacing = Spacing.sm,
   });
 
-  final String? svgAsset;
-  final String? asset;
-  final Widget? header;
-  final String? packageName;
   final String? title;
-  final TextStyle? titleStyle;
-  final String? subtitle;
+  final Widget? header;
   final String? content;
-  final Widget? contentWidget;
-  final String btnConfirmLabel;
-  final String btnCancelLabel;
-  final Key? btnConfirmKey;
+  final String? subtitle;
   final Key? btnCancelKey;
+  final Key? btnConfirmKey;
   final bool cancelIsLoading;
   final bool confirmIsLoading;
-  final Axis buttonsDirection;
-  final Spacing verticalSpacing;
-  final Spacing horizontalSpacing;
   final List<Widget> buttons;
   final Function()? onConfirm;
   final Function()? onCancel;
+  final TextStyle? titleStyle;
+  final Widget? contentWidget;
+  final String btnConfirmLabel;
+  final String btnCancelLabel;
+  final Axis buttonsDirection;
+  final Spacing verticalSpacing;
+  final TextAlign titleTextAlign;
+  final Spacing horizontalSpacing;
+  final TextAlign contentTextAlign;
+  final TextAlign subtitleTextAlign;
 
   Widget get _confirmButtom {
     return KeyedSubtree(
@@ -92,44 +90,35 @@ class CustomAlert extends StatelessWidget {
         spacing: verticalSpacing.value,
         children: [
           ?header,
-          if (svgAsset != null || asset != null) ...[
-            CustomImage(
-              svgAsset: svgAsset!,
-              asset: asset,
-              packageName: packageName,
-              imageSize: Size(double.infinity, 100.responsiveHeight),
-              backgroundColor: Colors.transparent,
-            ),
-          ],
           if (title != null)
             Text(
               title!,
-              textAlign: .center,
+              textAlign: titleTextAlign,
               style: titleStyle ?? context.textTheme.titleMedium,
             ),
           if (subtitle != null)
             Text(
               subtitle!,
-              textAlign: .center,
+              textAlign: subtitleTextAlign,
               style: context.textTheme.bodyLarge,
             ),
           if (content != null)
             SelectableText(
               content!,
-              textAlign: .center,
+              textAlign: contentTextAlign,
               style: context.textTheme.bodyMedium,
             ),
           ?contentWidget,
           if (onCancel != null || onConfirm != null)
             switch (buttonsDirection) {
-              Axis.horizontal => Row(
+              .horizontal => Row(
                 spacing: verticalSpacing.value,
                 children: [
                   if (onCancel != null) Expanded(child: _cancelButtom),
                   if (onConfirm != null) Expanded(child: _confirmButtom),
                 ],
               ),
-              Axis.vertical => Column(
+              .vertical => Column(
                 mainAxisSize: .min,
                 crossAxisAlignment: .stretch,
                 spacing: verticalSpacing.value,
@@ -141,11 +130,11 @@ class CustomAlert extends StatelessWidget {
             },
           if (buttons.isNotEmpty)
             switch (buttonsDirection) {
-              Axis.horizontal => Row(
+              .horizontal => Row(
                 spacing: horizontalSpacing.value,
                 children: buttons.map((e) => Expanded(child: e)).toList(),
               ),
-              Axis.vertical => Column(
+              .vertical => Column(
                 mainAxisSize: .min,
                 crossAxisAlignment: .stretch,
                 spacing: horizontalSpacing.value,

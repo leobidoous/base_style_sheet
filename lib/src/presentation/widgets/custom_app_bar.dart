@@ -8,7 +8,8 @@ import '../extensions/build_context_extensions.dart';
 import 'buttons/custom_button.dart';
 
 class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
-  factory CustomAppBar.zero({
+  factory CustomAppBar.zero(
+    BuildContext context, {
     Color? backgroundColor,
     bool enableShadow = false,
     final EdgeInsets? linearProgressPadding,
@@ -18,6 +19,9 @@ class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
       backgroundColor: backgroundColor,
       automaticallyImplyLeading: false,
       linearProgressPadding: linearProgressPadding,
+      toolbarHeight: context.mediaQuery.padding.top > 0
+          ? context.mediaQuery.padding.top
+          : null,
     );
   }
   const CustomAppBar({
