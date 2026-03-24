@@ -20,7 +20,7 @@ class CustomBottomSheet {
     bool showClose = false,
     bool useSafeArea = true,
     bool isDismissible = true,
-    bool showDragHandle = false,
+    bool showDragHandle = true,
     Function(T value)? onClose,
     BoxConstraints? constraints,
     bool useRootNavigator = true,
@@ -33,7 +33,6 @@ class CustomBottomSheet {
       enableDrag: isDismissible,
       isDismissible: isDismissible,
       constraints: BoxConstraints(),
-      showDragHandle: showDragHandle,
       useRootNavigator: useRootNavigator,
       backgroundColor: Colors.transparent,
       isScrollControlled: isScrollControlled,
@@ -50,6 +49,7 @@ class CustomBottomSheet {
           canPop: false,
           child: _CustomBottomSheet(
             backgroundColor: backgroundColor,
+            showDragHandle: showDragHandle,
             isDismissible: isDismissible,
             constraints: constraints,
             useSafeArea: useSafeArea,
@@ -69,19 +69,21 @@ class CustomBottomSheet {
 
 class _CustomBottomSheet extends StatefulWidget {
   const _CustomBottomSheet({
-    this.padding,
-    this.constraints,
-    this.backgroundColor,
     required this.child,
     required this.closeMode,
     required this.showClose,
+    this.padding,
+    this.constraints,
+    this.backgroundColor,
     this.useSafeArea = true,
     this.isDismissible = true,
+    this.showDragHandle = true,
   });
   final Widget child;
   final bool showClose;
   final bool useSafeArea;
   final bool isDismissible;
+  final bool showDragHandle;
   final EdgeInsets? padding;
   final Color? backgroundColor;
   final BoxConstraints? constraints;
@@ -133,21 +135,22 @@ class _CustomBottomSheetState extends State<_CustomBottomSheet> {
                 child: SafeArea(
                   bottom: false,
                   child: Padding(
-                    padding: .only(
-                      top: switch (defaultTargetPlatform) {
-                        .android => context.theme.appBarTheme.appBarHeight,
-                        .iOS => context.theme.appBarTheme.appBarHeight,
-                        TargetPlatform() =>
-                          widget.padding?.top ?? Spacing.sm.value,
-                      },
-                    ),
+                    padding: widget.useSafeArea
+                        ? .only(
+                            top: switch (defaultTargetPlatform) {
+                              .android =>
+                                context.theme.appBarTheme.appBarHeight,
+                              .iOS => context.theme.appBarTheme.appBarHeight,
+                              _ => widget.padding?.top ?? Spacing.sm.value,
+                            },
+                          )
+                        : .zero,
                     child: Column(
                       mainAxisSize: .min,
                       mainAxisAlignment: .end,
                       crossAxisAlignment: .stretch,
                       children: [
-                        if (widget.closeMode ==
-                            CustomBottomSheetCloseMode.outside)
+                        if (widget.closeMode == .outside)
                           if (widget.showClose)
                             Padding(
                               padding: .all(Spacing.xs.value),
@@ -163,32 +166,37 @@ class _CustomBottomSheetState extends State<_CustomBottomSheet> {
                               ),
                             ),
                         Flexible(
-                          child: DecoratedBox(
-                            decoration: _decoration,
-                            child: SafeArea(
-                              bottom: widget.useSafeArea,
-                              child: Column(
-                                mainAxisAlignment: .center,
-                                mainAxisSize: .min,
-                                children: [
-                                  Padding(
-                                    padding: .only(top: Spacing.xxxs.value),
-                                    child: _header,
-                                  ),
-                                  Flexible(
-                                    child: Padding(
-                                      padding:
-                                          widget.padding ??
-                                          .fromLTRB(
-                                            Spacing.sm.value,
-                                            Spacing.xs.value,
-                                            Spacing.sm.value,
-                                            Spacing.sm.value,
-                                          ),
-                                      child: widget.child,
+                          child: ClipRRect(
+                            borderRadius: _decoration.borderRadius ?? .zero,
+                            child: DecoratedBox(
+                              decoration: _decoration,
+                              child: SafeArea(
+                                top: widget.useSafeArea,
+                                bottom: widget.useSafeArea,
+                                child: Column(
+                                  mainAxisAlignment: .center,
+                                  mainAxisSize: .min,
+                                  children: [
+                                    if (widget.showDragHandle)
+                                      Padding(
+                                        padding: .only(top: Spacing.xxxs.value),
+                                        child: _header,
+                                      ),
+                                    Flexible(
+                                      child: Padding(
+                                        padding:
+                                            widget.padding ??
+                                            .fromLTRB(
+                                              Spacing.sm.value,
+                                              Spacing.xs.value,
+                                              Spacing.sm.value,
+                                              Spacing.sm.value,
+                                            ),
+                                        child: widget.child,
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
                           ),
