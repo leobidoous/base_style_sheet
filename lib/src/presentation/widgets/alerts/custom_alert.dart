@@ -24,6 +24,8 @@ class CustomAlert extends StatelessWidget {
     this.buttons = const [],
     this.btnCancelLabel = '',
     this.btnConfirmLabel = '',
+    this.btnConfirmKey,
+    this.btnCancelKey,
     this.confirmIsLoading = false,
     this.cancelIsLoading = false,
     this.buttonsDirection = .vertical,
@@ -42,6 +44,8 @@ class CustomAlert extends StatelessWidget {
   final Widget? contentWidget;
   final String btnConfirmLabel;
   final String btnCancelLabel;
+  final Key? btnConfirmKey;
+  final Key? btnCancelKey;
   final bool cancelIsLoading;
   final bool confirmIsLoading;
   final Axis buttonsDirection;
@@ -51,21 +55,32 @@ class CustomAlert extends StatelessWidget {
   final Function()? onConfirm;
   final Function()? onCancel;
 
-  CustomButton get _confirmButtom => CustomButton.text(
-    heightType: .normal,
-    onPressed: onConfirm,
-    text: btnConfirmLabel,
-    isLoading: confirmIsLoading,
-    isEnabled: !cancelIsLoading,
-  );
-  CustomButton get _cancelButtom => CustomButton.text(
-    type: .background,
-    heightType: .normal,
-    onPressed: onCancel,
-    text: btnCancelLabel,
-    isLoading: cancelIsLoading,
-    isEnabled: !confirmIsLoading,
-  );
+  Widget get _confirmButtom {
+    return KeyedSubtree(
+      key: btnConfirmKey,
+      child: CustomButton.text(
+        heightType: .normal,
+        onPressed: onConfirm,
+        text: btnConfirmLabel,
+        isLoading: confirmIsLoading,
+        isEnabled: !cancelIsLoading,
+      ),
+    );
+  }
+
+  Widget get _cancelButtom {
+    return KeyedSubtree(
+      key: btnCancelKey,
+      child: CustomButton.text(
+        type: .background,
+        heightType: .normal,
+        onPressed: onCancel,
+        text: btnCancelLabel,
+        isLoading: cancelIsLoading,
+        isEnabled: !confirmIsLoading,
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -263,7 +263,9 @@ class _CustomAppBarState extends State<CustomAppBar>
               widget.leadingIcon != null ||
               widget.onBackTap != null
           ? Align(
-              child: CustomButton.child(
+              child: KeyedSubtree(
+                key: const Key('app_bar_back'),
+                child: CustomButton.child(
                 type: .noShape,
                 padding: .zero,
                 heightType: .small,
@@ -282,6 +284,7 @@ class _CustomAppBarState extends State<CustomAppBar>
                       Icons.chevron_left_rounded,
                       size: AppFontSize.iconButton.value,
                     ),
+              ),
               ),
             )
           : const SizedBox(),
