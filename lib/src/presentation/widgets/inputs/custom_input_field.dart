@@ -259,7 +259,7 @@ class _CustomInputFieldState extends State<CustomInputField> {
                     widget.contentPadding ??
                     .symmetric(
                       horizontal: _fontSize,
-                      vertical: widget.maxLines > 1 ? _fontSize : 0,
+                      vertical: Spacing(1).value,
                     ),
                 errorText: widget.errorText == '' ? null : widget.errorText,
                 floatingLabelBehavior: widget.floatingLabelBehavior,

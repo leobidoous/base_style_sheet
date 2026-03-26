@@ -85,7 +85,7 @@ class ColumnLabelValue extends StatelessWidget {
             ],
           ],
         ),
-        spacing?.vertical ?? Spacing.xs.vertical,
+        spacing?.vertical ?? Spacing.xxs.vertical,
         Text(
           value,
           style:

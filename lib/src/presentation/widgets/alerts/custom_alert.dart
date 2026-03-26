@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/themes/spacing/spacing.dart';
+import '../../../core/themes/typography/typography_constants.dart';
 import '../../extensions/build_context_extensions.dart';
 import '../buttons/custom_button.dart';
 import '../custom_scroll_content.dart';
@@ -52,6 +53,40 @@ class CustomAlert extends StatelessWidget {
   final Spacing horizontalSpacing;
   final TextAlign contentTextAlign;
   final TextAlign subtitleTextAlign;
+
+  static Widget iconHeader(
+    BuildContext context, {
+    required IconData iconData,
+    Color? iconColor,
+  }) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        shape: .circle,
+        color: (iconColor ?? context.colorScheme.primary).withValues(
+          alpha: .025,
+        ),
+      ),
+      child: Padding(
+        padding: .all(Spacing.xxs.value),
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            shape: .circle,
+            color: (iconColor ?? context.colorScheme.primary).withValues(
+              alpha: .075,
+            ),
+          ),
+          child: Padding(
+            padding: .all(Spacing.sm.value),
+            child: Icon(
+              iconData,
+              size: AppFontSize.iconButton.value,
+              color: iconColor ?? context.colorScheme.primary,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 
   Widget get _confirmButtom {
     return KeyedSubtree(
