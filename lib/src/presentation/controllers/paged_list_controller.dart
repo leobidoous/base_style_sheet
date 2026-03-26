@@ -43,7 +43,8 @@ class _PagedListConfig<T> {
   late final bool _initWithRequest;
 
   bool get isLastFetch {
-    return lastItems.isNotEmpty && lastItems.length < pageSize;
+    return lastItems.isNotEmpty && lastItems.length < pageSize ||
+        lastItems.isEmpty && pageKey > 0;
   }
 
   void reset() {
@@ -206,7 +207,7 @@ class PagedListController<E, S> extends ValueNotifier<List<S>> {
     int? pageSize,
   }) async {
     if (((state.isNotEmpty && config.preventNewFetch) ||
-            (config.nextPageKey + config.pageIncrement == pageKey) ||
+            (pageKey <= config.pageKey && state.isNotEmpty) ||
             (config.isLastFetch && !config.forceNewFetch) ||
             isLoading) &&
         !forceFetch) {

@@ -24,7 +24,7 @@ class CustomButton extends StatefulWidget {
     Color? loadingPrimaryColor,
     Color? loadingSecondaryColor,
     ButtonType type = .primary,
-    ButtonHeightType heightType = .medium,
+    ButtonHeightType heightType = .normal,
   }) {
     return CustomButton(
       type: type,
@@ -74,7 +74,7 @@ class CustomButton extends StatefulWidget {
     Color? loadingSecondaryColor,
     ButtonType type = .primary,
     EdgeInsets? padding = .zero,
-    ButtonHeightType heightType = .medium,
+    ButtonHeightType heightType = .normal,
   }) {
     return CustomButton(
       type: type,
@@ -115,7 +115,7 @@ class CustomButton extends StatefulWidget {
     Color? loadingSecondaryColor,
     ButtonType type = .primary,
     EdgeInsets? padding = .zero,
-    ButtonHeightType heightType = .medium,
+    ButtonHeightType heightType = .normal,
   }) {
     return CustomButton(
       type: type,
@@ -155,7 +155,7 @@ class CustomButton extends StatefulWidget {
     Color? loadingPrimaryColor,
     Color? loadingSecondaryColor,
     ButtonType type = .primary,
-    ButtonHeightType heightType = .medium,
+    ButtonHeightType heightType = .normal,
   }) {
     return CustomButton(
       type: type,
@@ -223,7 +223,7 @@ class CustomButton extends StatefulWidget {
     Color? loadingPrimaryColor,
     Color? loadingSecondaryColor,
     ButtonType type = .primary,
-    ButtonHeightType heightType = .medium,
+    ButtonHeightType heightType = .normal,
   }) {
     return CustomButton(
       type: type,
@@ -317,7 +317,7 @@ class CustomButton extends StatefulWidget {
     IconData iconData, {
     Color? iconColor,
     ButtonType type = .primary,
-    ButtonHeightType heightType = .medium,
+    ButtonHeightType heightType = .normal,
   }) {
     return Builder(
       builder: (context) {
@@ -366,7 +366,7 @@ class CustomButton extends StatefulWidget {
     Color? textColor,
     TextStyle? textStyle,
     ButtonType type = .primary,
-    ButtonHeightType heightType = .medium,
+    ButtonHeightType heightType = .normal,
   }) {
     return Builder(
       builder: (context) {
@@ -456,19 +456,18 @@ class _CustomButtonState extends State<CustomButton> {
             shape: .all(
               RoundedRectangleBorder(
                 borderRadius: .only(
-                  topLeft:
-                      (widget.borderRadius ?? context.theme.borderRadiusXLG)
-                          .topLeft,
+                  topLeft: (widget.borderRadius ?? context.theme.borderRadiusNM)
+                      .topLeft,
                   topRight:
-                      (widget.borderRadius ?? context.theme.borderRadiusXLG)
+                      (widget.borderRadius ?? context.theme.borderRadiusNM)
                           .topRight,
                   bottomLeft: widget.isSafe
                       ? .zero
-                      : (widget.borderRadius ?? context.theme.borderRadiusXLG)
+                      : (widget.borderRadius ?? context.theme.borderRadiusNM)
                             .bottomLeft,
                   bottomRight: widget.isSafe
                       ? .zero
-                      : (widget.borderRadius ?? context.theme.borderRadiusXLG)
+                      : (widget.borderRadius ?? context.theme.borderRadiusNM)
                             .bottomRight,
                 ),
               ),
