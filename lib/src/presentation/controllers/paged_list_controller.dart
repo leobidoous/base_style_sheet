@@ -10,6 +10,7 @@ class _PagedListConfig<T> {
   _PagedListConfig({
     required this.pageKey,
     required this.pageSize,
+    required this.firstPageKey,
     required this.nextPageKey,
     required this.pageIncrement,
     required this.forceNewFetch,
@@ -18,6 +19,7 @@ class _PagedListConfig<T> {
   }) {
     _pageKey = pageKey;
     _pageSize = pageSize;
+    _firstPageKey = firstPageKey;
     _nextPageKey = nextPageKey;
     _pageIncrement = pageIncrement;
     _forceNewFetch = forceNewFetch;
@@ -27,6 +29,7 @@ class _PagedListConfig<T> {
 
   int pageKey;
   int pageSize;
+  int firstPageKey;
   int nextPageKey;
   int pageIncrement;
   bool forceNewFetch;
@@ -36,6 +39,7 @@ class _PagedListConfig<T> {
 
   late final int _pageKey;
   late final int _pageSize;
+  late final int _firstPageKey;
   late final int _nextPageKey;
   late final int _pageIncrement;
   late final bool _forceNewFetch;
@@ -44,13 +48,14 @@ class _PagedListConfig<T> {
 
   bool get isLastFetch {
     return lastItems.isNotEmpty && lastItems.length < pageSize ||
-        lastItems.isEmpty && pageKey > 0;
+        lastItems.isEmpty && pageKey > firstPageKey;
   }
 
   void reset() {
     lastItems.clear();
     pageKey = _pageKey;
     pageSize = _pageSize;
+    firstPageKey = _firstPageKey;
     nextPageKey = _nextPageKey;
     pageIncrement = _pageIncrement;
     forceNewFetch = _forceNewFetch;
@@ -79,6 +84,7 @@ class PagedListController<E, S> extends ValueNotifier<List<S>> {
       preventNewFetch: preventNewFetch,
       forceNewFetch: forceNewFetch,
       pageIncrement: pageIncrement,
+      firstPageKey: firstPageKey,
       pageKey: firstPageKey,
       pageSize: pageSize,
     );
