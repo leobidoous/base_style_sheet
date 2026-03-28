@@ -270,25 +270,25 @@ class _CustomAppBarState extends State<CustomAppBar>
               child: KeyedSubtree(
                 key: const Key('app_bar_back'),
                 child: CustomButton.child(
-                type: .noShape,
-                padding: .zero,
-                heightType: .small,
-                onPressed:
-                    widget.onBackTap ??
-                    () {
-                      setState(() {
-                        if (Navigator.of(context).canPop()) {
-                          Navigator.of(context).pop();
-                        }
-                      });
-                    },
-                child:
-                    widget.leadingIcon ??
-                    Icon(
-                      Icons.chevron_left_rounded,
-                      size: AppFontSize.iconButton.value,
-                    ),
-              ),
+                  type: .noShape,
+                  padding: .zero,
+                  heightType: .normal,
+                  onPressed:
+                      widget.onBackTap ??
+                      () {
+                        setState(() {
+                          if (Navigator.of(context).canPop()) {
+                            Navigator.of(context).pop();
+                          }
+                        });
+                      },
+                  child:
+                      widget.leadingIcon ??
+                      Icon(
+                        Icons.chevron_left_rounded,
+                        size: AppFontSize.iconButton.value,
+                      ),
+                ),
               ),
             )
           : const SizedBox(),

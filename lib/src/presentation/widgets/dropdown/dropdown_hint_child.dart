@@ -2,14 +2,8 @@ part of 'custom_dropdown.dart';
 
 class _DropdownHintChild extends StatefulWidget {
   const _DropdownHintChild({
-    this.icon,
-    this.onTap,
-    this.prefixIcon,
-    this.onSearchChanged,
-    this.canFocus = true,
-    this.canSearch = true,
+    super.key,
     required this.onClear,
-    this.onEditingComplete,
     required this.fontSize,
     required this.readOnly,
     required this.showClear,
@@ -21,6 +15,12 @@ class _DropdownHintChild extends StatefulWidget {
     required this.boxDecoration,
     required this.valueSelected,
     required this.rotateAnimation,
+    this.icon,
+    this.onTap,
+    this.prefixIcon,
+    this.onSearchChanged,
+    this.canFocus = true,
+    this.canSearch = true,
   });
 
   final Widget? icon;
@@ -38,7 +38,6 @@ class _DropdownHintChild extends StatefulWidget {
   final Function() onClear;
   final String valueSelected;
   final BoxDecoration? boxDecoration;
-  final Function()? onEditingComplete;
   final DropdownHeightType heightType;
   final Animation<double> rotateAnimation;
   final Function(String?)? onSearchChanged;
@@ -48,20 +47,22 @@ class _DropdownHintChild extends StatefulWidget {
 }
 
 class _DropdownHintChildState extends State<_DropdownHintChild> {
-  final _editingController = TextEditingController();
+  late final TextEditingController _editingController;
   final _focusNode = FocusNode();
 
   @override
   void initState() {
     super.initState();
-    _editingController.text = widget.valueSelected;
+    _editingController = TextEditingController(text: widget.valueSelected);
     WidgetsBinding.instance.addPostFrameCallback((callback) {
       if (widget.canFocus && widget.canSearch) {
         _focusNode.requestFocus();
-        _editingController.selection = TextSelection(
-          baseOffset: 0,
-          extentOffset: _editingController.text.length,
-        );
+        if (kIsWeb) {
+          _editingController.selection = TextSelection(
+            baseOffset: 0,
+            extentOffset: _editingController.text.length,
+          );
+        }
       }
     });
   }
@@ -93,15 +94,14 @@ class _DropdownHintChildState extends State<_DropdownHintChild> {
       focusNode: _focusNode,
       textInputAction: .done,
       enableSuggestions: true,
+      readOnly: widget.readOnly,
       autofocus: widget.canFocus,
       isEnabled: widget.isEnabled,
       hintText: widget.placeholder,
       isExpanded: widget.isExpanded,
       controller: _editingController,
       fillColor: widget.boxDecoration?.color,
-      onEditingComplete: widget.onEditingComplete,
       borderRadius: context.theme.borderRadiusNone,
-      readOnly: widget.readOnly || !widget.canSearch,
       onChanged: (input) {
         widget.onTap?.call();
         widget.onSearchChanged?.call(input);

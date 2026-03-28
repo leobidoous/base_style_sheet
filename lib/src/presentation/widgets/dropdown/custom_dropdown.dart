@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../base_style_sheet.dart' show CustomCard;
@@ -201,7 +202,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
     _animationController.dispose();
     _scrollController.dispose();
     _valueSelected.dispose();
-    _removeOverlay();
+    _closeDropdown();
     super.dispose();
   }
 
@@ -210,8 +211,8 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
       _textSearchFilter = '';
       _valueSelected.value = item.label;
       widget.onChanged?.call(item.value);
+      _closeDropdown();
     });
-    _removeOverlay();
   }
 
   void _showDropdown() {
@@ -231,7 +232,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
     overlay.insert(_overlayEntry!);
   }
 
-  void _removeOverlay() {
+  void _closeDropdown() {
     try {
       _overlayEntry?.remove();
       _overlayEntry?.dispose();
@@ -239,6 +240,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
 
       // Limpa o filtro de busca sem disparar requisição
       _textSearchFilter = '';
+      _valueSelected.value = '';
 
       if (mounted) {
         FocusScope.of(context).requestFocus(FocusNode());
@@ -327,12 +329,10 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
       builder: (BuildContext context, Widget? child) {
         return Column(
           mainAxisSize: .min,
+          spacing: Spacing.xxxs.value,
           crossAxisAlignment: widget.isExpanded ? .stretch : .start,
           children: [
-            if (widget.inputLabel != null) ...[
-              widget.inputLabel!,
-              Spacing.xxxs.vertical,
-            ],
+            if (widget.inputLabel != null) widget.inputLabel!,
             Flexible(
               child: AnimatedOpacity(
                 opacity: _opacityAnimation.value,
@@ -359,7 +359,10 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
             children: [
               Semantics(
                 key: _key,
-                child: _container(child: _hintChild, hasError: c.hasError),
+                child: _container(
+                  child: ExcludeFocus(child: _hintChild),
+                  hasError: c.hasError,
+                ),
               ),
               if (c.hasError) ...[
                 Padding(
@@ -431,9 +434,9 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
               child: GestureDetector(
                 onTap: () {
                   if (Spacing.keyboardIsOpened(context)) {
-                    FocusScope.of(context).requestFocus(FocusNode());
+                    FocusScope.of(context).requestScopeFocus();
                   } else {
-                    _removeOverlay();
+                    _closeDropdown();
                   }
                 },
                 child: Container(color: Colors.transparent),
@@ -504,6 +507,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
       valueListenable: _valueSelected,
       builder: (context, value, child) {
         return _DropdownHintChild(
+          key: ValueKey(value),
           onClear: () {
             // Reseta estado interno primeiro
             _textSearchFilter = '';
@@ -519,17 +523,6 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
             _textSearchFilter = input ?? '';
             if (mounted && !_listController.wasDisposed) {
               _listController.search(_textSearchFilter);
-            }
-          },
-          onEditingComplete: () {
-            if (_listController.value.isNotEmpty) {
-              _onChangedItem(
-                context,
-                _listController.value.firstWhere(
-                  (e) => e.label == _valueSelected.value,
-                  orElse: () => _listController.value.first,
-                ),
-              );
             }
           },
           icon: widget.icon,

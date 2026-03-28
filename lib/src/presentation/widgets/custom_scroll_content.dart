@@ -53,7 +53,7 @@ class CustomScrollContent extends StatelessWidget {
     );
 
     if (expanded) {
-      if (scrollDirection == Axis.vertical) {
+      if (scrollDirection == .vertical) {
         scroll = RawScrollbar(
           padding: .zero,
           thickness: switch (defaultTargetPlatform) {
