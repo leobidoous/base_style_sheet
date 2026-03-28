@@ -2,7 +2,6 @@ part of 'custom_dropdown.dart';
 
 class _DropdownHintChild extends StatefulWidget {
   const _DropdownHintChild({
-    super.key,
     required this.onClear,
     required this.fontSize,
     required this.readOnly,
@@ -55,7 +54,7 @@ class _DropdownHintChildState extends State<_DropdownHintChild> {
     WidgetsBinding.instance.addPostFrameCallback((callback) {
       if (widget.canSearch) {
         if (!Spacing.keyboardIsOpened(context) && _focusNode.canRequestFocus) {
-          _focusNode.requestFocus();
+          // _focusNode.requestFocus();
         }
         if (kIsWeb) {
           _editingController.selection = TextSelection(
@@ -65,6 +64,16 @@ class _DropdownHintChildState extends State<_DropdownHintChild> {
         }
       }
     });
+  }
+
+  @override
+  void didUpdateWidget(covariant _DropdownHintChild oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.valueSelected != widget.valueSelected) {
+      WidgetsBinding.instance.addPostFrameCallback((callback) {
+        if (mounted) _editingController.text = widget.valueSelected;
+      });
+    }
   }
 
   @override
