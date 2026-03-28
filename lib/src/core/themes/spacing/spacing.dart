@@ -59,7 +59,7 @@ class Spacing {
 
   /// The scaling factor for gutters and margins
   static bool keyboardIsOpened(BuildContext context) =>
-      context.mediaQuery.viewInsets.bottom != 0;
+      context.mediaQuery.viewInsets.bottom > 0;
 
   /// Default Spacing or keyboard padding
   static double orKeyboardPadding(BuildContext context, double value) =>

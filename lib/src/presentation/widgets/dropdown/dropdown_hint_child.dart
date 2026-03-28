@@ -19,12 +19,10 @@ class _DropdownHintChild extends StatefulWidget {
     this.onTap,
     this.prefixIcon,
     this.onSearchChanged,
-    this.canFocus = true,
     this.canSearch = true,
   });
 
   final Widget? icon;
-  final bool canFocus;
   final bool readOnly;
   final bool canSearch;
   final bool isLoading;
@@ -55,8 +53,10 @@ class _DropdownHintChildState extends State<_DropdownHintChild> {
     super.initState();
     _editingController = TextEditingController(text: widget.valueSelected);
     WidgetsBinding.instance.addPostFrameCallback((callback) {
-      if (widget.canFocus && widget.canSearch) {
-        _focusNode.requestFocus();
+      if (widget.canSearch) {
+        if (!Spacing.keyboardIsOpened(context) && _focusNode.canRequestFocus) {
+          _focusNode.requestFocus();
+        }
         if (kIsWeb) {
           _editingController.selection = TextSelection(
             baseOffset: 0,
@@ -95,7 +95,7 @@ class _DropdownHintChildState extends State<_DropdownHintChild> {
       textInputAction: .done,
       enableSuggestions: true,
       readOnly: widget.readOnly,
-      autofocus: widget.canFocus,
+      autofocus: widget.canSearch,
       isEnabled: widget.isEnabled,
       hintText: widget.placeholder,
       isExpanded: widget.isExpanded,

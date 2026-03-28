@@ -67,15 +67,15 @@ class _PagedListConfig<T> {
 class PagedListController<E, S> extends ValueNotifier<List<S>> {
   PagedListController({
     int pageSize = 10,
-    this.firstPageKey = 0,
-    this.reverse = false,
     int pageIncrement = 1,
-    this.searchPercent = 100,
     bool forceNewFetch = false,
     bool initWithRequest = true,
     bool preventNewFetch = false,
-    this.searchDebounce = Duration.zero,
+    this.firstPageKey = 0,
+    this.reverse = false,
     this.onSearchChanged,
+    this.searchPercent = 100,
+    this.searchDebounce = .zero,
   }) : assert(searchPercent >= 0 && searchPercent <= 100),
        super(const []) {
     config = _PagedListConfig(

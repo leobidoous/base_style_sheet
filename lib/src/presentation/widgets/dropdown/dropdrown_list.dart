@@ -43,6 +43,25 @@ class _DropdownList<T> extends StatelessWidget {
           padding: padding ?? .all(Spacing.sm.value),
         );
       },
+      newPageProgressIndicatorBuilder: (context) {
+        return Padding(
+          padding:
+              padding ??
+              .symmetric(
+                horizontal: Spacing.sm.value,
+                vertical: Spacing.xs.value,
+              ),
+          child: Column(
+            children: [
+              CustomLoading(
+                height: AppFontSize.iconButton.value,
+                width: AppFontSize.iconButton.value,
+              ),
+              Text('Buscando...', style: context.textTheme.bodyMedium),
+            ],
+          ),
+        );
+      },
       firstPageProgressIndicatorBuilder: (_) {
         return ListView.separated(
           itemCount: 5,

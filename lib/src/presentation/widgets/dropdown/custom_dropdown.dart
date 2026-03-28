@@ -220,7 +220,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
 
     _animationController.forward();
 
-    final overlay = Overlay.of(context);
+    final overlay = Overlay.of(context, rootOverlay: true);
 
     _overlayEntry = OverlayEntry(
       builder: (context) => Material(
@@ -234,6 +234,8 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
 
   void _closeDropdown() {
     try {
+      if (mounted) FocusScope.of(context).requestScopeFocus();
+
       _overlayEntry?.remove();
       _overlayEntry?.dispose();
       _overlayEntry = null;
@@ -241,10 +243,6 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
       // Limpa o filtro de busca sem disparar requisição
       _textSearchFilter = '';
       _valueSelected.value = '';
-
-      if (mounted) {
-        FocusScope.of(context).requestFocus(FocusNode());
-      }
 
       _animationController.isCompleted ? _animationController.reverse() : null;
     } catch (e) {
@@ -297,7 +295,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
   }
 
   double _getMaxHeight(BuildContext context, BoxConstraints constraints) {
-    final mediaQuery = MediaQuery.of(context);
+    final mediaQuery = context.mediaQuery;
     final safeAreaTop = mediaQuery.padding.top;
     final safeAreaBottom = mediaQuery.padding.bottom;
     final padding = widget.verticalSpacing ?? Spacing.sm.value;
@@ -359,6 +357,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
             children: [
               Semantics(
                 key: _key,
+                button: true,
                 child: _container(
                   child: ExcludeFocus(child: _hintChild),
                   hasError: c.hasError,
@@ -530,7 +529,6 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
           isEnabled: _isEnabled,
           showClear: _showClear,
           readOnly: widget.readOnly,
-          canSearch: widget.canSearch,
           isLoading: widget.isLoading,
           prefixIcon: widget.prefixIcon,
           isExpanded: widget.isExpanded,
@@ -539,7 +537,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
           rotateAnimation: _rotateAnimation,
           boxDecoration: widget.boxDecoration,
           valueSelected: _valueSelected.value,
-          canFocus: _animationController.isForwardOrCompleted,
+          canSearch: widget.canSearch && _animationController.isCompleted,
         );
       },
     );
