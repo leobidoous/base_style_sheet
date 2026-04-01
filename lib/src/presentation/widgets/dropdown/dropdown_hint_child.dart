@@ -54,7 +54,7 @@ class _DropdownHintChildState extends State<_DropdownHintChild> {
     WidgetsBinding.instance.addPostFrameCallback((callback) {
       if (widget.canSearch) {
         if (!Spacing.keyboardIsOpened(context) && _focusNode.canRequestFocus) {
-          // _focusNode.requestFocus();
+          _focusNode.requestFocus();
         }
         if (kIsWeb) {
           _editingController.selection = TextSelection(

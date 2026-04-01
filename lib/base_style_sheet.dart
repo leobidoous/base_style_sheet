@@ -19,6 +19,7 @@ export 'package:base_style_sheet/src/presentation/shapes/coupom_border_painter.d
 export 'package:base_style_sheet/src/presentation/shapes/inverse_border_shape.dart';
 export 'package:base_style_sheet/src/presentation/widgets/alerts/custom_alert.dart';
 export 'package:base_style_sheet/src/presentation/widgets/animated_dot.dart';
+export 'package:base_style_sheet/src/presentation/widgets/bottom_nav_bar_blur_container.dart';
 export 'package:base_style_sheet/src/presentation/widgets/bottom_sheets/bottom_sheet_drag_icon.dart';
 export 'package:base_style_sheet/src/presentation/widgets/bottom_sheets/custom_bottom_sheet.dart';
 export 'package:base_style_sheet/src/presentation/widgets/buttons/app_bar_button.dart';
