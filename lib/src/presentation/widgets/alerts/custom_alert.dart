@@ -58,11 +58,12 @@ class CustomAlert extends StatelessWidget {
     BuildContext context, {
     required IconData iconData,
     Color? iconColor,
+    Color? backgroundColor,
   }) {
     return DecoratedBox(
       decoration: BoxDecoration(
         shape: .circle,
-        color: (iconColor ?? context.colorScheme.primary).withValues(
+        color: (backgroundColor ?? context.colorScheme.primary).withValues(
           alpha: .025,
         ),
       ),
@@ -71,7 +72,7 @@ class CustomAlert extends StatelessWidget {
         child: DecoratedBox(
           decoration: BoxDecoration(
             shape: .circle,
-            color: (iconColor ?? context.colorScheme.primary).withValues(
+            color: (backgroundColor ?? context.colorScheme.primary).withValues(
               alpha: .075,
             ),
           ),

@@ -234,7 +234,7 @@ void _removeOverlay() {
   _textSearchFilter = '';
 
   if (mounted) {
-    FocusScope.of(context).requestFocus(FocusNode());
+    FocusScope.of(context).requestScopeFocus();
   }
 
   _animationController.isCompleted ? _animationController.reverse() : null;

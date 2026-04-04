@@ -6,6 +6,13 @@ enum ButtonType { primary, secondary, tertiary, background, noShape }
 
 enum ButtonHeightType { medium, normal, small }
 
+class _EmptyChild extends StatelessWidget {
+  const _EmptyChild();
+
+  @override
+  Widget build(BuildContext context) => SizedBox();
+}
+
 class CustomButton extends StatefulWidget {
   factory CustomButton.text({
     Color? color,
@@ -91,12 +98,14 @@ class CustomButton extends StatefulWidget {
       loadingPrimaryColor: loadingPrimaryColor,
       loadingSecondaryColor: loadingSecondaryColor,
       padding: padding ?? .symmetric(horizontal: Spacing.xs.value),
-      child: _iconValue(
-        icon,
-        type: type,
-        iconColor: iconColor,
-        heightType: heightType,
-      ),
+      child: isLoading
+          ? _EmptyChild()
+          : _iconValue(
+              icon,
+              type: type,
+              iconColor: iconColor,
+              heightType: heightType,
+            ),
     );
   }
 
@@ -180,16 +189,17 @@ class CustomButton extends StatefulWidget {
         },
         message: text,
         child: Row(
-          mainAxisAlignment: .spaceBetween,
           mainAxisSize: .min,
+          spacing: Spacing.xxs.value,
+          mainAxisAlignment: .spaceBetween,
           children: [
-            _iconValue(
-              icon,
-              type: type,
-              iconColor: iconColor,
-              heightType: heightType,
-            ),
-            Spacing.xxs.horizontal,
+            if (!isLoading)
+              _iconValue(
+                icon,
+                type: type,
+                iconColor: iconColor,
+                heightType: heightType,
+              ),
             Flexible(
               child: _textValue(
                 text,
@@ -249,6 +259,7 @@ class CustomButton extends StatefulWidget {
         message: text,
         child: Row(
           mainAxisSize: .min,
+          spacing: Spacing.xxs.value,
           mainAxisAlignment: .spaceBetween,
           children: [
             Flexible(
@@ -259,13 +270,13 @@ class CustomButton extends StatefulWidget {
                 textColor: textColor,
               ),
             ),
-            Spacing.xxs.horizontal,
-            _iconValue(
-              icon,
-              type: type,
-              iconColor: iconColor,
-              heightType: heightType,
-            ),
+            if (!isLoading)
+              _iconValue(
+                icon,
+                type: type,
+                iconColor: iconColor,
+                heightType: heightType,
+              ),
           ],
         ),
       ),
@@ -506,12 +517,12 @@ class _CustomButtonState extends State<CustomButton> {
 
   AnimatedSwitcher get _child {
     return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 500),
+      duration: Durations.long2,
       child: Row(
         mainAxisSize: .min,
         spacing: Spacing.xs.value,
         children: [
-          Flexible(child: widget.child),
+          if (widget.child is! _EmptyChild) Flexible(child: widget.child),
           if (widget.isLoading)
             DecoratedBox(
               decoration: BoxDecoration(
