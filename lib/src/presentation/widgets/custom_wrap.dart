@@ -51,7 +51,7 @@ class CustomWrap<T> extends StatelessWidget {
                 // Determina a posição na linha atual (0-indexed)
                 final positionInRow = index % nCols!;
 
-                // Se temos flexChilds definidos e 
+                // Se temos flexChilds definidos e
                 // a posição está dentro do range
                 if (flexChilds.isNotEmpty &&
                     positionInRow < flexChilds.length) {

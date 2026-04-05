@@ -8,10 +8,10 @@ import 'custom_button.dart';
 class AppBarButton extends StatelessWidget {
   const AppBarButton({
     super.key,
+    required this.child,
     this.onTap,
     this.padding,
     this.borderRadius,
-    required this.child,
     this.isEnabled = true,
     this.isLoading = false,
     this.isLastButtom = true,

@@ -74,10 +74,7 @@ class ListEmpty extends StatelessWidget {
               ],
               if (onPressed != null && btnLabel.isNotEmpty) ...[
                 Spacing.sm.vertical,
-                CustomButton.text(
-                  onPressed: onPressed,
-                  text: btnLabel,
-                ),
+                CustomButton.text(onPressed: onPressed, text: btnLabel),
               ],
             ],
           ),
