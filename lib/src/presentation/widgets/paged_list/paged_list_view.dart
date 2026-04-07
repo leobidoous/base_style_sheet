@@ -20,6 +20,9 @@ enum PagedListMode { normal, wrap }
 class PagedListView<E, S> extends StatefulWidget {
   const PagedListView({
     super.key,
+    required this.itemBuilder,
+    required this.listController,
+    required this.separatorBuilder,
     this.nCols,
     this.physics,
     this.thickness,
@@ -29,11 +32,8 @@ class PagedListView<E, S> extends StatefulWidget {
     this.scrollController,
     this.shrinkWrap = false,
     this.allowRefresh = true,
-    required this.itemBuilder,
     this.parentScrollController,
-    required this.listController,
     this.safeAreaLastItem = true,
-    required this.separatorBuilder,
     this.scrollDirection = .vertical,
     this.noItemsFoundIndicatorBuilder,
     this.newPageErrorIndicatorBuilder,

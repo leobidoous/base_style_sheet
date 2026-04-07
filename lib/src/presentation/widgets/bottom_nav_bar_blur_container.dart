@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../core/themes/app_theme_factory.dart';
@@ -30,7 +31,7 @@ class BottomNavBarBlurContainer extends StatelessWidget {
                 Spacing.sm.value,
                 Spacing.sm.value,
                 Spacing.sm.value,
-                Spacing.md.value,
+                kIsWeb ? Spacing.sm.value : Spacing.md.value,
               ),
           borderRadius: .only(
             topLeft: context.theme.borderRadiusMD.topLeft,

@@ -17,12 +17,12 @@ import '../errors/custom_request_error.dart';
 /// Configuração de uma coluna da tabela
 class TableColumnConfig<S> {
   const TableColumnConfig({
+    required this.header,
+    required this.cellBuilder,
     this.flex,
     this.width,
     this.onTap,
     this.boxDecoration,
-    required this.header,
-    required this.cellBuilder,
     this.alignment = .centerLeft,
   }) : assert(
          width == null || flex == null,
@@ -41,20 +41,20 @@ class TableColumnConfig<S> {
 class PagedTableView<E, S> extends StatefulWidget {
   const PagedTableView({
     super.key,
+    required this.columns,
+    required this.context,
+    required this.tableController,
     this.physics,
     this.thickness,
     this.refreshLogo,
     this.boxDecoration,
     this.padding = .zero,
-    required this.columns,
-    required this.context,
     this.scrollController,
     this.useSafeArea = true,
     this.shrinkWrap = false,
     this.allowRefresh = true,
     this.heightType = .normal,
     this.parentScrollController,
-    required this.tableController,
     this.allowHorizontalScroll = true,
     this.noItemsFoundIndicatorBuilder,
     this.newPageErrorIndicatorBuilder,
@@ -372,6 +372,11 @@ class _PagedTableViewState<E, S> extends State<PagedTableView<E, S>> {
         CustomDropdown<int>(
           canSearch: false,
           isExpanded: false,
+          borderRadius: switch (widget.heightType) {
+            .small => context.theme.borderRadiusSM,
+            .medium => context.theme.borderRadiusMD,
+            .normal => context.theme.borderRadiusNM,
+          },
           heightType: widget.heightType,
           isEnabled: !_listController.isLoading,
           value: _listController.config.pageSize.toString(),

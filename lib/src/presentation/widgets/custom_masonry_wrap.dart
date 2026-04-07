@@ -20,9 +20,9 @@ class CustomMasonryWrap extends StatelessWidget {
   const CustomMasonryWrap({
     super.key,
     required this.nCols,
+    required this.items,
     this.spacing = 8,
     this.runSpacing = 8,
-    required this.items,
     this.padding = .zero,
   });
 
