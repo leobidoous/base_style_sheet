@@ -1,24 +1,4 @@
-import 'package:flutter/material.dart'
-    show
-        Align,
-        BoxConstraints,
-        BoxDecoration,
-        BoxShadow,
-        BuildContext,
-        Colors,
-        Column,
-        EdgeInsets,
-        Flexible,
-        Icons,
-        Material,
-        MaterialLocalizations,
-        Navigator,
-        Padding,
-        PopScope,
-        SafeArea,
-        Widget,
-        showGeneralDialog;
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 
 import '../../core/themes/app_theme_factory.dart';
 import '../../core/themes/spacing/spacing.dart';
@@ -32,24 +12,24 @@ class CustomDialog {
   static Future<bool> show<T>(
     BuildContext context,
     Widget child, {
-    Function(T)? onClose,
+    String? routeName,
     EdgeInsets? padding,
     bool showClose = true,
+    Color? backgroundColor,
+    bool isDismissible = true,
+    Function(T value)? onClose,
     BoxConstraints? constraints,
     bool useRootNavigator = true,
-    bool isDismissible = true,
-    String? routeName,
-    Color? backgroundColor,
-    CustomDialogCloseMode closeMode = CustomDialogCloseMode.outside,
+    CustomDialogCloseMode closeMode = .outside,
   }) async {
     return await showGeneralDialog<T>(
       context: context,
       barrierDismissible: false,
       useRootNavigator: useRootNavigator,
-      routeSettings: RouteSettings(name: routeName ?? '/${child.runtimeType}/'),
       barrierColor: Colors.black.withValues(alpha: 0.8),
       transitionDuration: const Duration(milliseconds: 250),
       barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
+      routeSettings: RouteSettings(name: routeName ?? '/${child.runtimeType}/'),
       pageBuilder: (_, animation, secondaryAnimation) {
         return PopScope(
           canPop: false,
