@@ -1,20 +1,4 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart'
-    show
-        Animation,
-        AnimationController,
-        BuildContext,
-        ClipRRect,
-        Column,
-        CurvedAnimation,
-        Curves,
-        DecoratedBox,
-        LinearProgressIndicator,
-        SizedBox,
-        TickerProviderStateMixin,
-        Transform,
-        Tween,
-        Widget;
+import 'package:flutter/material.dart';
 
 import '../../core/themes/app_theme_factory.dart';
 import '../../core/themes/spacing/spacing.dart';

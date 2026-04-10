@@ -67,7 +67,7 @@ class CustomMasonryWrap extends StatelessWidget {
                       crossAxisAlignment: .stretch,
                       children: columns[i].asMap().entries.map((entry) {
                         return Padding(
-                          padding: EdgeInsets.only(
+                          padding: .only(
                             bottom: entry.key < columns[i].length - 1
                                 ? runSpacing
                                 : 0,
