@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../base_style_sheet.dart' show CustomCard;
 import '../../../core/themes/app_theme_base.dart';
 import '../../../core/themes/app_theme_factory.dart';
 import '../../../core/themes/spacing/spacing.dart';
@@ -9,6 +8,7 @@ import '../../../core/themes/typography/typography_constants.dart';
 import '../../controllers/paged_list_controller.dart';
 import '../../extensions/build_context_extensions.dart';
 import '../buttons/custom_button.dart';
+import '../containers/custom_card.dart';
 import '../containers/custom_shimmer.dart';
 import '../custom_loading.dart';
 import '../custom_scroll_content.dart';
@@ -266,21 +266,25 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
   }
 
   double _getTopPosition(BoxConstraints constraints) {
-    return _isOnTop(constraints)
-        ? _offset.dy
-        : (widget.verticalSpacing ?? Spacing.sm.value);
+    return _isOnTop(constraints) ? _offset.dy : 0;
   }
 
   double _getBottomPosition(BuildContext context, BoxConstraints constraints) {
     late double dy;
     dy = _isOnTop(constraints)
-        ? (widget.verticalSpacing ?? Spacing.sm.value)
+        ? 0
         : constraints.maxHeight - _offset.dy - _size.height;
     return (_isOnTop(constraints)
-        ? dy + (widget.verticalSpacing ?? Spacing.sm.value)
+        ? dy +
+              Spacing.orKeyboardPadding(
+                context,
+                (widget.verticalSpacing ?? Spacing.sm.value),
+              )
         : Spacing.keyboardHeigth(context) > dy
-        ? Spacing.keyboardHeigth(context) +
-              (widget.verticalSpacing ?? Spacing.sm.value)
+        ? Spacing.orKeyboardPadding(
+            context,
+            (widget.verticalSpacing ?? Spacing.sm.value),
+          )
         : dy);
   }
 
@@ -296,14 +300,16 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
     final mediaQuery = context.mediaQuery;
     final safeAreaTop = mediaQuery.padding.top;
     final safeAreaBottom = mediaQuery.padding.bottom;
-    final padding = widget.verticalSpacing ?? Spacing.sm.value;
+    final padding =
+        widget.verticalSpacing ??
+        Spacing.sm.value * (Spacing.keyboardIsOpened(context) ? 2 : 0);
 
     if (widget.maxHeight != null) return widget.maxHeight!;
 
     if (_isOnTop(constraints)) {
       return constraints.maxHeight - _offset.dy - safeAreaBottom - padding;
     } else {
-      return _offset.dy + _size.height - safeAreaTop - padding;
+      return _offset.dy + _size.height - padding - safeAreaTop;
     }
   }
 

@@ -37,7 +37,7 @@ class _DropdownHintChild extends StatefulWidget {
   final BoxDecoration? boxDecoration;
   final DropdownHeightType heightType;
   final Animation<double> rotateAnimation;
-  final Function(String?)? onSearchChanged;
+  final Function(String? input)? onSearchChanged;
 
   @override
   State<_DropdownHintChild> createState() => _DropdownHintChildState();
@@ -101,11 +101,11 @@ class _DropdownHintChildState extends State<_DropdownHintChild> {
       autocorrect: false,
       onTap: widget.onTap,
       focusNode: _focusNode,
-      textInputAction: .done,
       enableSuggestions: true,
       readOnly: widget.readOnly,
       autofocus: widget.canSearch,
       isEnabled: widget.isEnabled,
+      textInputAction: .unspecified,
       hintText: widget.placeholder,
       isExpanded: widget.isExpanded,
       controller: _editingController,

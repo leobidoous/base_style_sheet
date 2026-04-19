@@ -22,7 +22,6 @@ class CustomExpansion<T> extends StatefulWidget {
     this.isSelected = false,
     this.showTrailing = true,
     this.initialState = .closed,
-    this.allowDismissOnBody = false,
     this.crossAxisAlignment = .stretch,
   });
 
@@ -36,7 +35,6 @@ class CustomExpansion<T> extends StatefulWidget {
   final bool showTrailing;
   final Function()? onTap;
   final EdgeInsets padding;
-  final bool allowDismissOnBody;
   final Duration? animationDuration;
   final ExpansionState initialState;
   final Function(bool isExpanded)? onChanged;
@@ -134,29 +132,19 @@ class CustomExpansionState<T> extends State<CustomExpansion<T>>
         opacity: widget.isEnabled ? 1 : .5,
         child: AbsorbPointer(
           absorbing: !widget.isEnabled,
-          child: InkWell(
-            onTap: () {
-              widget.onTap != null ? widget.onTap!() : _onChanged();
-            },
-            borderRadius: context.theme.borderRadiusMD,
-            overlayColor: WidgetStatePropertyAll(Colors.transparent),
-            child: AnimatedBuilder(
-              animation: _animationController,
-              child: Semantics(
-                button: !widget.allowDismissOnBody,
-                child: InkWell(
-                  borderRadius: context.theme.borderRadiusMD,
-                  onTap: !widget.allowDismissOnBody ? () {} : null,
-                  overlayColor: WidgetStatePropertyAll(Colors.transparent),
-                  child: widget.body ?? const SizedBox(),
-                ),
-              ),
-              builder: (_, child) {
-                return Column(
-                  mainAxisSize: .min,
-                  crossAxisAlignment: widget.crossAxisAlignment,
-                  children: [
-                    Padding(
+          child: AnimatedBuilder(
+            animation: _animationController,
+            child: widget.body ?? const SizedBox(),
+            builder: (_, child) {
+              return Column(
+                mainAxisSize: .min,
+                crossAxisAlignment: widget.crossAxisAlignment,
+                children: [
+                  InkWell(
+                    onTap: widget.onTap ?? _onChanged,
+                    borderRadius: context.theme.borderRadiusMD,
+                    overlayColor: WidgetStatePropertyAll(Colors.transparent),
+                    child: Padding(
                       padding: widget.padding,
                       child: Row(
                         mainAxisSize: .min,
@@ -185,18 +173,18 @@ class CustomExpansionState<T> extends State<CustomExpansion<T>>
                         ],
                       ),
                     ),
-                    FadeTransition(
-                      opacity: _animation,
-                      child: SizeTransition(
-                        sizeFactor: _animation,
-                        axisAlignment: 1,
-                        child: child!,
-                      ),
+                  ),
+                  FadeTransition(
+                    opacity: _animation,
+                    child: SizeTransition(
+                      sizeFactor: _animation,
+                      axisAlignment: 1,
+                      child: child!,
                     ),
-                  ],
-                );
-              },
-            ),
+                  ),
+                ],
+              );
+            },
           ),
         ),
       ),

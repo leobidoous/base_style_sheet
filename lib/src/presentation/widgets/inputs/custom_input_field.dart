@@ -123,6 +123,10 @@ class CustomInputField extends StatefulWidget {
 }
 
 class _CustomInputFieldState extends State<CustomInputField> {
+  late final TextEditingController _inputController;
+  late final FocusNode _inputFocus;
+  final _inputKey = GlobalKey();
+
   BoxConstraints get _boxConstraints {
     switch (widget.heightType) {
       case .medium:
@@ -166,118 +170,162 @@ class _CustomInputFieldState extends State<CustomInputField> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    _inputController = widget.controller ?? TextEditingController();
+    _inputFocus = widget.focusNode ?? FocusNode();
+    _inputController.addListener(_onTextChanged);
+    _inputFocus.addListener(_onFocusChanged);
+  }
+
+  @override
+  void dispose() {
+    _inputFocus.removeListener(_onFocusChanged);
+    if (widget.focusNode == null) _inputFocus.dispose();
+    _inputController.removeListener(_onTextChanged);
+    if (widget.controller == null) _inputController.dispose();
+    super.dispose();
+  }
+
+  void _onFocusChanged() {
+    if (!_inputFocus.hasFocus) return;
+    _scrollToVisible();
+  }
+
+  void _onTextChanged() {
+    if (!_inputFocus.hasFocus) return;
+    _scrollToVisible();
+  }
+
+  void _scrollToVisible() {
+    WidgetsBinding.instance.addPostFrameCallback((callback) async {
+      if (!mounted || !_inputFocus.hasFocus) return;
+      final ctx = _inputKey.currentContext;
+      if (ctx == null) return;
+      Scrollable.ensureVisible(
+        ctx,
+        curve: Curves.easeInOut,
+        duration: Durations.medium1,
+        alignmentPolicy: .keepVisibleAtEnd,
+      );
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final child = Column(
-      mainAxisSize: .min,
-      crossAxisAlignment: .stretch,
-      children: [
-        if (widget.inputLabel != null) ...[
-          widget.inputLabel!,
-          Spacing.xxxs.vertical,
-        ],
-        Flexible(
-          child: Opacity(
-            opacity: widget.isEnabled ? 1 : .5,
-            child: TextFormField(
-              key: widget.key,
-              onTap: widget.onTap,
-              enabled: widget.isEnabled,
-              maxLines: widget.maxLines,
-              minLines: widget.minLines,
-              readOnly: widget.readOnly,
-              smartDashesType: .enabled,
-              textAlignVertical: .center,
-              maxLength: widget.maxLength,
-              textAlign: widget.textAlign,
-              focusNode: widget.focusNode,
-              controller: widget.controller,
-              autocorrect: widget.autocorrect,
-              keyboardType: widget.keyboardType,
-              autofillHints: widget.autofillHints,
-              initialValue: widget.initialValue,
-              buildCounter: widget.buildCounter,
-              onTapOutside: widget.onTapOutside,
-              inputFormatters: widget.inputFormatters,
-              autovalidateMode: widget.autovalidateMode,
-              onFieldSubmitted: widget.onFieldSubmitted,
-              cursorRadius: .circular(Spacing.md.value),
-              enableSuggestions: widget.enableSuggestions,
-              onEditingComplete: widget.onEditingComplete,
-              textCapitalization: widget.textCapitalization,
-              textInputAction: widget.textInputAction ?? .done,
-              enableInteractiveSelection: widget.enableinteractiveSelection,
-              style: context.textTheme.bodyMedium?.copyWith(
-                fontWeight: AppFontWeight.normal.value,
-                fontSize: _fontSize,
-              ),
-              obscureText: widget.obscureText,
-              decoration: InputDecoration(
-                focusColor: Colors.transparent,
-                hoverColor: Colors.transparent,
-                isCollapsed: widget.isCollapsed,
-                isDense: widget.isDense,
-                filled: widget.fillColor != null,
-                fillColor: widget.isEnabled
-                    ? widget.fillColor ?? context.colorScheme.surface
-                    : (widget.fillColor ?? context.colorScheme.surface)
-                          .withValues(alpha: .75),
-                hintStyle: context.textTheme.bodyMedium?.copyWith(
+    final child = KeyedSubtree(
+      key: _inputKey,
+      child: Column(
+        mainAxisSize: .min,
+        crossAxisAlignment: .stretch,
+        children: [
+          if (widget.inputLabel != null) ...[
+            widget.inputLabel!,
+            Spacing.xxxs.vertical,
+          ],
+          Flexible(
+            child: Opacity(
+              opacity: widget.isEnabled ? 1 : .5,
+              child: TextFormField(
+                onTap: widget.onTap,
+                focusNode: _inputFocus,
+                enabled: widget.isEnabled,
+                maxLines: widget.maxLines,
+                minLines: widget.minLines,
+                readOnly: widget.readOnly,
+                smartDashesType: .enabled,
+                textAlignVertical: .center,
+                maxLength: widget.maxLength,
+                textAlign: widget.textAlign,
+                controller: _inputController,
+                autocorrect: widget.autocorrect,
+                keyboardType: widget.keyboardType,
+                autofillHints: widget.autofillHints,
+                initialValue: widget.initialValue,
+                buildCounter: widget.buildCounter,
+                onTapOutside: widget.onTapOutside,
+                inputFormatters: widget.inputFormatters,
+                autovalidateMode: widget.autovalidateMode,
+                onFieldSubmitted: widget.onFieldSubmitted,
+                cursorRadius: .circular(Spacing.md.value),
+                enableSuggestions: widget.enableSuggestions,
+                onEditingComplete: widget.onEditingComplete,
+                textCapitalization: widget.textCapitalization,
+                textInputAction: widget.textInputAction ?? .done,
+                enableInteractiveSelection: widget.enableinteractiveSelection,
+                style: context.textTheme.bodyMedium?.copyWith(
                   fontWeight: AppFontWeight.normal.value,
-                  color: context.textTheme.bodyMedium?.color?.withValues(
-                    alpha: .75,
-                  ),
                   fontSize: _fontSize,
                 ),
-                labelStyle: context.textTheme.titleMedium?.copyWith(
-                  fontWeight: AppFontWeight.medium.value,
-                ),
-                errorMaxLines: 2,
-                hintText: widget.hintText,
-                labelText: widget.labelText,
-                constraints: _boxConstraints,
-                counterText: widget.counterText,
-                prefix: Text(widget.prefix ?? ''),
-                suffixIconConstraints: _boxConstraints.copyWith(
-                  minWidth: widget.suffixIcon != null
-                      ? _boxConstraints.minWidth
-                      : widget.contentPadding?.right ?? _fontSize,
-                ),
-                prefixIconConstraints: _boxConstraints.copyWith(
-                  minWidth: widget.prefixIcon != null
-                      ? _boxConstraints.minWidth
-                      : widget.contentPadding?.left ?? _fontSize,
-                ),
-                helperStyle: context.textTheme.labelSmall,
-                suffixIcon: widget.suffixIcon ?? SizedBox(width: _fontSize),
-                prefixIcon: widget.prefixIcon ?? SizedBox(width: _fontSize),
-                errorStyle:
-                    widget.errorStyle ??
-                    context.textTheme.labelSmall?.copyWith(
-                      color: context.colorScheme.error,
+                obscureText: widget.obscureText,
+                decoration: InputDecoration(
+                  focusColor: Colors.transparent,
+                  hoverColor: Colors.transparent,
+                  isCollapsed: widget.isCollapsed,
+                  isDense: widget.isDense,
+                  filled: widget.fillColor != null,
+                  fillColor: widget.isEnabled
+                      ? widget.fillColor ?? context.colorScheme.surface
+                      : (widget.fillColor ?? context.colorScheme.surface)
+                            .withValues(alpha: .75),
+                  hintStyle: context.textTheme.bodyMedium?.copyWith(
+                    fontWeight: AppFontWeight.normal.value,
+                    color: context.textTheme.bodyMedium?.color?.withValues(
+                      alpha: .75,
                     ),
-                contentPadding:
-                    widget.contentPadding ??
-                    .symmetric(
-                      horizontal: _fontSize,
-                      vertical: Spacing(1).value,
-                    ),
-                errorText: widget.errorText == '' ? null : widget.errorText,
-                floatingLabelBehavior: widget.floatingLabelBehavior,
-                focusedErrorBorder: _border(context.colorScheme.error),
-                errorBorder: _border(context.colorScheme.error),
-                disabledBorder: _border(Colors.grey),
-                enabledBorder: _border(Colors.grey),
-                focusedBorder: _border(Colors.grey),
-                border: _border(Colors.grey),
-                alignLabelWithHint: true,
+                    fontSize: _fontSize,
+                  ),
+                  labelStyle: context.textTheme.titleMedium?.copyWith(
+                    fontWeight: AppFontWeight.medium.value,
+                  ),
+                  errorMaxLines: 2,
+                  hintText: widget.hintText,
+                  labelText: widget.labelText,
+                  constraints: _boxConstraints,
+                  counterText: widget.counterText,
+                  prefix: Text(widget.prefix ?? ''),
+                  suffixIconConstraints: _boxConstraints.copyWith(
+                    minWidth: widget.suffixIcon != null
+                        ? _boxConstraints.minWidth
+                        : widget.contentPadding?.right ?? _fontSize,
+                  ),
+                  prefixIconConstraints: _boxConstraints.copyWith(
+                    minWidth: widget.prefixIcon != null
+                        ? _boxConstraints.minWidth
+                        : widget.contentPadding?.left ?? _fontSize,
+                  ),
+                  helperStyle: context.textTheme.labelSmall,
+                  suffixIcon: widget.suffixIcon ?? SizedBox(width: _fontSize),
+                  prefixIcon: widget.prefixIcon ?? SizedBox(width: _fontSize),
+                  errorStyle:
+                      widget.errorStyle ??
+                      context.textTheme.labelSmall?.copyWith(
+                        color: context.colorScheme.error,
+                      ),
+                  contentPadding:
+                      widget.contentPadding ??
+                      .symmetric(
+                        horizontal: _fontSize,
+                        vertical: Spacing(1).value,
+                      ),
+                  errorText: widget.errorText == '' ? null : widget.errorText,
+                  floatingLabelBehavior: widget.floatingLabelBehavior,
+                  focusedErrorBorder: _border(context.colorScheme.error),
+                  errorBorder: _border(context.colorScheme.error),
+                  disabledBorder: _border(Colors.grey),
+                  enabledBorder: _border(Colors.grey),
+                  focusedBorder: _border(Colors.grey),
+                  border: _border(Colors.grey),
+                  alignLabelWithHint: true,
+                ),
+                onChanged: widget.onChanged,
+                autofocus: widget.autofocus,
+                validator: _validator,
               ),
-              onChanged: widget.onChanged,
-              autofocus: widget.autofocus,
-              validator: _validator,
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
     if (widget.isExpanded) return child;
 

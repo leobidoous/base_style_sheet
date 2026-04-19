@@ -88,7 +88,9 @@ class TextLink extends StatelessWidget {
               : Icon(
                   icon,
                   color:
-                      styleText?.color ?? context.textTheme.bodyMedium?.color,
+                      color ??
+                      styleText?.color ??
+                      context.textTheme.bodyMedium?.color,
                   size: AppFontSize.bodyMedium.value,
                 ),
         );

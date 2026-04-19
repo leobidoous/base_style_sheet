@@ -5,13 +5,13 @@ import '../../core/themes/app_theme_factory.dart';
 import '../extensions/build_context_extensions.dart';
 import 'custom_refresh_indicator.dart';
 
-class CustomScrollContent extends StatelessWidget {
+class CustomScrollContent extends StatefulWidget {
   const CustomScrollContent({
     super.key,
+    required this.child,
     this.physics,
     this.onRefresh,
     this.refreshLogo,
-    required this.child,
     this.reverse = false,
     this.expanded = false,
     this.scrollController,
@@ -34,6 +34,25 @@ class CustomScrollContent extends StatelessWidget {
   final ScrollController? scrollController;
 
   @override
+  State<CustomScrollContent> createState() => _CustomScrollContentState();
+}
+
+class _CustomScrollContentState extends State<CustomScrollContent> {
+  late final ScrollController _scrollController;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = widget.scrollController ?? ScrollController();
+  }
+
+  @override
+  void dispose() {
+    if (widget.scrollController == null) _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     Widget scroll = NotificationListener(
       onNotification: (notification) {
@@ -41,19 +60,21 @@ class CustomScrollContent extends StatelessWidget {
       },
       child: SingleChildScrollView(
         physics:
-            physics ??
-            (alwaysScrollable ? const AlwaysScrollableScrollPhysics() : null),
-        scrollDirection: scrollDirection,
-        controller: scrollController,
-        clipBehavior: clipBehavior,
-        reverse: reverse,
-        padding: padding,
-        child: child,
+            widget.physics ??
+            (widget.alwaysScrollable
+                ? const AlwaysScrollableScrollPhysics()
+                : null),
+        scrollDirection: widget.scrollDirection,
+        clipBehavior: widget.clipBehavior,
+        controller: _scrollController,
+        reverse: widget.reverse,
+        padding: widget.padding,
+        child: widget.child,
       ),
     );
 
-    if (expanded) {
-      if (scrollDirection == .vertical) {
+    if (widget.expanded) {
+      if (widget.scrollDirection == .vertical) {
         scroll = RawScrollbar(
           padding: .zero,
           thickness: switch (defaultTargetPlatform) {
@@ -61,15 +82,15 @@ class CustomScrollContent extends StatelessWidget {
             .iOS => null,
             _ => 0,
           },
-          controller: scrollController,
+          controller: _scrollController,
           thumbColor: context.colorScheme.primary,
           radius: context.theme.borderRadiusXLG.bottomLeft,
           child: scroll,
         );
-        if (onRefresh != null) {
+        if (widget.onRefresh != null) {
           return CustomRefreshIndicator(
-            refreshLogo: refreshLogo,
-            onRefresh: onRefresh!,
+            refreshLogo: widget.refreshLogo,
+            onRefresh: widget.onRefresh!,
             child: Column(
               crossAxisAlignment: .stretch,
               children: [Expanded(child: scroll)],
@@ -82,10 +103,10 @@ class CustomScrollContent extends StatelessWidget {
         );
       }
       return scroll;
-    } else if (onRefresh != null) {
+    } else if (widget.onRefresh != null) {
       return CustomRefreshIndicator(
-        refreshLogo: refreshLogo,
-        onRefresh: onRefresh!,
+        refreshLogo: widget.refreshLogo,
+        onRefresh: widget.onRefresh!,
         child: scroll,
       );
     }

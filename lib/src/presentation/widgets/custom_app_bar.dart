@@ -39,9 +39,9 @@ class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
     this.backgroundColor,
     this.centerTitle = true,
     this.enableShadow = true,
+    this.titlePadding = .zero,
     this.linearProgressPadding,
     this.scrolledUnderElevation,
-    this.titlePadding = .zero,
     this.automaticallyImplyLeading = true,
   });
 
