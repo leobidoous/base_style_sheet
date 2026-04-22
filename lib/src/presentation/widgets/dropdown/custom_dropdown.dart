@@ -118,7 +118,6 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
   String _valueSelected = '';
   final _key = GlobalKey();
   bool _showClear = false;
-  late double _maxHeight;
   late Offset _offset;
   late Size _size;
 
@@ -239,8 +238,8 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
       _overlayEntry?.dispose();
       _overlayEntry = null;
 
-      // Limpa o filtro de busca sem disparar requisição
-      _textSearchFilter = '';
+      // Limpa o filtro de busca e notifica o controller
+          _listController.clearSearch();
 
       _animationController.isCompleted ? _animationController.reverse() : null;
     } catch (e) {
@@ -266,51 +265,42 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
   }
 
   double _getTopPosition(BoxConstraints constraints) {
-    return _isOnTop(constraints) ? _offset.dy : 0;
+    final view = View.of(context);
+    final spacing = widget.verticalSpacing ?? Spacing.sm.value;
+    final safeTop = view.viewPadding.top / view.devicePixelRatio;
+
+    return _isOnTop(constraints) ? _offset.dy : safeTop + spacing;
   }
 
   double _getBottomPosition(BuildContext context, BoxConstraints constraints) {
-    late double dy;
-    dy = _isOnTop(constraints)
-        ? 0
-        : constraints.maxHeight - _offset.dy - _size.height;
-    return (_isOnTop(constraints)
-        ? dy +
-              Spacing.orKeyboardPadding(
-                context,
-                (widget.verticalSpacing ?? Spacing.sm.value),
-              )
-        : Spacing.keyboardHeigth(context) > dy
-        ? Spacing.orKeyboardPadding(
-            context,
-            (widget.verticalSpacing ?? Spacing.sm.value),
-          )
-        : dy);
+    final keyboardHeight = Spacing.keyboardHeigth(context);
+    final spacing = widget.verticalSpacing ?? Spacing.sm.value;
+    final safeAreaBottom = context.mediaQuery.padding.bottom;
+
+    if (_isOnTop(constraints)) {
+      /// Dropdown abre para baixo: bottom = espaço entre o fundo da
+      /// área útil e o fundo do dropdown (limitado pelo spacing).
+      return safeAreaBottom + spacing + keyboardHeight;
+    }
+
+    /// Fundo do widget na tela.
+    final widgetBottom = _offset.dy + _size.height;
+
+    /// Dropdown abre para cima: bottom = distância do fundo do widget
+    /// até o fundo da tela, garantindo que não fique atrás do teclado.
+    final distanceToBottom = constraints.maxHeight - widgetBottom;
+    if (keyboardHeight + spacing > distanceToBottom) {
+      /// O teclado cobre o espaço abaixo do widget — ajusta o bottom
+      /// para que o dropdown fique acima do teclado.
+      return keyboardHeight + spacing;
+    }
+    return distanceToBottom > 0 ? distanceToBottom : spacing;
   }
 
-  double get _getLeftPosition {
-    return _offset.dx;
-  }
+  double get _getLeftPosition => _offset.dx;
 
   double _getRightPosition(BoxConstraints constraints) {
     return constraints.maxWidth - _offset.dx - _size.width;
-  }
-
-  double _getMaxHeight(BuildContext context, BoxConstraints constraints) {
-    final mediaQuery = context.mediaQuery;
-    final safeAreaTop = mediaQuery.padding.top;
-    final safeAreaBottom = mediaQuery.padding.bottom;
-    final padding =
-        widget.verticalSpacing ??
-        Spacing.sm.value * (Spacing.keyboardIsOpened(context) ? 2 : 0);
-
-    if (widget.maxHeight != null) return widget.maxHeight!;
-
-    if (_isOnTop(constraints)) {
-      return constraints.maxHeight - _offset.dy - safeAreaBottom - padding;
-    } else {
-      return _offset.dy + _size.height - padding - safeAreaTop;
-    }
   }
 
   String? _validator(String? input) {
@@ -387,11 +377,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
     );
   }
 
-  Widget _container({
-    double? maxHeight,
-    required Widget child,
-    bool hasError = false,
-  }) {
+  Widget _container({required Widget child, bool hasError = false}) {
     return DecoratedBox(
       decoration:
           widget.boxDecoration ??
@@ -404,11 +390,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
             ),
           ),
       child: ConstrainedBox(
-        constraints:
-            widget.boxConstraints ??
-            BoxConstraints(
-              maxHeight: maxHeight?.abs() ?? AppThemeBase.buttonHeightMD,
-            ),
+        constraints: widget.boxConstraints ?? BoxConstraints(),
         child: IntrinsicWidth(
           stepWidth: widget.isExpanded
               ? widget.boxConstraints?.maxWidth ?? .infinity
@@ -428,7 +410,6 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
     return LayoutBuilder(
       builder: (context, constraints) {
         _getWidgetInfos(overlayContext);
-        _maxHeight = _getMaxHeight(context, constraints);
         return Stack(
           children: [
             Positioned.fill(
@@ -456,10 +437,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
                   mainAxisAlignment: _isOnTop(constraints) ? .start : .end,
                   children: [
                     Flexible(
-                      child: _container(
-                        maxHeight: _maxHeight,
-                        child: _dropdownBuilder(constraints),
-                      ),
+                      child: _container(child: _dropdownBuilder(constraints)),
                     ),
                   ],
                 ),

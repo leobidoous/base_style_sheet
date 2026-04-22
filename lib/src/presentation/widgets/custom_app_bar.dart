@@ -14,14 +14,14 @@ class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
     bool enableShadow = false,
     final EdgeInsets? linearProgressPadding,
   }) {
+    final view = View.of(context);
+    final safeTop = view.viewPadding.top / view.devicePixelRatio;
     return CustomAppBar(
       enableShadow: enableShadow,
       backgroundColor: backgroundColor,
       automaticallyImplyLeading: false,
+      toolbarHeight: safeTop > 0 ? safeTop : null,
       linearProgressPadding: linearProgressPadding,
-      toolbarHeight: context.mediaQuery.padding.top > 0
-          ? context.mediaQuery.padding.top
-          : null,
     );
   }
   const CustomAppBar({

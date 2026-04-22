@@ -177,7 +177,7 @@ class PagedListController<E, S> extends ValueNotifier<List<S>> {
     _searchDebounceTimer?.cancel();
 
     // Execute immediately if requested or debounce is zero
-    if (immediate || searchDebounce == Duration.zero) {
+    if (immediate || searchDebounce == .zero) {
       await _executeSearch(searchTerm);
       return;
     }
@@ -189,6 +189,15 @@ class PagedListController<E, S> extends ValueNotifier<List<S>> {
         await _executeSearch(searchTerm);
       }
     });
+  }
+
+  /// Limpa o filtro de busca sem disparar nova requisição.
+  /// Apenas notifica o [onSearchChanged] com string vazia
+  /// e reseta o termo interno.
+  Future<void> clearSearch() async {
+    _searchDebounceTimer?.cancel();
+    _lastSearchTerm = null;
+    if (onSearchChanged != null) await onSearchChanged!('');
   }
 
   Future<void> _executeSearch(String searchTerm) async {
