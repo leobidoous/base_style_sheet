@@ -115,11 +115,17 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
   bool _canForceValidator = false;
   String _textSearchFilter = '';
   OverlayEntry? _overlayEntry;
+  ModalRoute<dynamic>? _route;
   String _valueSelected = '';
   final _key = GlobalKey();
   bool _showClear = false;
   late Offset _offset;
   late Size _size;
+
+  /// Controla se o pop da rota deve ser bloqueado.
+  /// Quando o overlay está aberto, o primeiro pop fecha o dropdown
+  /// (e o teclado); o segundo pop navega de volta.
+  bool get _shouldBlockPop => _overlayEntry != null;
 
   bool get _isEnabled => !widget.isLoading && widget.isEnabled;
 
@@ -184,6 +190,25 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final newRoute = ModalRoute.of(context);
+    if (newRoute != _route) {
+      _route?.animation?.removeStatusListener(_onRouteAnimationStatus);
+      _route = newRoute;
+      _route?.animation?.addStatusListener(_onRouteAnimationStatus);
+    }
+  }
+
+  void _onRouteAnimationStatus(AnimationStatus status) {
+    // Quando a rota começa a sair (pop), fecha o overlay imediatamente
+    // para evitar que ele fique órfão e cause exceções.
+    if (status == .reverse && _overlayEntry != null) {
+      _closeDropdown();
+    }
+  }
+
+  @override
   void didUpdateWidget(covariant CustomDropdown<T> oldWidget) {
     _textSearchFilter = '';
     _showClear =
@@ -197,6 +222,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
 
   @override
   void dispose() {
+    _route?.animation?.removeStatusListener(_onRouteAnimationStatus);
     if (widget.listController == null) _listController.dispose();
     _animationController.dispose();
     _scrollController.dispose();
@@ -239,7 +265,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
       _overlayEntry = null;
 
       // Limpa o filtro de busca e notifica o controller
-          _listController.clearSearch();
+      _listController.clearSearch();
 
       _animationController.isCompleted ? _animationController.reverse() : null;
     } catch (e) {
@@ -299,9 +325,8 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
 
   double get _getLeftPosition => _offset.dx;
 
-  double _getRightPosition(BoxConstraints constraints) {
-    return constraints.maxWidth - _offset.dx - _size.width;
-  }
+  double _getRightPosition(BoxConstraints constraints) =>
+      constraints.maxWidth - _offset.dx - _size.width;
 
   String? _validator(String? input) {
     String? error = widget.validator?.call(input);
@@ -316,63 +341,73 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: _animationController,
-      builder: (BuildContext context, Widget? child) {
-        return Column(
-          mainAxisSize: .min,
-          spacing: Spacing.xxxs.value,
-          crossAxisAlignment: widget.isExpanded ? .stretch : .start,
-          children: [
-            if (widget.inputLabel != null) widget.inputLabel!,
-            Flexible(
-              child: AnimatedOpacity(
-                opacity: _opacityAnimation.value,
-                duration: .zero,
-                child: child,
-              ),
-            ),
-          ],
-        );
+    return PopScope(
+      canPop: !_shouldBlockPop,
+      onPopInvokedWithResult: (didPop, result) {
+        if (!didPop && _shouldBlockPop) {
+          _closeDropdown();
+        }
       },
-      child: FormField<String>(
-        enabled: _isEnabled,
-        validator: _validator,
-        initialValue: _valueSelected,
-        key: ValueKey(_valueSelected),
-        autovalidateMode: widget.autovalidateMode,
-        forceErrorText: _canForceValidator ? _validator(_valueSelected) : null,
-        builder: (c) {
+      child: AnimatedBuilder(
+        animation: _animationController,
+        builder: (BuildContext context, Widget? child) {
           return Column(
             mainAxisSize: .min,
+            spacing: Spacing.xxxs.value,
             crossAxisAlignment: widget.isExpanded ? .stretch : .start,
             children: [
-              Semantics(
-                key: _key,
-                button: true,
-                child: _container(
-                  child: ExcludeFocus(child: _hintChild),
-                  hasError: c.hasError,
+              if (widget.inputLabel != null) widget.inputLabel!,
+              Flexible(
+                child: AnimatedOpacity(
+                  opacity: _opacityAnimation.value,
+                  duration: .zero,
+                  child: child,
                 ),
               ),
-              if (c.hasError) ...[
-                Padding(
-                  padding: .only(
-                    top: Spacing.xxs.value,
-                    left: widget.childPadding?.left ?? Spacing.xs.value,
-                    right: widget.childPadding?.right ?? Spacing.xs.value,
-                  ),
-                  child: Text(
-                    c.errorText ?? '',
-                    style: c.context.textTheme.labelSmall?.copyWith(
-                      color: context.colorScheme.error,
-                    ),
-                  ),
-                ),
-              ],
             ],
           );
         },
+        child: FormField<String>(
+          enabled: _isEnabled,
+          validator: _validator,
+          initialValue: _valueSelected,
+          key: ValueKey(_valueSelected),
+          autovalidateMode: widget.autovalidateMode,
+          forceErrorText: _canForceValidator
+              ? _validator(_valueSelected)
+              : null,
+          builder: (c) {
+            return Column(
+              mainAxisSize: .min,
+              crossAxisAlignment: widget.isExpanded ? .stretch : .start,
+              children: [
+                Semantics(
+                  key: _key,
+                  button: true,
+                  child: _container(
+                    child: ExcludeFocus(child: _hintChild),
+                    hasError: c.hasError,
+                  ),
+                ),
+                if (c.hasError) ...[
+                  Padding(
+                    padding: .only(
+                      top: Spacing.xxs.value,
+                      left: widget.childPadding?.left ?? Spacing.xs.value,
+                      right: widget.childPadding?.right ?? Spacing.xs.value,
+                    ),
+                    child: Text(
+                      c.errorText ?? '',
+                      style: c.context.textTheme.labelSmall?.copyWith(
+                        color: context.colorScheme.error,
+                      ),
+                    ),
+                  ),
+                ],
+              ],
+            );
+          },
+        ),
       ),
     );
   }
