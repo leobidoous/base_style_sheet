@@ -64,7 +64,7 @@ extension ThemeDataExtension on ThemeData {
   double get customRadioCircleSize => AppThemeBase.customRadioCircleSize;
   double get disclaimerIconSize => AppThemeBase.disclaimerIconSize;
 
-  Border get borderNone => Border.all(width: 0, color: Colors.transparent);
+  Border get borderNone => .all(width: 0, color: Colors.transparent);
 }
 
 extension InputDecorationThemeExtension on InputDecorationTheme {

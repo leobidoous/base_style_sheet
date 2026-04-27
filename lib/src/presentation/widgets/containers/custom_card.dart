@@ -53,7 +53,7 @@ class CustomCard extends StatelessWidget {
                       : color ?? context.colorScheme.surface,
                   border:
                       border ??
-                      Border.all(
+                      .all(
                         width: .05,
                         color: isSelected
                             ? context.colorScheme.primary

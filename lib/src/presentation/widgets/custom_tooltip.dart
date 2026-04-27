@@ -47,7 +47,7 @@ class CustomTooltip extends StatelessWidget {
       decoration: BoxDecoration(
         border:
             border ??
-            Border.all(
+            .all(
               width: .05,
               color: context.colorScheme.onSurface.withValues(alpha: .01),
             ),
