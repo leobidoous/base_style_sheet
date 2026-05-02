@@ -2,12 +2,14 @@ part of 'custom_dropdown.dart';
 
 class _DropdownHintChild extends StatefulWidget {
   const _DropdownHintChild({
+    super.key,
     required this.onClear,
     required this.fontSize,
     required this.readOnly,
     required this.showClear,
     required this.isLoading,
     required this.isEnabled,
+    required this.focusNode,
     required this.isExpanded,
     required this.heightType,
     required this.placeholder,
@@ -33,6 +35,7 @@ class _DropdownHintChild extends StatefulWidget {
   final Widget? prefixIcon;
   final String placeholder;
   final Function() onClear;
+  final FocusNode focusNode;
   final String valueSelected;
   final BoxDecoration? boxDecoration;
   final DropdownHeightType heightType;
@@ -45,7 +48,6 @@ class _DropdownHintChild extends StatefulWidget {
 
 class _DropdownHintChildState extends State<_DropdownHintChild> {
   late final TextEditingController _editingController;
-  final _focusNode = FocusNode();
 
   @override
   void initState() {
@@ -53,15 +55,15 @@ class _DropdownHintChildState extends State<_DropdownHintChild> {
     _editingController = TextEditingController(text: widget.valueSelected);
     WidgetsBinding.instance.addPostFrameCallback((callback) {
       if (widget.canSearch) {
-        if (!Spacing.keyboardIsOpened(context) && _focusNode.canRequestFocus) {
-          _focusNode.requestFocus();
-        }
+        if (widget.focusNode.canRequestFocus) widget.focusNode.requestFocus();
         if (kIsWeb) {
           _editingController.selection = TextSelection(
             baseOffset: 0,
             extentOffset: _editingController.text.length,
           );
         }
+      } else {
+        widget.focusNode.unfocus();
       }
     });
   }
@@ -79,7 +81,6 @@ class _DropdownHintChildState extends State<_DropdownHintChild> {
   @override
   void dispose() {
     _editingController.dispose();
-    _focusNode.dispose();
     super.dispose();
   }
 
@@ -100,10 +101,10 @@ class _DropdownHintChildState extends State<_DropdownHintChild> {
       borderSide: .none,
       autocorrect: false,
       onTap: widget.onTap,
-      focusNode: _focusNode,
       textInputAction: .done,
       enableSuggestions: true,
       readOnly: widget.readOnly,
+      focusNode: widget.focusNode,
       autofocus: widget.canSearch,
       isEnabled: widget.isEnabled,
       hintText: widget.placeholder,

@@ -172,7 +172,8 @@ class _CustomInputFieldState extends State<CustomInputField> {
   @override
   void initState() {
     super.initState();
-    _inputController = widget.controller ?? TextEditingController();
+    _inputController =
+        widget.controller ?? TextEditingController(text: widget.initialValue);
     _inputFocus = widget.focusNode ?? FocusNode();
     _inputController.addListener(_onTextChanged);
     _inputFocus.addListener(_onFocusChanged);
@@ -241,7 +242,6 @@ class _CustomInputFieldState extends State<CustomInputField> {
                 autocorrect: widget.autocorrect,
                 keyboardType: widget.keyboardType,
                 autofillHints: widget.autofillHints,
-                initialValue: widget.initialValue,
                 buildCounter: widget.buildCounter,
                 onTapOutside: widget.onTapOutside,
                 inputFormatters: widget.inputFormatters,

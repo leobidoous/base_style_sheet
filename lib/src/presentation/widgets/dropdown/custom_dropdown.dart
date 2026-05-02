@@ -112,6 +112,9 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
   late final Animation<double> _opacityAnimation;
   late final Animation<double> _rotateAnimation;
   final _scrollController = ScrollController();
+  final _dropdownHintChildKey = GlobalKey();
+  // final _dropdownBuilderKey = GlobalKey();
+  final _searchFocusNode = FocusNode();
   bool _canForceValidator = false;
   String _textSearchFilter = '';
   OverlayEntry? _overlayEntry;
@@ -226,6 +229,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
     if (widget.listController == null) _listController.dispose();
     _animationController.dispose();
     _scrollController.dispose();
+    _searchFocusNode.dispose();
     _closeDropdown();
     super.dispose();
   }
@@ -234,9 +238,9 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
     setState(() {
       _textSearchFilter = '';
       _valueSelected = item.label;
+      widget.onChanged?.call(item.value);
+      _closeDropdown();
     });
-    widget.onChanged?.call(item.value);
-    _closeDropdown();
   }
 
   void _showDropdown() {
@@ -385,7 +389,9 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
                   key: _key,
                   button: true,
                   child: _container(
-                    child: ExcludeFocus(child: _hintChild),
+                    child: ExcludeFocus(
+                      child: _hintChild(ValueKey(_valueSelected)),
+                    ),
                     hasError: c.hasError,
                   ),
                 ),
@@ -489,9 +495,9 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
       width: _size.width,
       items: widget.items,
       fontSize: _fontSize,
-      hintChild: _hintChild,
       padding: widget.listPadding,
       itemStyle: widget.itemStyle,
+      key: ValueKey(_valueSelected),
       valueSelected: _valueSelected,
       heightType: widget.heightType,
       isOnTop: _isOnTop(constraints),
@@ -500,6 +506,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
       placeholder: widget.placeholder,
       scrollController: _scrollController,
       itemSelectedStyle: widget.itemSelectedStyle,
+      hintChild: _hintChild(_dropdownHintChildKey),
       boxDecoration:
           widget.boxDecoration ??
           BoxDecoration(
@@ -511,8 +518,9 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
     );
   }
 
-  Widget get _hintChild {
+  Widget _hintChild([Key? key]) {
     return _DropdownHintChild(
+      key: key,
       onClear: () {
         setState(() {
           _textSearchFilter = '';
@@ -535,15 +543,16 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
       fontSize: _fontSize,
       isEnabled: _isEnabled,
       showClear: _showClear,
-      readOnly: widget.readOnly,
       isLoading: widget.isLoading,
       prefixIcon: widget.prefixIcon,
+      focusNode: _searchFocusNode,
       isExpanded: widget.isExpanded,
       heightType: widget.heightType,
       valueSelected: _valueSelected,
       placeholder: widget.placeholder,
       rotateAnimation: _rotateAnimation,
       boxDecoration: widget.boxDecoration,
+      readOnly: widget.readOnly || !widget.canSearch,
       canSearch: widget.canSearch && _animationController.isCompleted,
     );
   }

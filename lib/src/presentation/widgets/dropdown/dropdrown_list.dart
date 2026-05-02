@@ -2,6 +2,7 @@ part of 'custom_dropdown.dart';
 
 class _DropdownList<T> extends StatelessWidget {
   const _DropdownList({
+    super.key,
     required this.items,
     required this.padding,
     required this.fontSize,
