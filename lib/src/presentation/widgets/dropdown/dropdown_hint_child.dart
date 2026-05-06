@@ -9,7 +9,6 @@ class _DropdownHintChild extends StatefulWidget {
     required this.showClear,
     required this.isLoading,
     required this.isEnabled,
-    required this.focusNode,
     required this.isExpanded,
     required this.heightType,
     required this.placeholder,
@@ -19,6 +18,7 @@ class _DropdownHintChild extends StatefulWidget {
     this.icon,
     this.onTap,
     this.prefixIcon,
+    this.focusNode,
     this.onSearchChanged,
     this.canSearch = true,
   });
@@ -35,7 +35,7 @@ class _DropdownHintChild extends StatefulWidget {
   final Widget? prefixIcon;
   final String placeholder;
   final Function() onClear;
-  final FocusNode focusNode;
+  final FocusNode? focusNode;
   final String valueSelected;
   final BoxDecoration? boxDecoration;
   final DropdownHeightType heightType;
@@ -55,15 +55,15 @@ class _DropdownHintChildState extends State<_DropdownHintChild> {
     _editingController = TextEditingController(text: widget.valueSelected);
     WidgetsBinding.instance.addPostFrameCallback((callback) {
       if (widget.canSearch) {
-        if (widget.focusNode.canRequestFocus) widget.focusNode.requestFocus();
-        if (kIsWeb) {
+        if (widget.focusNode?.canRequestFocus == true) {
+          widget.focusNode?.requestFocus();
+        }
+        if (kIsWeb && _editingController.text.isNotEmpty) {
           _editingController.selection = TextSelection(
             baseOffset: 0,
             extentOffset: _editingController.text.length,
           );
         }
-      } else {
-        widget.focusNode.unfocus();
       }
     });
   }
@@ -105,13 +105,13 @@ class _DropdownHintChildState extends State<_DropdownHintChild> {
       enableSuggestions: true,
       readOnly: widget.readOnly,
       focusNode: widget.focusNode,
-      autofocus: widget.canSearch,
       isEnabled: widget.isEnabled,
       hintText: widget.placeholder,
       isExpanded: widget.isExpanded,
       controller: _editingController,
       fillColor: widget.boxDecoration?.color,
       borderRadius: context.theme.borderRadiusNone,
+      autofocus: widget.canSearch && !widget.readOnly,
       onChanged: (input) {
         widget.onTap?.call();
         widget.onSearchChanged?.call(input);

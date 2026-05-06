@@ -389,9 +389,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
                   key: _key,
                   button: true,
                   child: _container(
-                    child: ExcludeFocus(
-                      child: _hintChild(ValueKey(_valueSelected)),
-                    ),
+                    child: _hintChild(key: ValueKey(_valueSelected)),
                     hasError: c.hasError,
                   ),
                 ),
@@ -506,7 +504,10 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
       placeholder: widget.placeholder,
       scrollController: _scrollController,
       itemSelectedStyle: widget.itemSelectedStyle,
-      hintChild: _hintChild(_dropdownHintChildKey),
+      hintChild: _hintChild(
+        key: _dropdownHintChildKey,
+        focusNode: _searchFocusNode,
+      ),
       boxDecoration:
           widget.boxDecoration ??
           BoxDecoration(
@@ -518,7 +519,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
     );
   }
 
-  Widget _hintChild([Key? key]) {
+  Widget _hintChild({required Key? key, FocusNode? focusNode}) {
     return _DropdownHintChild(
       key: key,
       onClear: () {
@@ -541,11 +542,11 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
       },
       icon: widget.icon,
       fontSize: _fontSize,
+      focusNode: focusNode,
       isEnabled: _isEnabled,
       showClear: _showClear,
       isLoading: widget.isLoading,
       prefixIcon: widget.prefixIcon,
-      focusNode: _searchFocusNode,
       isExpanded: widget.isExpanded,
       heightType: widget.heightType,
       valueSelected: _valueSelected,
