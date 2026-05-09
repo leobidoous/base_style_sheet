@@ -1,4 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../core/themes/app_theme_base.dart';
@@ -20,8 +21,12 @@ class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
       enableShadow: enableShadow,
       backgroundColor: backgroundColor,
       automaticallyImplyLeading: false,
-      toolbarHeight: safeTop > 0 ? safeTop : null,
       linearProgressPadding: linearProgressPadding,
+      toolbarHeight: kIsWeb
+          ? 0
+          : safeTop > 0
+          ? safeTop
+          : null,
     );
   }
   const CustomAppBar({
