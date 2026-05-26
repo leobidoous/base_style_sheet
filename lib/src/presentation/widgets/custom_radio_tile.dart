@@ -38,24 +38,19 @@ class CustomRadioTile<T> extends StatelessWidget {
           child: Padding(
             padding: padding,
             child: Column(
+              spacing: Spacing.xxs.value,
               crossAxisAlignment: .stretch,
               children: [
                 Row(
+                  spacing: Spacing.sm.value,
                   crossAxisAlignment: crossAxisAlignment,
                   children: [
-                    if (controlAffinity == ListTileControlAffinity.leading) ...[
-                      _radioCheck(context),
-                      Spacing.sm.horizontal,
-                    ],
+                    if (controlAffinity == .leading) _radioCheck(context),
                     Expanded(child: title),
-                    if (controlAffinity ==
-                        ListTileControlAffinity.trailing) ...[
-                      Spacing.xs.horizontal,
-                      _radioCheck(context),
-                    ],
+                    if (controlAffinity == .trailing) _radioCheck(context),
                   ],
                 ),
-                if (subtitle != null) ...[Spacing.xxs.vertical, subtitle!],
+                ?subtitle,
               ],
             ),
           ),
