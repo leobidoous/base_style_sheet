@@ -1,19 +1,9 @@
-import 'package:flutter/material.dart'
-    show
-        BuildContext,
-        Column,
-        EdgeInsets,
-        SafeArea,
-        StatelessWidget,
-        Text,
-        Widget,
-        ConstrainedBox,
-        BoxConstraints;
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 import '../../../core/themes/spacing/spacing.dart';
 import '../../../core/themes/typography/typography_constants.dart';
-import '../../../domain/enums/screen_size_type.dart'
-    show ScreenSizeType, ScreenSizeTypeExt;
+import '../../../domain/enums/screen_size_type.dart';
 import '../../extensions/build_context_extensions.dart';
 import '../buttons/custom_button.dart';
 import '../custom_scroll_content.dart';
@@ -21,11 +11,11 @@ import '../custom_scroll_content.dart';
 class ListEmpty extends StatelessWidget {
   const ListEmpty({
     super.key,
+    required this.message,
     this.header,
     this.content,
     this.onPressed,
     this.btnLabel = '',
-    required this.message,
     this.isSafeArea = false,
     this.padding = const .symmetric(vertical: 16),
   });

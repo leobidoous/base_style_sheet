@@ -178,7 +178,7 @@ class CustomExpansionState<T> extends State<CustomExpansion<T>>
                     opacity: _animation,
                     child: SizeTransition(
                       sizeFactor: _animation,
-                      axisAlignment: 1,
+                      alignment: .centerRight,
                       child: child!,
                     ),
                   ),

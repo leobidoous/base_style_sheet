@@ -78,7 +78,7 @@ class _CustomRefreshIndicatorState extends State<CustomRefreshIndicator>
                 ConstrainedBox(
                   constraints: BoxConstraints(maxHeight: _offsetToArmed),
                   child: SizeTransition(
-                    axisAlignment: widget.reverse ? -1 : 1,
+                    alignment: widget.reverse ? .centerLeft : .centerRight,
                     sizeFactor: controller,
                     child: FadeTransition(
                       opacity: widget.refreshLogo != null
