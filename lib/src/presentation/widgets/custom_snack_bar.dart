@@ -75,7 +75,7 @@ class CustomSnackBar {
         .init(context)
         .showToast(
           isDismissible: true,
-          gravity: ToastGravity.TOP,
+          gravity: .TOP,
           toastDuration: duration ?? const Duration(seconds: 5),
           positionedToastBuilder: (context, child, gravity) {
             return Positioned(
@@ -93,11 +93,12 @@ class CustomSnackBar {
           child: CustomCard(
             key: key ?? ValueKey('Toast_${context.hashCode}'),
             color: switch (type) {
-              .error => errorColor ?? Colors.red,
-              .info => infoColor ?? Colors.orange,
-              .success => successColor ?? Colors.green,
+              .info => infoColor ?? Color(0xFFF79009),
+              .error => errorColor ?? Color(0xFFB42318),
+              .success => successColor ?? Color(0xFF027A48),
             },
             constraints: BoxConstraints(maxWidth: ScreenSizeType.phone.width),
+            shaddow: [context.theme.shadowLightmodeLevel0],
             borderRadius: context.theme.borderRadiusSM,
             padding: .all(Spacing.sm.value),
             child: Row(

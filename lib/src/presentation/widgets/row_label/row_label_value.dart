@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/themes/spacing/spacing.dart';
@@ -16,6 +17,8 @@ class RowLabelValue extends StatelessWidget {
     this.tooltipIcon,
     this.valueWidget,
     this.labelWidget,
+    this.valueMaxLine,
+    this.labelMaxLine,
     this.onTapTooltip,
     this.flexLabel = 4,
     this.flexValue = 6,
@@ -37,6 +40,8 @@ class RowLabelValue extends StatelessWidget {
   final bool isValueBold;
   final bool showTooltip;
   final TextStyle? style;
+  final int? valueMaxLine;
+  final int? labelMaxLine;
   final Widget? valueWidget;
   final Widget? labelWidget;
   final TextStyle? labelStyle;
@@ -71,8 +76,9 @@ class RowLabelValue extends StatelessWidget {
                 mainAxisSize: .min,
                 children: [
                   Flexible(
-                    child: Text(
+                    child: AutoSizeText(
                       label,
+                      maxLines: labelMaxLine,
                       style:
                           labelStyle ??
                           (isAllBold || isLabelBold
@@ -104,9 +110,10 @@ class RowLabelValue extends StatelessWidget {
           flex: flexValue ?? 1,
           child:
               valueWidget ??
-              Text(
+              AutoSizeText(
                 value,
                 textAlign: .end,
+                maxLines: valueMaxLine,
                 style:
                     valueStyle ??
                     (isAllBold || isValueBold

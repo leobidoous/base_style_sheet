@@ -1,120 +1,103 @@
-import 'dart:math' as math;
+import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 
 class DashedRect extends StatelessWidget {
   const DashedRect({
     super.key,
-    this.color = Colors.black,
-    this.strokeWidth = 1.0,
     required this.child,
-    this.gap = 5.0,
+    this.color = Colors.black,
+    this.borderRadius = .zero,
+    this.strokeWidth = 1.0,
+    this.dashWidth = 5.0,
+    this.padding = .zero,
+    this.dashGap = 5.0,
   });
 
-  final double strokeWidth;
-  final Widget child;
   final Color color;
-  final double gap;
+  final Widget child;
+  final double dashGap;
+  final double dashWidth;
+  final double strokeWidth;
+  final EdgeInsets padding;
+  final BorderRadius borderRadius;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: .all(strokeWidth / 2),
-      child: CustomPaint(
-        painter: DashRectPainter(
-          strokeWidth: strokeWidth,
-          color: color,
-          gap: gap,
-        ),
-        child: child,
+    return CustomPaint(
+      painter: _DashedRectPainter(
+        color: color,
+        dashGap: dashGap,
+        dashWidth: dashWidth,
+        strokeWidth: strokeWidth,
+        borderRadius: borderRadius,
       ),
+      child: Padding(padding: padding + .all(strokeWidth / 2), child: child),
     );
   }
 }
 
-class DashRectPainter extends CustomPainter {
-  DashRectPainter({
-    this.color = Colors.black,
-    this.strokeWidth = 5.0,
-    this.gap = 5.0,
+class _DashedRectPainter extends CustomPainter {
+  _DashedRectPainter({
+    required this.color,
+    required this.dashGap,
+    required this.dashWidth,
+    required this.strokeWidth,
+    required this.borderRadius,
   });
-  double strokeWidth;
-  Color color;
-  double gap;
+
+  final Color color;
+  final double dashGap;
+  final double dashWidth;
+  final double strokeWidth;
+  final BorderRadius borderRadius;
 
   @override
   void paint(Canvas canvas, Size size) {
-    Paint dashedPaint = Paint()
+    final paint = Paint()
       ..color = color
       ..strokeWidth = strokeWidth
       ..style = PaintingStyle.stroke;
 
-    double x = size.width;
-    double y = size.height;
-
-    Path topPath = getDashedPath(
-      a: const math.Point(0, 0),
-      b: math.Point(x, 0),
-      gap: gap,
+    final rect = Rect.fromLTWH(
+      strokeWidth / 2,
+      strokeWidth / 2,
+      size.width - strokeWidth,
+      size.height - strokeWidth,
     );
 
-    Path rightPath = getDashedPath(
-      a: math.Point(x, 0),
-      b: math.Point(x, y),
-      gap: gap,
-    );
+    final rRect = borderRadius.toRRect(rect);
+    final path = Path()..addRRect(rRect);
 
-    Path bottomPath = getDashedPath(
-      a: math.Point(0, y),
-      b: math.Point(x, y),
-      gap: gap,
-    );
-
-    Path leftPath = getDashedPath(
-      a: const math.Point(0, 0),
-      b: math.Point(0.001, y),
-      gap: gap,
-    );
-
-    canvas.drawPath(topPath, dashedPaint);
-    canvas.drawPath(rightPath, dashedPaint);
-    canvas.drawPath(bottomPath, dashedPaint);
-    canvas.drawPath(leftPath, dashedPaint);
+    final dashedPath = _createDashedPath(path);
+    canvas.drawPath(dashedPath, paint);
   }
 
-  Path getDashedPath({
-    required math.Point<double> a,
-    required math.Point<double> b,
-    required gap,
-  }) {
-    Size size = Size(b.x - a.x, b.y - a.y);
-    Path path = Path();
-    path.moveTo(a.x, a.y);
-    bool shouldDraw = true;
-    math.Point currentPoint = math.Point(a.x, a.y);
-
-    num radians = math.atan(size.height / size.width);
-
-    num dx = math.cos(radians) * gap < 0
-        ? math.cos(radians) * gap * -1
-        : math.cos(radians) * gap;
-
-    num dy = math.sin(radians) * gap < 0
-        ? math.sin(radians) * gap * -1
-        : math.sin(radians) * gap;
-
-    while (currentPoint.x <= b.x && currentPoint.y <= b.y) {
-      shouldDraw
-          ? path.lineTo(currentPoint.x.toDouble(), currentPoint.y.toDouble())
-          : path.moveTo(currentPoint.x.toDouble(), currentPoint.y.toDouble());
-      shouldDraw = !shouldDraw;
-      currentPoint = math.Point(currentPoint.x + dx, currentPoint.y + dy);
+  Path _createDashedPath(Path source) {
+    final dashedPath = Path();
+    for (final metric in source.computeMetrics()) {
+      double distance = 0;
+      bool draw = true;
+      while (distance < metric.length) {
+        final length = draw ? dashWidth : dashGap;
+        final end = (distance + length).clamp(0, metric.length).toDouble();
+        if (draw) {
+          final extracted = metric.extractPath(distance, end);
+          dashedPath.addPath(extracted, ui.Offset.zero);
+        }
+        distance = end;
+        draw = !draw;
+      }
     }
-    return path;
+    return dashedPath;
   }
 
   @override
-  bool shouldRepaint(CustomPainter oldDelegate) {
-    return true;
+  bool shouldRepaint(_DashedRectPainter oldDelegate) {
+    return oldDelegate.color != color ||
+        oldDelegate.dashGap != dashGap ||
+        oldDelegate.dashWidth != dashWidth ||
+        oldDelegate.strokeWidth != strokeWidth ||
+        oldDelegate.borderRadius != borderRadius;
   }
 }

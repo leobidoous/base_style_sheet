@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'responsive/responsive_extension.dart';
@@ -43,13 +42,13 @@ class AppThemeBase {
     color: Color.fromRGBO(164, 176, 190, 0.1),
     blurRadius: 10,
     spreadRadius: 0,
-    offset: Offset.zero,
+    offset: .zero,
   );
-  static BoxShadow get shadowLightmodeLevel1 => const BoxShadow(
-    color: Color.fromRGBO(120, 141, 150, 0.25),
-    blurRadius: 4,
-    spreadRadius: 0,
-    offset: Offset.zero,
+  static BoxShadow get shadowLightmodeLevel1 => BoxShadow(
+    color: Colors.grey.shade200,
+    blurRadius: 8,
+    spreadRadius: .01,
+    offset: .zero,
   );
   static BoxShadow get shadowLightmodeLevel2 =>
       const BoxShadow(blurRadius: 24, offset: Offset(0, 8));

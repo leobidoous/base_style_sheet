@@ -6,13 +6,13 @@ import '../../extensions/build_context_extensions.dart';
 class CustomCard extends StatelessWidget {
   const CustomCard({
     super.key,
+    required this.child,
     this.color,
     this.onTap,
     this.shaddow,
     this.border,
     this.constraints,
     this.borderRadius,
-    required this.child,
     this.padding = .zero,
     this.isEnabled = true,
     this.isSelected = false,
@@ -58,13 +58,12 @@ class CustomCard extends StatelessWidget {
                         color: isSelected
                             ? context.colorScheme.primary
                             : color ??
-                                  context.colorScheme.onSurface.withValues(
-                                    alpha: .01,
-                                  ),
+                                  context.theme.shadowLightmodeLevel1.color
+                                      .withValues(alpha: .01),
                       ),
                   borderRadius: borderRadius ?? context.theme.borderRadiusMD,
                   boxShadow: shaddow == null
-                      ? [context.theme.shadowLightmodeLevel0]
+                      ? [context.theme.shadowLightmodeLevel1]
                       : (shaddow?.isEmpty ?? false)
                       ? null
                       : shaddow,

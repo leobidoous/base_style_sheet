@@ -16,29 +16,33 @@ class RowLabelValueShimmer extends StatefulWidget {
 class _RowLabelValueShimmerState extends State<RowLabelValueShimmer> {
   final _random = Random();
 
-  int get factor1 => _random.nextInt(4);
-  int get factor2 => _random.nextInt(6);
+  int get factor1 => _random.nextInt(10) + 1;
+  int get factor2 => _random.nextInt(10) + 1;
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constrains) {
         return Row(
+          spacing: Spacing.xs.value,
           mainAxisAlignment: .spaceBetween,
           children: [
             Flexible(
               flex: 4,
               child: CustomShimmer(
                 height: AppFontSize.bodyMedium.value,
-                width: constrains.maxWidth * (factor1 < 3 ? .5 : factor1 / 10),
+                width:
+                    (constrains.maxWidth * .4) *
+                    (factor1 < 3 ? .5 : factor1 / 10),
               ),
             ),
-            Spacing.xs.horizontal,
             Flexible(
               flex: 6,
               child: CustomShimmer(
                 height: AppFontSize.bodyMedium.value,
-                width: constrains.maxWidth * (factor2 < 3 ? .5 : factor2 / 10),
+                width:
+                    (constrains.maxWidth * .6) *
+                    (factor2 < 3 ? .5 : factor2 / 10),
               ),
             ),
           ],

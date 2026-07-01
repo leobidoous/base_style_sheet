@@ -13,10 +13,10 @@ class CustomTabBar extends StatefulWidget {
     this.padding,
   });
 
+  final int tabSelected;
   final List<String> tabs;
   final EdgeInsets? padding;
-  final int tabSelected;
-  final Function(int)? onChange;
+  final Function(int value)? onChange;
 
   @override
   State<CustomTabBar> createState() => _CustomTabBarState();

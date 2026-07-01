@@ -48,7 +48,7 @@ class TextLink extends StatelessWidget {
             spacing: Spacing.xxs.value,
             children: [
               if (controlAffinity == .leading)
-                if (icon != null) _icon,
+                if (icon != null) _icon(context),
               Flexible(
                 child: Text(
                   text,
@@ -67,7 +67,7 @@ class TextLink extends StatelessWidget {
                 ),
               ),
               if (controlAffinity == .trailing)
-                if (icon != null) _icon,
+                if (icon != null) _icon(context),
             ],
           ),
         ),
@@ -75,26 +75,22 @@ class TextLink extends StatelessWidget {
     );
   }
 
-  Widget get _icon {
-    return Builder(
-      builder: (context) {
-        return AnimatedSwitcher(
-          duration: const Duration(milliseconds: 250),
-          child: isLoading
-              ? CustomLoading(
-                  width: AppFontSize.bodyMedium.value,
-                  height: AppFontSize.bodyMedium.value,
-                )
-              : Icon(
-                  icon,
-                  color:
-                      color ??
-                      styleText?.color ??
-                      context.textTheme.bodyMedium?.color,
-                  size: AppFontSize.bodyMedium.value,
-                ),
-        );
-      },
+  Widget _icon(BuildContext context) {
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 250),
+      child: isLoading
+          ? CustomLoading(
+              width: AppFontSize.bodyMedium.value,
+              height: AppFontSize.bodyMedium.value,
+            )
+          : Icon(
+              icon,
+              color:
+                  color ??
+                  styleText?.color ??
+                  context.textTheme.bodyMedium?.color,
+              size: styleText?.fontSize ?? AppFontSize.titleLarge.value * .9,
+            ),
     );
   }
 }

@@ -39,7 +39,7 @@ class _ColumnLabelValueShimmerState extends State<ColumnLabelValueShimmer> {
               physics: const NeverScrollableScrollPhysics(),
               separatorBuilder: (_, index) => Spacing.xxs.vertical,
               itemBuilder: (_, index) {
-                final factor = _random.nextInt(10);
+                final factor = _random.nextInt(10) + 1;
                 return Align(
                   alignment: .centerLeft,
                   child: Padding(
@@ -66,7 +66,7 @@ class _ColumnLabelValueShimmerState extends State<ColumnLabelValueShimmer> {
               physics: const NeverScrollableScrollPhysics(),
               separatorBuilder: (_, index) => Spacing.xxs.vertical,
               itemBuilder: (_, index) {
-                final factor = _random.nextInt(10);
+                final factor = _random.nextInt(10) + 1;
                 return Align(
                   alignment: .centerLeft,
                   child: Padding(
