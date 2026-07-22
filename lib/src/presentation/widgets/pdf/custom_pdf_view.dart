@@ -14,9 +14,9 @@ import '../custom_dialog.dart';
 class CustomPdfView extends StatefulWidget {
   const CustomPdfView({
     super.key,
-    this.asset,
     this.url,
     this.file,
+    this.asset,
     this.headers,
     this.viewMode = .page,
     this.actions = const [],
@@ -99,9 +99,9 @@ class _CustomPdfViewState extends State<CustomPdfView>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: switch (widget.viewMode) {
-        CustomPdfViewMode.page => PreferredSize(
+        .page => PreferredSize(
           preferredSize: Size(
-            double.infinity,
+            .infinity,
             context.theme.appBarTheme.appBarHeight,
           ),
           child: AnimatedBuilder(
@@ -123,13 +123,13 @@ class _CustomPdfViewState extends State<CustomPdfView>
             },
           ),
         ),
-        CustomPdfViewMode.view => null,
+        .view => null,
       },
       body: Semantics(
         button: true,
         child: InkWell(
           onTap: switch (widget.viewMode) {
-            CustomPdfViewMode.page => () {
+            .page => () {
               if (_animationController.isDismissed) {
                 _animationController.forward();
                 SystemChrome.setEnabledSystemUIMode(.immersive);
@@ -138,7 +138,7 @@ class _CustomPdfViewState extends State<CustomPdfView>
                 SystemChrome.setEnabledSystemUIMode(.edgeToEdge);
               }
             },
-            CustomPdfViewMode.view => null,
+            .view => null,
           },
           child: SafeArea(
             child: Theme(
@@ -150,12 +150,12 @@ class _CustomPdfViewState extends State<CustomPdfView>
                       widget.url!,
                       headers: widget.headers,
                       controller: _pdfController,
-                      pageLayoutMode: PdfPageLayoutMode.continuous,
-                      onDocumentLoadFailed: (details) async {
-                        await CustomDialog.error(
+                      pageLayoutMode: .continuous,
+                      onDocumentLoadFailed: (details) {
+                        CustomDialog.error(
                           context,
                           message: details.description,
-                        ).then((value) => Navigator.of(context).pop());
+                        );
                       },
                     );
                   } else if (widget.asset != null) {

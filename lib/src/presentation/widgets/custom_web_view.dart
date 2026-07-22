@@ -26,13 +26,14 @@ class CustomWebView extends StatefulWidget {
 
   final String url;
   final Map<String, String> headers;
-  final void Function(int)? onProgress;
-  final void Function(String)? onPageStarted;
-  final void Function(UrlChange)? onUrlChange;
-  final void Function(String)? onPageFinished;
-  final void Function(WebResourceError)? onWebResourceError;
-  final Map<String, void Function(JavaScriptMessage)?>? onJavaScriptChannels;
-  final FutureOr<NavigationDecision> Function(NavigationRequest)?
+  final void Function(int progress)? onProgress;
+  final void Function(String url)? onPageStarted;
+  final void Function(String url)? onPageFinished;
+  final void Function(UrlChange urlChange)? onUrlChange;
+  final void Function(WebResourceError error)? onWebResourceError;
+  final Map<String, void Function(JavaScriptMessage message)?>?
+  onJavaScriptChannels;
+  final FutureOr<NavigationDecision> Function(NavigationRequest request)?
   onNavigationRequest;
 
   @override

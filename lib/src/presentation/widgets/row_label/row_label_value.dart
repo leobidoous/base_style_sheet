@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../../../core/themes/spacing/spacing.dart';
 import '../../../core/themes/typography/typography_constants.dart';
 import '../../extensions/build_context_extensions.dart';
+import '../custom_tooltip.dart';
 
 class RowLabelValue extends StatelessWidget {
   const RowLabelValue({
@@ -65,6 +66,7 @@ class RowLabelValue extends StatelessWidget {
 
     return Row(
       mainAxisSize: .min,
+      spacing: Spacing.xs.value,
       crossAxisAlignment: crossAxisAlignment ?? .center,
       mainAxisAlignment: mainAxisAlignment ?? .spaceBetween,
       children: [
@@ -73,21 +75,25 @@ class RowLabelValue extends StatelessWidget {
           child:
               labelWidget ??
               Row(
+                spacing: Spacing.xs.value,
                 mainAxisSize: .min,
                 children: [
                   Flexible(
-                    child: AutoSizeText(
-                      label,
-                      maxLines: labelMaxLine,
-                      style:
-                          labelStyle ??
-                          (isAllBold || isLabelBold
-                              ? defaultStyleBold
-                              : defaultStyle),
+                    child: CustomTooltip(
+                      message: label,
+                      child: AutoSizeText(
+                        label,
+                        maxLines: labelMaxLine,
+                        overflow: .ellipsis,
+                        style:
+                            labelStyle ??
+                            (isAllBold || isLabelBold
+                                ? defaultStyleBold
+                                : defaultStyle),
+                      ),
                     ),
                   ),
                   if (showTooltip) ...[
-                    Spacing.xs.horizontal,
                     InkWell(
                       onTap: onTapTooltip,
                       child: Icon(
@@ -108,18 +114,22 @@ class RowLabelValue extends StatelessWidget {
         ),
         Flexible(
           flex: flexValue ?? 1,
-          child:
-              valueWidget ??
-              AutoSizeText(
-                value,
-                textAlign: .end,
-                maxLines: valueMaxLine,
-                style:
-                    valueStyle ??
-                    (isAllBold || isValueBold
-                        ? defaultStyleBold
-                        : defaultStyle),
-              ),
+          child: CustomTooltip(
+            message: value,
+            child:
+                valueWidget ??
+                AutoSizeText(
+                  value,
+                  textAlign: .end,
+                  overflow: .ellipsis,
+                  maxLines: valueMaxLine,
+                  style:
+                      valueStyle ??
+                      (isAllBold || isValueBold
+                          ? defaultStyleBold
+                          : defaultStyle),
+                ),
+          ),
         ),
       ],
     );

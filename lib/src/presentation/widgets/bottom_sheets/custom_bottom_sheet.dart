@@ -192,7 +192,10 @@ class _CustomBottomSheetState extends State<_CustomBottomSheet> {
                                               Spacing.sm.value,
                                               Spacing.sm.value,
                                             ),
-                                        child: widget.child,
+                                        child: Material(
+                                          color: Colors.transparent,
+                                          child: widget.child,
+                                        ),
                                       ),
                                     ),
                                   ],
