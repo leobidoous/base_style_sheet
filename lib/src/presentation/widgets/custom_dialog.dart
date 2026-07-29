@@ -83,7 +83,7 @@ class _CustomDialog extends StatefulWidget {
     this.constraints,
     this.padding,
     this.backgroundColor,
-    this.closeMode = CustomDialogCloseMode.outside,
+    this.closeMode = .outside,
   });
   final Widget child;
   final bool showClose;
@@ -134,7 +134,7 @@ class _CustomDialogState extends State<_CustomDialog> {
                     widget.constraints ?? BoxConstraints(maxWidth: 640),
                 child: SafeArea(
                   child: Padding(
-                    padding: widget.padding ?? .all(Spacing.sm.value),
+                    padding: .all(Spacing.sm.value),
                     child: Column(
                       mainAxisSize: .min,
                       mainAxisAlignment: .center,
@@ -156,42 +156,47 @@ class _CustomDialogState extends State<_CustomDialog> {
                               ),
                             ),
                         Flexible(
-                          child: DecoratedBox(
-                            decoration: _decoration,
-                            child: Column(
-                              mainAxisSize: .min,
-                              mainAxisAlignment: .center,
-                              children: [
-                                if (widget.closeMode ==
-                                    CustomDialogCloseMode.inside)
-                                  if (widget.showClose)
-                                    Padding(
-                                      padding: .fromLTRB(
-                                        Spacing.xs.value,
-                                        Spacing.xs.value,
-                                        Spacing.xs.value,
-                                        0,
-                                      ),
-                                      child: Align(
-                                        alignment: .topRight,
-                                        child: CustomButton.icon(
-                                          onPressed: _onClose,
-                                          icon: Icons.close_rounded,
-                                          type: .background,
-                                          color: context.colorScheme.surface,
-                                          heightType: .small,
+                          child: ClipRRect(
+                            borderRadius: _decoration.borderRadius ?? .zero,
+                            child: DecoratedBox(
+                              decoration: _decoration,
+                              child: Column(
+                                mainAxisSize: .min,
+                                mainAxisAlignment: .center,
+                                children: [
+                                  if (widget.closeMode == .inside)
+                                    if (widget.showClose)
+                                      Padding(
+                                        padding: .fromLTRB(
+                                          Spacing.xs.value,
+                                          Spacing.xs.value,
+                                          Spacing.xs.value,
+                                          0,
+                                        ),
+                                        child: Align(
+                                          alignment: .topRight,
+                                          child: CustomButton.icon(
+                                            onPressed: _onClose,
+                                            icon: Icons.close_rounded,
+                                            type: .background,
+                                            color: context.colorScheme.surface,
+                                            heightType: .small,
+                                          ),
                                         ),
                                       ),
+                                  Flexible(
+                                    child: Padding(
+                                      padding:
+                                          widget.padding ??
+                                          .all(Spacing.sm.value),
+                                      child: Material(
+                                        color: Colors.transparent,
+                                        child: widget.child,
+                                      ),
                                     ),
-                                Flexible(
-                                  child: Padding(
-                                    padding:
-                                        widget.padding ??
-                                        .all(Spacing.sm.value),
-                                    child: widget.child,
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                         ),

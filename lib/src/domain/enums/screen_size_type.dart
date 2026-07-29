@@ -3,30 +3,30 @@ enum ScreenSizeType { phone, tablet, desktop, largeDesktop, extraLargeDesktop }
 extension ScreenSizeTypeExt on ScreenSizeType {
   double get width {
     switch (this) {
-      case ScreenSizeType.phone:
+      case .phone:
         return 480;
-      case ScreenSizeType.tablet:
+      case .tablet:
         return 768;
-      case ScreenSizeType.desktop:
+      case .desktop:
         return 1024;
-      case ScreenSizeType.largeDesktop:
+      case .largeDesktop:
         return 1440;
-      case ScreenSizeType.extraLargeDesktop:
-        return double.infinity;
+      case .extraLargeDesktop:
+        return .infinity;
     }
   }
 }
 
 ScreenSizeType getScreenSizeType(double width) {
   if (width <= 480) {
-    return ScreenSizeType.phone;
+    return .phone;
   } else if (width > 480 && width <= 768) {
-    return ScreenSizeType.tablet;
+    return .tablet;
   } else if (width > 768 && width <= 1024) {
-    return ScreenSizeType.desktop;
+    return .desktop;
   } else if (width > 1024 && width <= 1440) {
-    return ScreenSizeType.largeDesktop;
+    return .largeDesktop;
   } else {
-    return ScreenSizeType.extraLargeDesktop;
+    return .extraLargeDesktop;
   }
 }

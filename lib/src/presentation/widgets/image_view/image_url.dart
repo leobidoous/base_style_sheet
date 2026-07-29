@@ -33,7 +33,7 @@ class ImageUrl extends StatelessWidget {
   final int? maxHeightDiskCache;
   final Map<String, String>? headers;
   final BaseCacheManager? cacheManager;
-  final Widget Function(String err)? errorBuilder;
+  final Widget Function(String error)? errorBuilder;
   final Widget Function(BuildContext context, String value)? placeholder;
 
   @override

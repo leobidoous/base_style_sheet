@@ -75,7 +75,7 @@ class RowLabelValue extends StatelessWidget {
           child:
               labelWidget ??
               Row(
-                spacing: Spacing.xs.value,
+                spacing: Spacing.xxs.value,
                 mainAxisSize: .min,
                 children: [
                   Flexible(
@@ -83,8 +83,9 @@ class RowLabelValue extends StatelessWidget {
                       message: label,
                       child: AutoSizeText(
                         label,
-                        maxLines: labelMaxLine,
                         overflow: .ellipsis,
+                        maxLines: labelMaxLine,
+                        minFontSize: AppFontSize.labelSmall.value,
                         style:
                             labelStyle ??
                             (isAllBold || isLabelBold
@@ -123,6 +124,7 @@ class RowLabelValue extends StatelessWidget {
                   textAlign: .end,
                   overflow: .ellipsis,
                   maxLines: valueMaxLine,
+                  minFontSize: AppFontSize.labelSmall.value,
                   style:
                       valueStyle ??
                       (isAllBold || isValueBold

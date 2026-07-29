@@ -52,6 +52,7 @@ export 'package:base_style_sheet/src/presentation/widgets/expansions/custom_expa
 export 'package:base_style_sheet/src/presentation/widgets/expansions/expansion_shimmer.dart';
 export 'package:base_style_sheet/src/presentation/widgets/image_view/custom_image.dart';
 export 'package:base_style_sheet/src/presentation/widgets/image_view/widgets/custom_photo_view.dart';
+export 'package:base_style_sheet/src/presentation/widgets/in_app_notification_banner.dart';
 export 'package:base_style_sheet/src/presentation/widgets/inputs/custom_input_field.dart';
 export 'package:base_style_sheet/src/presentation/widgets/inputs/custom_pin_input.dart';
 export 'package:base_style_sheet/src/presentation/widgets/inputs/input_label.dart';

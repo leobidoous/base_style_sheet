@@ -79,8 +79,8 @@ class CustomImage extends StatelessWidget {
   final BorderRadius borderRadius;
   final Map<String, String>? headers;
   final BaseCacheManager? cacheManager;
-  final Widget Function(String)? errorBuilder;
-  final Widget Function(BuildContext, String)? placeholder;
+  final Widget Function(String error)? errorBuilder;
+  final Widget Function(BuildContext context, String value)? placeholder;
 
   Widget _error([Object? err, StackTrace? stackTrace]) =>
       errorBuilder?.call('${err?.toString()} $stackTrace') ??
