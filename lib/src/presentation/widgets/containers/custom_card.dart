@@ -58,12 +58,19 @@ class CustomCard extends StatelessWidget {
                         color: isSelected
                             ? context.colorScheme.primary
                             : color ??
-                                  context.theme.shadowLightmodeLevel1.color
+                                  (context.isDarkMode
+                                          ? context.theme.shadowLightmodeLevel0
+                                          : context.theme.shadowLightmodeLevel1)
+                                      .color
                                       .withValues(alpha: .01),
                       ),
                   borderRadius: borderRadius ?? context.theme.borderRadiusMD,
                   boxShadow: shaddow == null
-                      ? [context.theme.shadowLightmodeLevel1]
+                      ? [
+                          context.isDarkMode
+                              ? context.theme.shadowLightmodeLevel0
+                              : context.theme.shadowLightmodeLevel1,
+                        ]
                       : (shaddow?.isEmpty ?? false)
                       ? null
                       : shaddow,

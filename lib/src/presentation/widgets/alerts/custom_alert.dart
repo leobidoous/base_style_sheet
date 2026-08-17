@@ -22,14 +22,14 @@ class CustomAlert extends StatelessWidget {
     this.buttons = const [],
     this.btnCancelLabel = '',
     this.btnConfirmLabel = '',
+    this.verticalSpacing = .sm,
+    this.horizontalSpacing = .sm,
     this.confirmIsLoading = false,
     this.cancelIsLoading = false,
     this.titleTextAlign = .center,
     this.contentTextAlign = .center,
     this.subtitleTextAlign = .center,
     this.buttonsDirection = .vertical,
-    this.verticalSpacing = Spacing.sm,
-    this.horizontalSpacing = Spacing.sm,
   });
 
   final String? title;
@@ -148,7 +148,7 @@ class CustomAlert extends StatelessWidget {
           if (onCancel != null || onConfirm != null)
             switch (buttonsDirection) {
               .horizontal => Row(
-                spacing: verticalSpacing.value,
+                spacing: horizontalSpacing.value,
                 children: [
                   if (onCancel != null) Expanded(child: _cancelButtom),
                   if (onConfirm != null) Expanded(child: _confirmButtom),
@@ -173,7 +173,7 @@ class CustomAlert extends StatelessWidget {
               .vertical => Column(
                 mainAxisSize: .min,
                 crossAxisAlignment: .stretch,
-                spacing: horizontalSpacing.value,
+                spacing: verticalSpacing.value,
                 children: buttons.map((b) => b).toList(),
               ),
             },

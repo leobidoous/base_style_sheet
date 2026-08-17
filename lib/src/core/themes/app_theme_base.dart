@@ -41,7 +41,7 @@ class AppThemeBase {
   static BoxShadow get shadowLightmodeLevel0 => BoxShadow(
     color: Color.fromRGBO(164, 176, 190, 0.1),
     blurRadius: 10,
-    spreadRadius: 0,
+    spreadRadius: .01,
     offset: .zero,
   );
   static BoxShadow get shadowLightmodeLevel1 => BoxShadow(

@@ -103,7 +103,11 @@ class _CustomBottomSheetState extends State<_CustomBottomSheet> {
       topLeft: context.theme.borderRadiusMD.topLeft,
       topRight: context.theme.borderRadiusMD.topRight,
     ),
-    color: widget.backgroundColor ?? context.colorScheme.surface,
+    color:
+        widget.backgroundColor ??
+        (context.isDarkMode
+            ? context.theme.scaffoldBackgroundColor
+            : context.colorScheme.surface),
     boxShadow: [
       BoxShadow(
         blurRadius: 5,

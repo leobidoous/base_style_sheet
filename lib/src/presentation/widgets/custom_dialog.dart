@@ -140,10 +140,10 @@ class _CustomDialogState extends State<_CustomDialog> {
                       mainAxisAlignment: .center,
                       crossAxisAlignment: .stretch,
                       children: [
-                        if (widget.closeMode == CustomDialogCloseMode.outside)
+                        if (widget.closeMode == .outside)
                           if (widget.showClose)
                             Padding(
-                              padding: .all(Spacing.xs.value),
+                              padding: .symmetric(vertical: Spacing.xs.value),
                               child: Align(
                                 alignment: .bottomRight,
                                 child: CustomButton.icon(

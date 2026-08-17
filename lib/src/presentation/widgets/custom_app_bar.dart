@@ -183,7 +183,11 @@ class _CustomAppBarState extends State<CustomAppBar>
                         )
                       : null,
                   boxShadow: widget.enableShadow
-                      ? [context.theme.shadowLightmodeLevel1]
+                      ? [
+                          context.isDarkMode
+                              ? context.theme.shadowLightmodeLevel0
+                              : context.theme.shadowLightmodeLevel1,
+                        ]
                       : null,
                 ),
                 child: AnimatedSize(
