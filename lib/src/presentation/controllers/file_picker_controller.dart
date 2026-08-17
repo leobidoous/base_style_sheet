@@ -9,29 +9,25 @@ class FilePickerController {
     FileType fileType = FileType.custom,
     List<String> allowedExtensions = const ['pdf'],
   }) async {
-    return FilePicker.pickFiles(
+    final files = await FilePicker.pickFiles(
       type: fileType,
-      compressionQuality: 10,
       allowedExtensions: allowedExtensions,
-    ).then((onValue) {
-      if ((onValue?.count ?? 0) <= 0) return '';
+    );
 
-      return onValue?.files.first.path ?? '';
-    });
+    if (files.isEmpty) return '';
+    return files.first.path ?? '';
   }
 
   Future<List<PlatformFile>> pickFile({
     FileType fileType = FileType.custom,
     List<String> allowedExtensions = const ['pdf'],
   }) async {
-    return FilePicker.pickFiles(
+    final files = await FilePicker.pickFiles(
       type: fileType,
-      compressionQuality: 10,
       allowedExtensions: allowedExtensions,
-    ).then((onValue) {
-      if ((onValue?.count ?? 0) <= 0) return const [];
+    );
 
-      return onValue?.files ?? const [];
-    });
+    if (files.isEmpty) return const [];
+    return files;
   }
 }
