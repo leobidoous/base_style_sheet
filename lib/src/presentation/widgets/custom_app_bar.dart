@@ -205,7 +205,7 @@ class _CustomAppBarState extends State<CustomAppBar>
             },
           ),
         ),
-        if (widget.progress != null)
+        if (widget.progress != null && (widget.toolbarHeight ?? 0) > 0)
           Padding(
             padding: widget.linearProgressPadding ?? .zero,
             child: ClipRRect(
