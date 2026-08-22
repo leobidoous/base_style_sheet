@@ -1,7 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 import '../../../core/themes/app_theme_factory.dart';
 import '../../../core/themes/spacing/spacing.dart' show Spacing;
@@ -263,7 +261,7 @@ class _PagedListViewState<E, S> extends State<PagedListView<E, S>> {
               : items.last == items[index]) &&
           widget.safeAreaLastItem,
       child: switch (widget.scrollDirection) {
-        Axis.horizontal => Row(
+        .horizontal => Row(
           mainAxisSize: .min,
           children: [
             if (_listController.reverse)
@@ -273,7 +271,7 @@ class _PagedListViewState<E, S> extends State<PagedListView<E, S>> {
               if (items.last == items[index]) ..._errorOrLoading(index),
           ],
         ),
-        Axis.vertical => Column(
+        .vertical => Column(
           mainAxisSize: .min,
           crossAxisAlignment: switch (widget.mode) {
             .wrap => .center,
