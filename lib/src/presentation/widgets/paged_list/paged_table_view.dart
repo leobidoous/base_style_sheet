@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/themes/app_theme_factory.dart';
@@ -120,23 +119,23 @@ class _PagedTableViewState<E, S> extends State<PagedTableView<E, S>> {
     super.dispose();
   }
 
+  BoxDecoration get _boxDecoration =>
+      widget.boxDecoration ??
+      BoxDecoration(
+        borderRadius: context.theme.borderRadiusMD,
+        color: context.colorScheme.surface,
+      );
+
+  WidgetStateProperty<Color> get _headingRowColor => WidgetStatePropertyAll(
+    context.colorScheme.onSurface.withValues(alpha: .1),
+  );
+
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<List<S>>(
       valueListenable: _listController,
       builder: (context, state, child) {
-        final child = RawScrollbar(
-          padding: .zero,
-          controller: _scrollController,
-          thumbColor: context.colorScheme.primary,
-          radius: context.theme.borderRadiusXLG.bottomLeft,
-          thickness: switch (defaultTargetPlatform) {
-            .android => widget.thickness,
-            .iOS => widget.thickness,
-            TargetPlatform() => 0,
-          },
-          child: _table(state),
-        );
+        final child = _table(state);
 
         /// Validate if it is allowed to use
         /// the onRefresh from the listController
@@ -179,94 +178,117 @@ class _PagedTableViewState<E, S> extends State<PagedTableView<E, S>> {
           children: [
             if (_listController.isLoading)
               widget.firstPageProgressIndicatorBuilder?.call(context) ??
-                  DataTable(
-                    decoration: widget.boxDecoration,
-                    clipBehavior: widget.clipBehavior,
-                    columns: widget.columns.map((c) {
-                      return DataColumn(
-                        label: CustomScrollContent(
-                          scrollDirection: .horizontal,
-                          child: Text(
-                            c.header,
-                            overflow: .ellipsis,
-                            style: context.textTheme.labelLarge?.copyWith(
-                              fontWeight: AppFontWeight.semiBold.value,
-                              color: context.colorScheme.onSurface,
+                  ClipRRect(
+                    borderRadius:
+                        _boxDecoration.borderRadius ??
+                        context.theme.borderRadiusNone,
+                    child: CustomScrollContent(
+                      scrollDirection: .horizontal,
+                      child: DataTable(
+                        decoration: _boxDecoration,
+                        clipBehavior: widget.clipBehavior,
+                        headingRowColor: _headingRowColor,
+                        columns: widget.columns.map((c) {
+                          return DataColumn(
+                            label: CustomScrollContent(
+                              scrollDirection: .horizontal,
+                              child: Text(
+                                c.header,
+                                overflow: .ellipsis,
+                                style: context.textTheme.labelLarge?.copyWith(
+                                  fontWeight: AppFontWeight.semiBold.value,
+                                  color: context.colorScheme.onSurface,
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                      );
-                    }).toList(),
-                    rows: List.generate(_listController.config.pageSize, (i) {
-                      return DataRow(
-                        cells: widget.columns.map((c) {
-                          return DataCell(
-                            CustomShimmer(height: AppFontSize.bodyMedium.value),
                           );
                         }).toList(),
-                      );
-                    }),
+                        rows: List.generate(_listController.config.pageSize, (
+                          i,
+                        ) {
+                          return DataRow(
+                            cells: widget.columns.map((c) {
+                              return DataCell(
+                                CustomShimmer(
+                                  height: AppFontSize.bodyMedium.value,
+                                ),
+                              );
+                            }).toList(),
+                          );
+                        }),
+                      ),
+                    ),
                   )
             else if (_listController.hasError)
-              DecoratedBox(
-                decoration: widget.boxDecoration ?? BoxDecoration(),
-                child: Column(
-                  crossAxisAlignment: .stretch,
-                  children: [
-                    _dataTablePlaceholder,
-                    widget.firstPageErrorIndicatorBuilder?.call(
-                          context,
-                          (_listController.error as E),
-                          _listController.refresh,
-                        ) ??
-                        Center(
-                          child: CustomRequestError(
-                            padding: widget.padding,
-                            btnLabel: 'Tentar novamente',
-                            message: _listController.error.toString(),
-                            onPressed: () {
-                              _listController.update([]);
-                              _listController.fetchNewItems(
-                                pageKey: _listController.config.pageKey,
-                                forceFetch: true,
-                              );
-                            },
+              ClipRRect(
+                borderRadius:
+                    _boxDecoration.borderRadius ??
+                    context.theme.borderRadiusNone,
+                child: DecoratedBox(
+                  decoration: _boxDecoration,
+                  child: Column(
+                    crossAxisAlignment: .stretch,
+                    children: [
+                      _dataTablePlaceholder,
+                      widget.firstPageErrorIndicatorBuilder?.call(
+                            context,
+                            (_listController.error as E),
+                            _listController.refresh,
+                          ) ??
+                          Center(
+                            child: CustomRequestError(
+                              padding: widget.padding,
+                              btnLabel: 'Tentar novamente',
+                              message: _listController.error.toString(),
+                              onPressed: () {
+                                _listController.update([]);
+                                _listController.fetchNewItems(
+                                  pageKey: _listController.config.pageKey,
+                                  forceFetch: true,
+                                );
+                              },
+                            ),
                           ),
-                        ),
-                  ],
+                    ],
+                  ),
                 ),
               )
             else if (state.isEmpty)
-              DecoratedBox(
-                decoration: widget.boxDecoration ?? BoxDecoration(),
-                child: Column(
-                  crossAxisAlignment: .stretch,
-                  children: [
-                    _dataTablePlaceholder,
-                    widget.noItemsFoundIndicatorBuilder?.call(
-                          context,
-                          _listController.refresh,
-                        ) ??
-                        Center(
-                          child: ListEmpty(
-                            padding: widget.padding,
-                            btnLabel: 'Tentar novamente',
-                            header: Icon(
-                              Icons.screen_search_desktop_outlined,
-                              size: AppFontSize.iconButton.value * 3,
-                              color: context.colorScheme.primary,
+              ClipRRect(
+                borderRadius:
+                    _boxDecoration.borderRadius ??
+                    context.theme.borderRadiusNone,
+                child: DecoratedBox(
+                  decoration: _boxDecoration,
+                  child: Column(
+                    crossAxisAlignment: .stretch,
+                    children: [
+                      _dataTablePlaceholder,
+                      widget.noItemsFoundIndicatorBuilder?.call(
+                            context,
+                            _listController.refresh,
+                          ) ??
+                          Center(
+                            child: ListEmpty(
+                              padding: widget.padding,
+                              btnLabel: 'Tentar novamente',
+                              header: Icon(
+                                Icons.screen_search_desktop_outlined,
+                                size: AppFontSize.iconButton.value * 3,
+                                color: context.colorScheme.primary,
+                              ),
+                              message: 'Nenhum item encontrado.',
+                              onPressed: () {
+                                _listController.update([]);
+                                _listController.fetchNewItems(
+                                  pageKey: _listController.config.pageKey,
+                                  forceFetch: true,
+                                );
+                              },
                             ),
-                            message: 'Nenhum item encontrado.',
-                            onPressed: () {
-                              _listController.update([]);
-                              _listController.fetchNewItems(
-                                pageKey: _listController.config.pageKey,
-                                forceFetch: true,
-                              );
-                            },
                           ),
-                        ),
-                  ],
+                    ],
+                  ),
                 ),
               )
             else
@@ -278,7 +300,12 @@ class _PagedTableViewState<E, S> extends State<PagedTableView<E, S>> {
                       constraints: BoxConstraints(
                         minWidth: constraints.maxWidth,
                       ),
-                      child: _dataTable,
+                      child: ClipRRect(
+                        borderRadius:
+                            _boxDecoration.borderRadius ??
+                            context.theme.borderRadiusNone,
+                        child: _dataTable,
+                      ),
                     ),
                   );
                 },
@@ -294,35 +321,40 @@ class _PagedTableViewState<E, S> extends State<PagedTableView<E, S>> {
   }
 
   Widget get _dataTablePlaceholder {
-    return DataTable(
-      clipBehavior: widget.clipBehavior,
-      decoration: widget.boxDecoration,
-      columns: widget.columns.map((c) {
-        return DataColumn(
-          tooltip: c.header,
-          headingRowAlignment: .start,
-          label: CustomScrollContent(
-            scrollDirection: .horizontal,
-            child: Text(
-              c.header,
-              overflow: .ellipsis,
-              style: context.textTheme.labelLarge?.copyWith(
-                fontWeight: AppFontWeight.semiBold.value,
-                color: context.colorScheme.onSurface,
+    return CustomScrollContent(
+      scrollDirection: .horizontal,
+      child: DataTable(
+        decoration: _boxDecoration,
+        clipBehavior: widget.clipBehavior,
+        headingRowColor: _headingRowColor,
+        columns: widget.columns.map((c) {
+          return DataColumn(
+            tooltip: c.header,
+            headingRowAlignment: .start,
+            label: CustomScrollContent(
+              scrollDirection: .horizontal,
+              child: Text(
+                c.header,
+                overflow: .ellipsis,
+                style: context.textTheme.labelLarge?.copyWith(
+                  fontWeight: AppFontWeight.semiBold.value,
+                  color: context.colorScheme.onSurface,
+                ),
               ),
             ),
-          ),
-        );
-      }).toList(),
-      rows: [],
+          );
+        }).toList(),
+        rows: [],
+      ),
     );
   }
 
   Widget get _dataTable {
     final state = _listController.state;
     return DataTable(
+      decoration: _boxDecoration,
       clipBehavior: widget.clipBehavior,
-      decoration: widget.boxDecoration,
+      headingRowColor: _headingRowColor,
       columns: widget.columns.asMap().entries.map((entry) {
         final c = entry.value;
         final columnWidth = c.width != null
