@@ -183,6 +183,7 @@ class _PagedTableViewState<E, S> extends State<PagedTableView<E, S>> {
                         _boxDecoration.borderRadius ??
                         context.theme.borderRadiusNone,
                     child: CustomScrollContent(
+                      expanded: true,
                       scrollDirection: .horizontal,
                       child: DataTable(
                         decoration: _boxDecoration,
@@ -322,6 +323,7 @@ class _PagedTableViewState<E, S> extends State<PagedTableView<E, S>> {
 
   Widget get _dataTablePlaceholder {
     return CustomScrollContent(
+      expanded: true,
       scrollDirection: .horizontal,
       child: DataTable(
         decoration: _boxDecoration,
