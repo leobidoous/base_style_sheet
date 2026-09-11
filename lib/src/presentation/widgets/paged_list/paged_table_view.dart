@@ -274,7 +274,7 @@ class _PagedTableViewState<E, S> extends State<PagedTableView<E, S>> {
                   ),
             ],
           )
-        else if (state.isNotEmpty)
+        else if (state.isEmpty)
           Column(
             crossAxisAlignment: .stretch,
             children: [
