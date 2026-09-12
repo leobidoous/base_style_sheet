@@ -40,6 +40,10 @@ class _DropdownList<T> extends StatelessWidget {
       separatorBuilder: (_, index) => const CustomDivider(height: 0),
       noItemsFoundIndicatorBuilder: (_, onRefresh) {
         return ListEmpty(
+          header: Icon(
+            Icons.search_rounded,
+            size: ScreenSizeType.phone.width * .15,
+          ),
           message: 'Nenhum item encontrado',
           padding: padding ?? .all(Spacing.sm.value),
         );

@@ -1,10 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 import '../../../core/themes/app_theme_factory.dart';
 import '../../../core/themes/typography/typography_constants.dart';
+import '../../../domain/enums/screen_size_type.dart';
 import '../../controllers/paged_list_controller.dart';
 import '../../extensions/build_context_extensions.dart';
 import '../custom_loading.dart';
@@ -142,6 +141,10 @@ class _PagedListViewState<E, S> extends State<PagedWrapView<E, S>> {
               ) ??
               Center(
                 child: ListEmpty(
+                  header: Icon(
+                    Icons.search_rounded,
+                    size: ScreenSizeType.phone.width * .15,
+                  ),
                   padding: widget.padding,
                   btnLabel: 'Tentar novamente',
                   onPressed: _listController.refresh,

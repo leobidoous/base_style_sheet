@@ -5,6 +5,7 @@ import '../../../core/themes/app_theme_base.dart';
 import '../../../core/themes/app_theme_factory.dart';
 import '../../../core/themes/spacing/spacing.dart';
 import '../../../core/themes/typography/typography_constants.dart';
+import '../../../domain/enums/screen_size_type.dart';
 import '../../controllers/paged_list_controller.dart';
 import '../../extensions/build_context_extensions.dart';
 import '../buttons/custom_button.dart';
