@@ -176,21 +176,13 @@ class _PagedTableViewState<E, S> extends State<PagedTableView<E, S>> {
         child: Column(
           crossAxisAlignment: .stretch,
           children: [
-            LayoutBuilder(
-              builder: (context, constraints) {
-                return ClipRRect(
-                  borderRadius:
-                      _boxDecoration.borderRadius ??
-                      context.theme.borderRadiusNone,
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(minWidth: constraints.maxWidth),
-                    child: DecoratedBox(
-                      decoration: _boxDecoration,
-                      child: _tableView(state),
-                    ),
-                  ),
-                );
-              },
+            ClipRRect(
+              borderRadius:
+                  _boxDecoration.borderRadius ?? context.theme.borderRadiusNone,
+              child: DecoratedBox(
+                decoration: _boxDecoration,
+                child: _tableView(state),
+              ),
             ),
             widget.padding.bottom > 0
                 ? SizedBox(height: widget.padding.bottom)
@@ -353,53 +345,60 @@ class _PagedTableViewState<E, S> extends State<PagedTableView<E, S>> {
 
   Widget get _dataTable {
     final state = _listController.state;
-    return CustomScrollContent(
-      scrollDirection: .horizontal,
-      child: DataTable(
-        decoration: _boxDecoration,
-        clipBehavior: widget.clipBehavior,
-        headingRowColor: _headingRowColor,
-        columns: widget.columns.asMap().entries.map((entry) {
-          final c = entry.value;
-          final columnWidth = c.width != null
-              ? FixedColumnWidth(c.width!)
-              : c.flex != null
-              ? IntrinsicColumnWidth(flex: c.flex!.toDouble())
-              : IntrinsicColumnWidth();
-          return DataColumn(
-            columnWidth: MinColumnWidth(
-              columnWidth,
-              IntrinsicColumnWidth(flex: c.flex?.toDouble()),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return CustomScrollContent(
+          scrollDirection: .horizontal,
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minWidth: constraints.maxWidth),
+            child: DataTable(
+              decoration: _boxDecoration,
+              clipBehavior: widget.clipBehavior,
+              headingRowColor: _headingRowColor,
+              columns: widget.columns.asMap().entries.map((entry) {
+                final c = entry.value;
+                final columnWidth = c.width != null
+                    ? FixedColumnWidth(c.width!)
+                    : c.flex != null
+                    ? IntrinsicColumnWidth(flex: c.flex!.toDouble())
+                    : IntrinsicColumnWidth();
+                return DataColumn(
+                  columnWidth: MinColumnWidth(
+                    columnWidth,
+                    IntrinsicColumnWidth(flex: c.flex?.toDouble()),
+                  ),
+                  tooltip: c.header,
+                  headingRowAlignment: .start,
+                  label: CustomScrollContent(
+                    alwaysScrollable: true,
+                    scrollDirection: .horizontal,
+                    child: Text(
+                      c.header,
+                      overflow: .ellipsis,
+                      style: context.textTheme.bodyMedium?.copyWith(
+                        fontWeight: AppFontWeight.semiBold.value,
+                        color: context.colorScheme.onSurface,
+                      ),
+                    ),
+                  ),
+                );
+              }).toList(),
+              rows: state.map((r) {
+                return DataRow(
+                  selected: true,
+                  color: WidgetStatePropertyAll(context.colorScheme.surface),
+                  cells: widget.columns.map((c) {
+                    return DataCell(
+                      onTap: () => c.onTap?.call(r),
+                      c.cellBuilder(context, r, state.indexOf(r)),
+                    );
+                  }).toList(),
+                );
+              }).toList(),
             ),
-            tooltip: c.header,
-            headingRowAlignment: .start,
-            label: CustomScrollContent(
-              alwaysScrollable: true,
-              scrollDirection: .horizontal,
-              child: Text(
-                c.header,
-                overflow: .ellipsis,
-                style: context.textTheme.bodyMedium?.copyWith(
-                  fontWeight: AppFontWeight.semiBold.value,
-                  color: context.colorScheme.onSurface,
-                ),
-              ),
-            ),
-          );
-        }).toList(),
-        rows: state.map((r) {
-          return DataRow(
-            selected: true,
-            color: WidgetStatePropertyAll(context.colorScheme.surface),
-            cells: widget.columns.map((c) {
-              return DataCell(
-                onTap: () => c.onTap?.call(r),
-                c.cellBuilder(context, r, state.indexOf(r)),
-              );
-            }).toList(),
-          );
-        }).toList(),
-      ),
+          ),
+        );
+      },
     );
   }
 
