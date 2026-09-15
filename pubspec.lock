@@ -5,10 +5,10 @@ packages:
     dependency: transitive
     description:
       name: android_file_picker
-      sha256: "014c74ab48d452c3252465682375a7fe6ddf56abb908ec361f207a3c4ffb2444"
+      sha256: "14ab27769b54c48d5a8a71aa9858372b7a3ae77572ea0a8aee744643c5d8c53d"
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.1"
+    version: "2.0.0"
   args:
     dependency: transitive
     description:
@@ -197,42 +197,42 @@ packages:
     dependency: "direct main"
     description:
       name: file_picker
-      sha256: "9be6aac79508dbcf8dac80a4fb20f27ce6f910837ca27e3670b9295995cc0110"
+      sha256: "98c0b156b6380ba55bc767a14e2e6b3feb246e713ad40092424596fa79005bea"
       url: "https://pub.dev"
     source: hosted
-    version: "12.3.0"
+    version: "13.1.0"
   file_picker_darwin:
     dependency: transitive
     description:
       name: file_picker_darwin
-      sha256: "59fa5394cfa5b6dc8bf491630cb17077b77b844adbb840df371e7be5355d6cf6"
+      sha256: deb3ff69d58656b885c85bc1627f09ecb79860f272a5e7577149582ede4dce5d
       url: "https://pub.dev"
     source: hosted
-    version: "1.2.0"
+    version: "2.1.0"
   file_picker_linux:
     dependency: transitive
     description:
       name: file_picker_linux
-      sha256: bd52ff1e0048f29df95f913c55ad2991c72791d93e6c42241912c4bdee946cb9
+      sha256: e7db600f50672ce5ebbe422ac0906e0f3d2a476188cc93e7126afee12bf08063
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.0"
+    version: "2.0.0"
   file_picker_platform_interface:
     dependency: transitive
     description:
       name: file_picker_platform_interface
-      sha256: "0355558fd9af6da499d18e333d6b3beb44b0bf19e00933fccd15d18eb8d0e9ca"
+      sha256: bbdc085a6f168e63f147e9ce8988f79fa0800a58e7f25a48f762c60837107ba5
       url: "https://pub.dev"
     source: hosted
-    version: "3.4.0"
+    version: "4.0.0"
   file_picker_web:
     dependency: transitive
     description:
       name: file_picker_web
-      sha256: "935560a9d29fa6f006f2855addebb88e88d438e13627d4cc24187033c106f227"
+      sha256: b3004268da0c1b52baa18df430e7ec4438194de855a807d26b447cbf07ef3496
       url: "https://pub.dev"
     source: hosted
-    version: "3.1.0"
+    version: "4.0.0"
   file_selector_linux:
     dependency: transitive
     description:
@@ -774,74 +774,74 @@ packages:
     dependency: transitive
     description:
       name: syncfusion_flutter_core
-      sha256: "4650a74c688891588afa0291a0e9849395de8bd42ebe5d5c4266f885d318f703"
+      sha256: "5847322d442ab29c04208d2b49166996dcba67e55d0ccd63c8b13d9bacff508e"
       url: "https://pub.dev"
     source: hosted
-    version: "34.2.7"
+    version: "34.2.8"
   syncfusion_flutter_pdf:
     dependency: transitive
     description:
       name: syncfusion_flutter_pdf
-      sha256: "5d8b54a77c15d35a4a92f4b14f4b31b5d5891d400a6d235a996dce265d7c6414"
+      sha256: "1332c431ca438c30d35dcbe4a231597eb74f2db4828f1a703cb243fa79029b08"
       url: "https://pub.dev"
     source: hosted
-    version: "34.2.7"
+    version: "34.2.8"
   syncfusion_flutter_pdfviewer:
     dependency: "direct main"
     description:
       name: syncfusion_flutter_pdfviewer
-      sha256: "16967a97b3465770ece0096727a486953d61720217a951cbb58e030fca4f463d"
+      sha256: "2c1c82c4fb0b243b862c2082d80a3bc0e5dbf896b8f5db2fe641817298fe1f79"
       url: "https://pub.dev"
     source: hosted
-    version: "34.2.7"
+    version: "34.2.8"
   syncfusion_flutter_signaturepad:
     dependency: transitive
     description:
       name: syncfusion_flutter_signaturepad
-      sha256: "8f1d8ce7aa8b0d4d631baee176fd674cc3548aa76671459d0373b950b70e49a1"
+      sha256: e88d4d374bf4b8e12ffa310c1f39929f8ef09c9fb8517ad6073d4d7e4050ffd5
       url: "https://pub.dev"
     source: hosted
-    version: "34.2.7"
+    version: "34.2.8"
   syncfusion_pdfviewer_linux:
     dependency: transitive
     description:
       name: syncfusion_pdfviewer_linux
-      sha256: f9a150402aae178c9cc19e4686ac0aef131196553e458c144442fa022be8c35c
+      sha256: "34817f84c30c3f887e504f09d93c881b0f752ab2de48d6e498f843025bccc6ee"
       url: "https://pub.dev"
     source: hosted
-    version: "34.2.7"
+    version: "34.2.8"
   syncfusion_pdfviewer_macos:
     dependency: transitive
     description:
       name: syncfusion_pdfviewer_macos
-      sha256: "47d0365ccd3359072a1500ee3a44818e775a399310f2e4323cd52ac52d5615aa"
+      sha256: "02aa72221378d47bd9b44e1d0d9edd68568cad9b024adda9584ffd5d587e5565"
       url: "https://pub.dev"
     source: hosted
-    version: "34.2.7"
+    version: "34.2.8"
   syncfusion_pdfviewer_platform_interface:
     dependency: transitive
     description:
       name: syncfusion_pdfviewer_platform_interface
-      sha256: c96009ffda8369b5c8c842864d4ceaaa3eb42704173107f202c4186e0ec0092a
+      sha256: e0cf6c7f56be8c20b73424e7249f96c75ff89997b718f405c1ce6f305b8bdc9d
       url: "https://pub.dev"
     source: hosted
-    version: "34.2.7"
+    version: "34.2.8"
   syncfusion_pdfviewer_web:
     dependency: transitive
     description:
       name: syncfusion_pdfviewer_web
-      sha256: "1f692f9da0f899c8f4645c5d4447cb101c0fa00b17be5a76842eb9cd0eb77b0f"
+      sha256: f51d0002f514b4ea081e43e5ddafab2b031cc8d12c889453850f647f24ca6edb
       url: "https://pub.dev"
     source: hosted
-    version: "34.2.7"
+    version: "34.2.8"
   syncfusion_pdfviewer_windows:
     dependency: transitive
     description:
       name: syncfusion_pdfviewer_windows
-      sha256: fc6778b5a0277fe3d1b3073c933bc78c8bc3f66ce3c73d2cd4584e2330d41e5a
+      sha256: "9c54f00074bcb47e843f824eb82d2ace219e4522a6bcee4c5f8373b1bb37d7d8"
       url: "https://pub.dev"
     source: hosted
-    version: "34.2.7"
+    version: "34.2.8"
   synchronized:
     dependency: transitive
     description:
@@ -1054,10 +1054,10 @@ packages:
     dependency: transitive
     description:
       name: windows_file_picker
-      sha256: "62e6e6e115231d1d1d71c7b5883b4091ce3e0190e49548dfb0ff8cba8d91ad96"
+      sha256: "9f3aa833068b09e380fdc59560ad260a4a14e9397173abb533699f967443602e"
       url: "https://pub.dev"
     source: hosted
-    version: "1.3.0"
+    version: "2.0.0"
   xdg_directories:
     dependency: transitive
     description:

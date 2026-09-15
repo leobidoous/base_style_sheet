@@ -85,7 +85,8 @@ class RowLabelValue extends StatelessWidget {
                         label,
                         overflow: .ellipsis,
                         maxLines: labelMaxLine,
-                        minFontSize: AppFontSize.labelSmall.value,
+                        minFontSize: AppFontSize.labelSmall.value
+                            .floorToDouble(),
                         style:
                             labelStyle ??
                             (isAllBold || isLabelBold
@@ -124,7 +125,7 @@ class RowLabelValue extends StatelessWidget {
                   textAlign: .end,
                   overflow: .ellipsis,
                   maxLines: valueMaxLine,
-                  minFontSize: AppFontSize.labelSmall.value,
+                  minFontSize: AppFontSize.labelSmall.value.floorToDouble(),
                   style:
                       valueStyle ??
                       (isAllBold || isValueBold
