@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show defaultTargetPlatform;
 import 'package:flutter/material.dart';
 
 import '../../../core/themes/app_theme_factory.dart';
@@ -54,6 +55,7 @@ class PagedTableView<E, S> extends StatefulWidget {
     this.allowRefresh = true,
     this.heightType = .normal,
     this.parentScrollController,
+    this.showTableFooter = true,
     this.allowHorizontalScroll = true,
     this.noItemsFoundIndicatorBuilder,
     this.newPageErrorIndicatorBuilder,
@@ -71,6 +73,7 @@ class PagedTableView<E, S> extends StatefulWidget {
   final EdgeInsets padding;
   final String? refreshLogo;
   final BuildContext context;
+  final bool showTableFooter;
   final ScrollPhysics? physics;
   final bool allowHorizontalScroll;
   final BoxDecoration? boxDecoration;
@@ -94,6 +97,7 @@ class PagedTableView<E, S> extends StatefulWidget {
 }
 
 class _PagedTableViewState<E, S> extends State<PagedTableView<E, S>> {
+  late final ScrollController _horizontalScrollController;
   late final PagedListController<E, S> _listController;
   late final ScrollController _scrollController;
 
@@ -105,6 +109,7 @@ class _PagedTableViewState<E, S> extends State<PagedTableView<E, S>> {
         widget.parentScrollController ??
         ScrollController();
     _listController = widget.tableController;
+    _horizontalScrollController = ScrollController();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (_listController.config.initWithRequest) _listController.refresh();
     });
@@ -116,6 +121,7 @@ class _PagedTableViewState<E, S> extends State<PagedTableView<E, S>> {
         widget.parentScrollController == null) {
       _scrollController.dispose();
     }
+    _horizontalScrollController.dispose();
     super.dispose();
   }
 
@@ -184,10 +190,12 @@ class _PagedTableViewState<E, S> extends State<PagedTableView<E, S>> {
                 child: _tableView(state),
               ),
             ),
-            widget.padding.bottom > 0
-                ? SizedBox(height: widget.padding.bottom)
-                : Spacing.sm.vertical,
-            _footer,
+            if (widget.showTableFooter) ...[
+              widget.padding.bottom > 0
+                  ? SizedBox(height: widget.padding.bottom)
+                  : Spacing.sm.vertical,
+              _footer,
+            ],
           ],
         ),
       ),
@@ -347,54 +355,67 @@ class _PagedTableViewState<E, S> extends State<PagedTableView<E, S>> {
     final state = _listController.state;
     return LayoutBuilder(
       builder: (context, constraints) {
-        return CustomScrollContent(
-          scrollDirection: .horizontal,
-          child: ConstrainedBox(
-            constraints: BoxConstraints(minWidth: constraints.maxWidth),
-            child: DataTable(
-              decoration: _boxDecoration,
-              clipBehavior: widget.clipBehavior,
-              headingRowColor: _headingRowColor,
-              columns: widget.columns.asMap().entries.map((entry) {
-                final c = entry.value;
-                final columnWidth = c.width != null
-                    ? FixedColumnWidth(c.width!)
-                    : c.flex != null
-                    ? IntrinsicColumnWidth(flex: c.flex!.toDouble())
-                    : IntrinsicColumnWidth();
-                return DataColumn(
-                  columnWidth: MinColumnWidth(
-                    columnWidth,
-                    IntrinsicColumnWidth(flex: c.flex?.toDouble()),
-                  ),
-                  tooltip: c.header,
-                  headingRowAlignment: .start,
-                  label: CustomScrollContent(
-                    alwaysScrollable: true,
-                    scrollDirection: .horizontal,
-                    child: Text(
-                      c.header,
-                      overflow: .ellipsis,
-                      style: context.textTheme.bodyMedium?.copyWith(
-                        fontWeight: AppFontWeight.semiBold.value,
-                        color: context.colorScheme.onSurface,
+        return RawScrollbar(
+          padding: .zero,
+          interactive: true,
+          controller: _horizontalScrollController,
+          thickness: switch (defaultTargetPlatform) {
+            .android => null,
+            .iOS => null,
+            _ => 10,
+          },
+          thumbColor: context.colorScheme.primary,
+          radius: context.theme.borderRadiusXLG.bottomLeft,
+          child: CustomScrollContent(
+            scrollDirection: .horizontal,
+            scrollController: _horizontalScrollController,
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minWidth: constraints.maxWidth),
+              child: DataTable(
+                decoration: _boxDecoration,
+                clipBehavior: widget.clipBehavior,
+                headingRowColor: _headingRowColor,
+                columns: widget.columns.asMap().entries.map((entry) {
+                  final c = entry.value;
+                  final columnWidth = c.width != null
+                      ? FixedColumnWidth(c.width!)
+                      : c.flex != null
+                      ? IntrinsicColumnWidth(flex: c.flex!.toDouble())
+                      : IntrinsicColumnWidth();
+                  return DataColumn(
+                    columnWidth: MinColumnWidth(
+                      columnWidth,
+                      IntrinsicColumnWidth(flex: c.flex?.toDouble()),
+                    ),
+                    tooltip: c.header,
+                    headingRowAlignment: .start,
+                    label: CustomScrollContent(
+                      alwaysScrollable: true,
+                      scrollDirection: .horizontal,
+                      child: Text(
+                        c.header,
+                        overflow: .ellipsis,
+                        style: context.textTheme.bodyMedium?.copyWith(
+                          fontWeight: AppFontWeight.semiBold.value,
+                          color: context.colorScheme.onSurface,
+                        ),
                       ),
                     ),
-                  ),
-                );
-              }).toList(),
-              rows: state.map((r) {
-                return DataRow(
-                  selected: true,
-                  color: WidgetStatePropertyAll(context.colorScheme.surface),
-                  cells: widget.columns.map((c) {
-                    return DataCell(
-                      onTap: () => c.onTap?.call(r),
-                      c.cellBuilder(context, r, state.indexOf(r)),
-                    );
-                  }).toList(),
-                );
-              }).toList(),
+                  );
+                }).toList(),
+                rows: state.map((r) {
+                  return DataRow(
+                    selected: true,
+                    color: WidgetStatePropertyAll(context.colorScheme.surface),
+                    cells: widget.columns.map((c) {
+                      return DataCell(
+                        onTap: () => c.onTap?.call(r),
+                        c.cellBuilder(context, r, state.indexOf(r)),
+                      );
+                    }).toList(),
+                  );
+                }).toList(),
+              ),
             ),
           ),
         );

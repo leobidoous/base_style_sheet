@@ -80,7 +80,7 @@ class _CustomScrollContentState extends State<CustomScrollContent> {
           thickness: switch (defaultTargetPlatform) {
             .android => null,
             .iOS => null,
-            _ => 0,
+            _ => 10,
           },
           controller: _scrollController,
           thumbColor: context.colorScheme.primary,
