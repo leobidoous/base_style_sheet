@@ -53,7 +53,7 @@ class PagedTableView<E, S> extends StatefulWidget {
     this.useSafeArea = true,
     this.shrinkWrap = false,
     this.allowRefresh = true,
-    this.heightType = .normal,
+    this.heightType = .small,
     this.parentScrollController,
     this.showTableFooter = true,
     this.allowHorizontalScroll = true,
