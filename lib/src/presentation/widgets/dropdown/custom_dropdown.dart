@@ -214,6 +214,9 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
 
   @override
   void didUpdateWidget(covariant CustomDropdown<T> oldWidget) {
+    // Valor controlado pelo pai (ex.: limpo ao mudar outro filtro): sem isto
+    // o campo seguia exibindo a seleção anterior até ser recriado.
+    if (widget.value != oldWidget.value) _valueSelected = widget.value;
     _textSearchFilter = '';
     _showClear =
         (_valueSelected.isNotEmpty || _textSearchFilter.isNotEmpty) &&
