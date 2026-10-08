@@ -3,7 +3,7 @@ description: Um package auxiliar para manter os componentes visuais globais de u
 homepage: https://www.github.com/leobidoous
 repository: https://www.github.com/leobidoous/base_style_sheet
 issue_tracker: https://www.github.com/leobidoous/base_style_sheet/issues
-version: 1.5.0
+version: 1.6.0
 
 environment:
   sdk: ^3.10.7
@@ -17,8 +17,8 @@ dependencies:
   flutter_svg: ^2.3.0
   file_picker: ^13.1.0
   photo_view: ^0.15.0
-  fluttertoast: ^10.0.0
-  image_picker: ^1.2.3
+  fluttertoast: ^10.0.2
+  image_picker: ^1.2.4
   auto_size_text: ^3.0.0
   webview_flutter: ^4.14.1
   flutter_cache_manager: ^3.4.5
@@ -26,8 +26,8 @@ dependencies:
   webview_flutter_web: ^0.2.3+4
   webview_flutter_android: ^4.13.0
   custom_refresh_indicator: ^4.0.2
-  webview_flutter_wkwebview: ^3.26.2
-  syncfusion_flutter_pdfviewer: ^35.1.37
+  webview_flutter_wkwebview: ^3.27.0
+  syncfusion_flutter_pdfviewer: ^35.1.39
   cached_network_image_platform_interface: ^5.0.3
 
 dev_dependencies:
