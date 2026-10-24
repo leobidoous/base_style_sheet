@@ -1,6 +1,12 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../base_style_sheet.dart';
+import '../../../core/themes/app_theme_base.dart';
+import '../../../core/themes/app_theme_factory.dart';
+import '../../../core/themes/spacing/spacing.dart';
+import '../../../core/themes/typography/typography_constants.dart';
+import '../../extensions/build_context_extensions.dart';
+import '../custom_loading.dart';
 
 enum ButtonType { primary, secondary, tertiary, background, noShape }
 
@@ -48,19 +54,11 @@ class CustomButton extends StatefulWidget {
       loadingPrimaryColor: loadingPrimaryColor,
       loadingSecondaryColor: loadingSecondaryColor,
       padding: padding ?? .symmetric(horizontal: Spacing.xs.value),
-      child: CustomTooltip(
-        verticalOffset: switch (heightType) {
-          .medium => Spacing.md.value,
-          .normal => Spacing.nm.value,
-          .small => Spacing.sm.value,
-        },
-        message: text,
-        child: _textValue(
-          text,
-          type: type,
-          textStyle: textStyle,
-          textColor: textColor,
-        ),
+      child: _textValue(
+        text,
+        type: type,
+        textStyle: textStyle,
+        textColor: textColor,
       ),
     );
   }
@@ -181,35 +179,27 @@ class CustomButton extends StatefulWidget {
       isSafe: isSafe,
       loadingPrimaryColor: loadingPrimaryColor,
       loadingSecondaryColor: loadingSecondaryColor,
-      child: CustomTooltip(
-        verticalOffset: switch (heightType) {
-          .medium => Spacing.md.value,
-          .normal => Spacing.nm.value,
-          .small => Spacing.sm.value,
-        },
-        message: text,
-        child: Row(
-          mainAxisSize: .min,
-          spacing: Spacing.xxs.value,
-          mainAxisAlignment: .spaceBetween,
-          children: [
-            if (!isLoading)
-              _iconValue(
-                icon,
-                type: type,
-                iconColor: iconColor,
-                heightType: heightType,
-              ),
-            Flexible(
-              child: _textValue(
-                text,
-                type: type,
-                textStyle: textStyle,
-                textColor: textColor,
-              ),
+      child: Row(
+        mainAxisSize: .min,
+        spacing: Spacing.xxs.value,
+        mainAxisAlignment: .spaceBetween,
+        children: [
+          if (!isLoading)
+            _iconValue(
+              icon,
+              type: type,
+              iconColor: iconColor,
+              heightType: heightType,
             ),
-          ],
-        ),
+          Flexible(
+            child: _textValue(
+              text,
+              type: type,
+              textStyle: textStyle,
+              textColor: textColor,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -250,35 +240,27 @@ class CustomButton extends StatefulWidget {
       loadingPrimaryColor: loadingPrimaryColor,
       loadingSecondaryColor: loadingSecondaryColor,
       padding: padding ?? .symmetric(horizontal: Spacing.xs.value),
-      child: CustomTooltip(
-        verticalOffset: switch (heightType) {
-          .medium => Spacing.md.value,
-          .normal => Spacing.nm.value,
-          .small => Spacing.sm.value,
-        },
-        message: text,
-        child: Row(
-          mainAxisSize: .min,
-          spacing: Spacing.xxs.value,
-          mainAxisAlignment: .spaceBetween,
-          children: [
-            Flexible(
-              child: _textValue(
-                text,
-                type: type,
-                textStyle: textStyle,
-                textColor: textColor,
-              ),
+      child: Row(
+        mainAxisSize: .min,
+        spacing: Spacing.xxs.value,
+        mainAxisAlignment: .spaceBetween,
+        children: [
+          Flexible(
+            child: _textValue(
+              text,
+              type: type,
+              textStyle: textStyle,
+              textColor: textColor,
             ),
-            if (!isLoading)
-              _iconValue(
-                icon,
-                type: type,
-                iconColor: iconColor,
-                heightType: heightType,
-              ),
-          ],
-        ),
+          ),
+          if (!isLoading)
+            _iconValue(
+              icon,
+              type: type,
+              iconColor: iconColor,
+              heightType: heightType,
+            ),
+        ],
       ),
     );
   }
