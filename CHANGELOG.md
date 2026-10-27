@@ -1,3 +1,9 @@
+## 1.7.1
+
+* Fix `CustomDropdown` showing a loading state on open for static `items`: the list is now filled directly, search filters synchronously and the list reloads automatically when `items` changes
+* Stop versioning locally generated test, coverage and Sonar reports
+* Add graphify knowledge graph and Claude Code project settings
+
 ## 1.4.5
 
 * Upgrade dependencies to latest versions
