@@ -34,8 +34,21 @@ migrate_working_dir/
 build/
 **/ios/Podfile.lock
 
-# Mac
-.DS_Store
 
 # Web related
 lib/generated_plugin_registrant.dart
+
+# Testes, cobertura e Sonar (gerados localmente pelo sonar.sh)
+coverage/
+tests.output
+test-results.json
+.scannerwork/
+
+# Claude Code (settings.json, skills e CLAUDE.md são versionados)
+.claude/settings.local.json
+
+# graphify (graph.json, GRAPH_REPORT.md e manifest.json são versionados)
+graphify-out/cache/
+graphify-out/graph.html
+graphify-out/.graphify_build_state.json
+graphify-out/.graphify_labels.pending.json
