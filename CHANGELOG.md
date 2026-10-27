@@ -1,3 +1,9 @@
+## 1.7.2
+
+* Fix `CustomDropdown` with dynamic search: the list now opens in the loading state instead of flashing empty or showing the previous items
+* Fix duplicated items when searching while a request is loading: `PagedListController` discards responses from superseded requests
+* Add `PagedListController.prepareNewRequest` to reset the controller and report loading until the next fetch
+
 ## 1.7.1
 
 * Fix `CustomDropdown` showing a loading state on open for static `items`: the list is now filled directly, search filters synchronously and the list reloads automatically when `items` changes
