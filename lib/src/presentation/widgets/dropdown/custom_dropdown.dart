@@ -133,6 +133,34 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
 
   bool get _isEnabled => !widget.isLoading && widget.isEnabled;
 
+  /// Lista estática ([CustomDropdown.items]): sem `listController` externo,
+  /// os itens são entregues direto ao controller, sem request nem loading.
+  bool get _isStatic => widget.listController == null;
+
+  List<CustomDropdownItem<T>> get _filteredItems => widget.items
+      .where(
+        (e) => e.label.toLowerCase().contains(_textSearchFilter.toLowerCase()),
+      )
+      .toList();
+
+  /// Reflete [CustomDropdown.items] (com o filtro de busca) no controller.
+  void _syncStaticItems() {
+    if (!_isStatic || _listController.wasDisposed) return;
+    _listController.update(_filteredItems, force: true);
+  }
+
+  bool _itemsChanged(List<CustomDropdownItem<T>> oldItems) {
+    if (identical(oldItems, widget.items)) return false;
+    if (oldItems.length != widget.items.length) return true;
+    for (var i = 0; i < oldItems.length; i++) {
+      if (oldItems[i].value != widget.items[i].value ||
+          oldItems[i].label != widget.items[i].label) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   double get _fontSize {
     switch (widget.heightType) {
       case .medium:
@@ -174,22 +202,18 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
         widget.listController ??
         PagedListController(
           preventNewFetch: true,
+          initWithRequest: false,
           pageSize: widget.items.length,
         );
 
-    if (widget.listController == null) {
+    if (_isStatic) {
       _listController.setListener(({
         required int pageKey,
         int? pageSize,
       }) async {
-        return widget.items
-            .where(
-              (e) => e.label.toLowerCase().contains(
-                _textSearchFilter.toLowerCase(),
-              ),
-            )
-            .toList();
+        return _filteredItems;
       });
+      _syncStaticItems();
     }
   }
 
@@ -218,6 +242,8 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
     // o campo seguia exibindo a seleção anterior até ser recriado.
     if (widget.value != oldWidget.value) _valueSelected = widget.value;
     _textSearchFilter = '';
+    // Itens estáticos trocados pelo pai: recarrega a lista automaticamente.
+    if (_itemsChanged(oldWidget.items)) _syncStaticItems();
     _showClear =
         (_valueSelected.isNotEmpty || _textSearchFilter.isNotEmpty) &&
         widget.onClear != null;
@@ -274,6 +300,10 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
 
       // Limpa o filtro de busca e notifica o controller
       _listController.clearSearch();
+      if (_isStatic && _textSearchFilter.isNotEmpty) {
+        _textSearchFilter = '';
+        _syncStaticItems();
+      }
 
       _animationController.isCompleted ? _animationController.reverse() : null;
     } catch (e) {
@@ -540,7 +570,9 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
       },
       onSearchChanged: (input) {
         _textSearchFilter = input ?? '';
-        if (mounted && !_listController.wasDisposed) {
+        if (_isStatic) {
+          _syncStaticItems();
+        } else if (mounted && !_listController.wasDisposed) {
           _listController.search(_textSearchFilter);
         }
       },
