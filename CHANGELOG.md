@@ -3,6 +3,7 @@
 * Fix `CustomDropdown` with dynamic search: the list now opens in the loading state instead of flashing empty or showing the previous items
 * Fix duplicated items when searching while a request is loading: `PagedListController` discards responses from superseded requests
 * Add `PagedListController.prepareNewRequest` to reset the controller and report loading until the next fetch
+* Upgrade dependencies: file_picker 13.3.0, flutter_cache_manager 3.4.6, syncfusion_flutter_pdfviewer 35.1.42
 
 ## 1.7.1
 
