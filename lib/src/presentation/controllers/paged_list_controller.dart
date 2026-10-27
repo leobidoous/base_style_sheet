@@ -88,9 +88,16 @@ class PagedListController<E, S> extends ValueNotifier<List<S>> {
       pageKey: firstPageKey,
       pageSize: pageSize,
     );
+    _pendingRequest = initWithRequest;
   }
 
   bool _wasDisposed = false;
+  int _fetchGeneration = 0;
+
+  /// Há uma busca agendada que ainda não começou (ex.: o `refresh()` que a
+  /// lista dispara após o primeiro frame). Enquanto isso o controller já se
+  /// reporta em loading, para a lista abrir carregando em vez de vazia.
+  late bool _pendingRequest;
   Timer? _searchDebounceTimer;
   String? _lastSearchTerm;
   final ValueNotifier<E?> _error = ValueNotifier(null);
@@ -110,6 +117,7 @@ class PagedListController<E, S> extends ValueNotifier<List<S>> {
   bool get hasError => _error.value != null;
   void setError(E value) {
     if (!_wasDisposed) {
+      _pendingRequest = false;
       _loading.value = false;
       _error.value = value;
       notifyListeners();
@@ -122,9 +130,10 @@ class PagedListController<E, S> extends ValueNotifier<List<S>> {
     if (update) notifyListeners();
   }
 
-  bool get isLoading => _loading.value;
+  bool get isLoading => _loading.value || _pendingRequest;
   void setLoading(bool value, {bool update = true}) {
     if (!_wasDisposed) {
+      _pendingRequest = false;
       _loading.value = value;
       if (update) notifyListeners();
     }
@@ -160,7 +169,8 @@ class PagedListController<E, S> extends ValueNotifier<List<S>> {
   late final bool reverse;
 
   Future<void> refresh() async {
-    if (!isLoading) {
+    if (!_loading.value) {
+      _fetchGeneration++;
       config.reset();
       update(List<S>.empty(growable: true));
       await fetchNewItems(pageKey: firstPageKey, pageSize: config.pageSize);
@@ -206,10 +216,26 @@ class PagedListController<E, S> extends ValueNotifier<List<S>> {
       await onSearchChanged!(searchTerm);
     }
 
-    // Reset and refresh
+    // Reset and refresh (descarta respostas de buscas anteriores)
+    _fetchGeneration++;
     config.reset();
     update(List<S>.empty(growable: true));
     await fetchNewItems(pageKey: firstPageKey, pageSize: config.pageSize);
+  }
+
+  /// Prepara o controller para uma nova busca (ex.: ao fechar um dropdown
+  /// que busca ao abrir): descarta requisições pendentes e itens atuais e
+  /// já se reporta em loading, para a próxima abertura não exibir os itens
+  /// antigos nem a lista vazia antes do `refresh()`.
+  void prepareNewRequest() {
+    if (_wasDisposed) return;
+    _searchDebounceTimer?.cancel();
+    _fetchGeneration++;
+    config.reset();
+    _error.value = null;
+    _loading.value = false;
+    _pendingRequest = true;
+    value = List<S>.empty(growable: true);
   }
 
   void setListener(
@@ -224,7 +250,7 @@ class PagedListController<E, S> extends ValueNotifier<List<S>> {
     if (((state.isNotEmpty && config.preventNewFetch) ||
             (pageKey <= config.pageKey && state.isNotEmpty) ||
             (config.isLastFetch && !config.forceNewFetch) ||
-            isLoading) &&
+            _loading.value) &&
         !forceFetch) {
       return;
     }
@@ -234,19 +260,7 @@ class PagedListController<E, S> extends ValueNotifier<List<S>> {
     config.nextPageKey = config.pageKey + config.pageIncrement;
     clearError();
     setLoading(true);
-    await _fetchItems(pageKey: pageKey, pageSize: pageSize ?? config.pageSize)
-        .then((value) async {
-          config.lastItems = value;
-          if (value.isNotEmpty) {
-            final newValues = value.where((v) => !state.contains(v)).toList();
-            await Future.delayed(Durations.medium1);
-            update(state..addAll(newValues));
-          }
-        })
-        .catchError((error) {
-          setError(error);
-        })
-        .whenComplete(() => setLoading(false));
+    await _runFetch(pageKey: pageKey, pageSize: pageSize ?? config.pageSize);
   }
 
   Future<void> fetchItemsPerPage({required int pageKey, int? pageSize}) async {
@@ -255,19 +269,32 @@ class PagedListController<E, S> extends ValueNotifier<List<S>> {
     config.pageKey = pageKey;
     config.pageSize = pageSize ?? config.pageSize;
     config.nextPageKey = config.pageKey + config.pageIncrement;
-    await _fetchItems(pageKey: pageKey, pageSize: pageSize ?? config.pageSize)
-        .then((value) async {
-          config.lastItems = value;
-          if (value.isNotEmpty) {
-            final newValues = value.where((v) => !state.contains(v)).toList();
-            await Future.delayed(Durations.medium1);
-            update(state..addAll(newValues));
-          }
-        })
-        .catchError((error) {
-          setError(error);
-        })
-        .whenComplete(() => setLoading(false));
+    await _runFetch(pageKey: pageKey, pageSize: pageSize ?? config.pageSize);
+  }
+
+  /// Executa o [_fetchItems] descartando respostas obsoletas: uma busca
+  /// iniciada durante um loading (ex.: digitar enquanto a anterior carrega)
+  /// substitui a anterior, cuja resposta não pode mais alterar a lista —
+  /// senão as duas eram somadas e os itens apareciam duplicados.
+  Future<void> _runFetch({required int pageKey, required int pageSize}) async {
+    final generation = ++_fetchGeneration;
+    bool isStale() => _wasDisposed || generation != _fetchGeneration;
+
+    try {
+      final value = await _fetchItems(pageKey: pageKey, pageSize: pageSize);
+      if (isStale()) return;
+      config.lastItems = value;
+      if (value.isNotEmpty) {
+        await Future.delayed(Durations.medium1);
+        if (isStale()) return;
+        final newValues = value.where((v) => !state.contains(v)).toList();
+        update(state..addAll(newValues));
+      }
+    } catch (error) {
+      if (!isStale()) setError(error as E);
+    } finally {
+      if (!isStale()) setLoading(false);
+    }
   }
 
   @override

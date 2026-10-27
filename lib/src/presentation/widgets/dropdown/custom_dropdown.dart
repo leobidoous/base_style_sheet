@@ -303,6 +303,11 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>>
       if (_isStatic && _textSearchFilter.isNotEmpty) {
         _textSearchFilter = '';
         _syncStaticItems();
+      } else if (!_isStatic &&
+          _listController.config.initWithRequest &&
+          !_listController.wasDisposed) {
+        // A próxima abertura busca de novo: já abre em loading.
+        _listController.prepareNewRequest();
       }
 
       _animationController.isCompleted ? _animationController.reverse() : null;
