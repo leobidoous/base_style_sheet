@@ -3,7 +3,7 @@ description: Um package auxiliar para manter os componentes visuais globais de u
 homepage: https://www.github.com/leobidoous
 repository: https://www.github.com/leobidoous/base_style_sheet
 issue_tracker: https://www.github.com/leobidoous/base_style_sheet/issues
-version: 1.7.2
+version: 1.7.3
 
 environment:
   sdk: ^3.10.7
@@ -12,7 +12,10 @@ dependencies:
   flutter:
     sdk: flutter
 
-  pinput: ^7.0.0
+  # O pinput 7 usa o Material do `material_ui`, que não enxerga o Material do
+  # `flutter/material` usado pelo pacote ("No Material widget found" no
+  # CustomPinField). Fica no 6 até o pacote migrar para o `material_ui`.
+  pinput: ^6.0.2
   shimmer: ^4.0.0
   flutter_svg: ^2.3.0
   file_picker: ^13.3.0

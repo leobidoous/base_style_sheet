@@ -1,3 +1,7 @@
+## 1.7.3
+
+* Fix `CustomPinField` throwing "No Material widget found": pinput 7 depends on the decoupled `material_ui` `Material`, which doesn't see the `flutter/material` one used by this package. Pin pinput to ^6.0.2 until the package migrates to `material_ui`
+
 ## 1.7.2
 
 * Fix `CustomDropdown` with dynamic search: the list now opens in the loading state instead of flashing empty or showing the previous items
