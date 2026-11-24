@@ -54,7 +54,7 @@ export 'package:base_style_sheet/src/presentation/widgets/image_view/custom_imag
 export 'package:base_style_sheet/src/presentation/widgets/image_view/widgets/custom_photo_view.dart';
 export 'package:base_style_sheet/src/presentation/widgets/in_app_notification_banner.dart';
 export 'package:base_style_sheet/src/presentation/widgets/inputs/custom_input_field.dart';
-export 'package:base_style_sheet/src/presentation/widgets/inputs/custom_pin_input.dart';
+export 'package:base_style_sheet/src/presentation/widgets/inputs/pin_input/custom_pin_input.dart';
 export 'package:base_style_sheet/src/presentation/widgets/inputs/input_label.dart';
 export 'package:base_style_sheet/src/presentation/widgets/paged_list/paged_list_view.dart';
 export 'package:base_style_sheet/src/presentation/widgets/paged_list/paged_table_view.dart';

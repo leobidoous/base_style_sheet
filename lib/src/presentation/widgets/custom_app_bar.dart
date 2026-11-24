@@ -13,7 +13,7 @@ class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
     BuildContext context, {
     Color? backgroundColor,
     bool enableShadow = false,
-    final EdgeInsets? linearProgressPadding,
+    EdgeInsets? linearProgressPadding,
   }) {
     final view = View.of(context);
     final safeTop = view.viewPadding.top / view.devicePixelRatio;
