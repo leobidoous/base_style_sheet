@@ -1,14 +1,18 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:pinput/pinput.dart';
 
-import '../../../core/themes/app_theme_base.dart';
 import '../../../core/themes/app_theme_factory.dart';
 import '../../../core/themes/spacing/spacing.dart';
 import '../../extensions/build_context_extensions.dart';
+import 'custom_input_field.dart';
 import 'input_label.dart';
 
+/// Campo de código (PIN/OTP) em caixas, feito sobre o [CustomInputField].
+///
+/// Um único [CustomInputField] invisível recebe a digitação (teclado,
+/// colar, autofill de SMS e apagar funcionam como num input comum) e as
+/// caixas só desenham o valor atual.
 class CustomPinField extends StatefulWidget {
   const CustomPinField({
     super.key,
@@ -68,61 +72,91 @@ class CustomPinField extends StatefulWidget {
 }
 
 class _CustomPinFieldState extends State<CustomPinField> {
-  BoxConstraints get boxConstraints => BoxConstraints(
-    minHeight: AppThemeBase.buttonHeightMD,
-    minWidth: AppThemeBase.buttonHeightMD,
-  );
+  late final TextEditingController _controller;
+  late final FocusNode _focusNode;
+  String? _validationError;
+
+  double get _boxSize => const Spacing(7).value;
+
+  String? get _errorMessage {
+    if (widget.errorText?.isNotEmpty ?? false) return widget.errorText;
+    if (_validationError?.isNotEmpty ?? false) return _validationError;
+    return null;
+  }
+
+  bool get _hasError => _errorMessage != null;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller =
+        widget.controller ?? TextEditingController(text: widget.initialValue);
+    _focusNode = widget.focusNode ?? FocusNode();
+    _controller.addListener(_onControllerChanged);
+    _focusNode.addListener(_refresh);
+  }
+
+  @override
+  void dispose() {
+    _controller.removeListener(_onControllerChanged);
+    _focusNode.removeListener(_refresh);
+    if (widget.controller == null) _controller.dispose();
+    if (widget.focusNode == null) _focusNode.dispose();
+    super.dispose();
+  }
+
+  void _refresh() {
+    if (mounted) setState(() {});
+  }
+
+  /// O cursor fica sempre no fim: as caixas são preenchidas em ordem.
+  void _onControllerChanged() {
+    final end = _controller.text.length;
+    final selection = _controller.selection;
+    if (selection.baseOffset != end || selection.extentOffset != end) {
+      _controller.selection = TextSelection.collapsed(offset: end);
+    }
+    _refresh();
+  }
+
+  void _onChanged(String value) {
+    widget.onChanged?.call(value);
+    if (value.length == widget.maxLength) {
+      _focusNode.unfocus();
+      widget.onComplete?.call(value);
+    }
+  }
 
   String? _validator(String? input) {
-    String? error;
-    widget.validators?.forEach((val) {
-      if (error == null) {
-        error = val(input);
-        return;
-      }
-    });
+    String? error = widget.validator?.call(input);
+    for (final validator in widget.validators ?? const []) {
+      error ??= validator(input);
+    }
+    // Guarda o erro para pintar as caixas e mostrar a mensagem.
+    if (error != _validationError) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        setState(() => _validationError = error);
+      });
+    }
     return error;
   }
 
-  TextStyle? get pinTextStyle => context.textTheme.bodyLarge?.copyWith(
-    fontWeight: context.textTheme.fontWeightMedium,
-    color: const Color(0xFF4E4B59),
-  );
-
-  PinTheme get defaultTheme => PinTheme(
-    width: const Spacing(7).value,
-    height: const Spacing(7).value,
-    textStyle: pinTextStyle,
-    decoration: BoxDecoration(
-      borderRadius: context.theme.borderRadiusXSM,
-      color: widget.fillColor ?? context.colorScheme.surface,
-      border: .all(color: Colors.grey.shade300, width: 1),
-    ),
-  );
-
-  PinTheme get focusedTheme => PinTheme(
-    width: const Spacing(7).value,
-    height: const Spacing(7).value,
-    decoration: BoxDecoration(
-      border: .all(color: context.colorScheme.primary, width: 1),
-      color: widget.fillColor ?? context.colorScheme.surface,
-      borderRadius: context.theme.borderRadiusXSM,
-    ),
-  );
-
-  PinTheme get errorTheme => PinTheme(
-    width: const Spacing(7).value,
-    height: const Spacing(7).value,
-    textStyle: pinTextStyle,
-    decoration: BoxDecoration(
-      border: .all(color: context.colorScheme.error, width: 1),
-      color: widget.fillColor ?? context.colorScheme.surface,
-      borderRadius: context.theme.borderRadiusXSM,
-    ),
-  );
+  Color _borderColor(int index) {
+    if (_hasError) return context.colorScheme.error;
+    final isCurrent =
+        _focusNode.hasFocus &&
+        (index == _controller.text.length ||
+            (index == widget.maxLength - 1 &&
+                _controller.text.length == widget.maxLength));
+    if (isCurrent) return context.colorScheme.primary;
+    return Colors.grey.shade300;
+  }
 
   @override
   Widget build(BuildContext context) {
+    final text = _controller.text;
+    final fillColor = widget.fillColor ?? context.colorScheme.surface;
     return Padding(
       padding: widget.padding,
       child: Column(
@@ -134,46 +168,101 @@ class _CustomPinFieldState extends State<CustomPinField> {
           ],
           Opacity(
             opacity: widget.isEnabled ? 1 : .5,
-            child: Pinput(
-              showCursor: true,
-              pinAnimationType: .fade,
-              length: widget.maxLength,
-              enabled: widget.isEnabled,
-              errorPinTheme: errorTheme,
-              focusNode: widget.focusNode,
-              autofocus: widget.autofocus,
-              errorText: widget.errorText,
-              onChanged: widget.onChanged,
-              controller: widget.controller,
-              defaultPinTheme: defaultTheme,
-              focusedPinTheme: focusedTheme,
-              mainAxisAlignment: .spaceBetween,
-              pinputAutovalidateMode: .onSubmit,
-              onSubmitted: widget.onFieldSubmitted,
-              inputFormatters: widget.inputFormatters,
-              forceErrorState: widget.errorText != null,
-              errorBuilder: (errorText, pin) {
-                if (errorText == null || errorText.isEmpty) {
-                  return const SizedBox();
-                }
-                return Padding(
-                  padding: .only(top: const Spacing(1).value),
-                  child: AutoSizeText(
-                    errorText,
-                    maxLines: 2,
-                    overflow: .ellipsis,
-                    style: context.textTheme.labelSmall?.copyWith(
-                      color: context.colorScheme.error,
+            child: SizedBox(
+              height: _boxSize,
+              child: Stack(
+                children: [
+                  Positioned.fill(
+                    child: IgnorePointer(
+                      child: Row(
+                        mainAxisAlignment: .spaceBetween,
+                        children: List.generate(widget.maxLength, (index) {
+                          final char = index < text.length ? text[index] : '';
+                          return AnimatedContainer(
+                            width: _boxSize,
+                            height: _boxSize,
+                            alignment: .center,
+                            duration: Durations.short3,
+                            decoration: BoxDecoration(
+                              color: fillColor,
+                              borderRadius: context.theme.borderRadiusXSM,
+                              border: .all(color: _borderColor(index)),
+                            ),
+                            child: AnimatedSwitcher(
+                              duration: Durations.short3,
+                              child: Text(
+                                widget.obscureText && char.isNotEmpty
+                                    ? '•'
+                                    : char,
+                                key: ValueKey('$index$char'),
+                                style: context.textTheme.bodyLarge?.copyWith(
+                                  fontWeight:
+                                      context.textTheme.fontWeightMedium,
+                                  color: const Color(0xFF4E4B59),
+                                ),
+                              ),
+                            ),
+                          );
+                        }),
+                      ),
                     ),
                   ),
-                );
-              },
-              validator: widget.validator ?? _validator,
-              onCompleted: widget.onComplete,
-              closeKeyboardWhenCompleted: true,
-              keyboardType: widget.keyboardType,
+                  Positioned.fill(
+                    child: CustomInputField(
+                      showCursor: false,
+                      focusNode: _focusNode,
+                      controller: _controller,
+                      readOnly: widget.readOnly,
+                      autofocus: widget.autofocus,
+                      isEnabled: widget.isEnabled,
+                      validator: _validator,
+                      onChanged: _onChanged,
+                      errorText: widget.errorText ?? '',
+                      keyboardType: widget.keyboardType,
+                      textInputAction: widget.textInputAction,
+                      onFieldSubmitted: widget.onFieldSubmitted,
+                      autovalidateMode: widget.autovalidateMode,
+                      textCapitalization: widget.textCapitalization,
+                      enableinteractiveSelection: false,
+                      autofillHints: const [AutofillHints.oneTimeCode],
+                      fillColor: Colors.transparent,
+                      cursorColor: Colors.transparent,
+                      borderSide: BorderSide.none,
+                      contentPadding: .zero,
+                      opacityDisabled: 1,
+                      // O erro é desenhado abaixo das caixas.
+                      errorStyle: const TextStyle(fontSize: 0, height: 0),
+                      textStyle: TextStyle(
+                        color: Colors.transparent,
+                        fontSize: _boxSize * .5,
+                      ),
+                      inputFormatters: [
+                        ...widget.inputFormatters,
+                        if (widget.keyboardType == TextInputType.number)
+                          FilteringTextInputFormatter.digitsOnly,
+                        LengthLimitingTextInputFormatter(widget.maxLength),
+                      ],
+                      prefixIcon: const SizedBox.shrink(),
+                      suffixIcon: const SizedBox.shrink(),
+                      heightType: .medium,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
+          if (_errorMessage case final message?)
+            Padding(
+              padding: .only(top: const Spacing(1).value),
+              child: AutoSizeText(
+                message,
+                maxLines: 2,
+                overflow: .ellipsis,
+                style: context.textTheme.labelSmall?.copyWith(
+                  color: context.colorScheme.error,
+                ),
+              ),
+            ),
         ],
       ),
     );

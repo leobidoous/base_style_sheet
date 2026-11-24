@@ -15,6 +15,9 @@ class CustomInputField extends StatefulWidget {
     super.key,
     this.prefix,
     this.onTap,
+    this.textStyle,
+    this.cursorColor,
+    this.showCursor,
     this.fillColor,
     this.hintText,
     this.minLines,
@@ -64,6 +67,11 @@ class CustomInputField extends StatefulWidget {
   });
 
   final List<String? Function(String?)>? validators;
+
+  /// Sobrescreve o estilo do texto digitado (mesclado ao padrão).
+  final TextStyle? textStyle;
+  final Color? cursorColor;
+  final bool? showCursor;
   final FloatingLabelBehavior floatingLabelBehavior;
   final List<TextInputFormatter>? inputFormatters;
   final Function(PointerDownEvent)? onTapOutside;
@@ -253,11 +261,15 @@ class _CustomInputFieldState extends State<CustomInputField> {
                 textCapitalization: widget.textCapitalization,
                 textInputAction: widget.textInputAction ?? .done,
                 enableInteractiveSelection: widget.enableinteractiveSelection,
-                style: context.textTheme.bodyMedium?.copyWith(
-                  fontWeight: AppFontWeight.normal.value,
-                  fontSize: _fontSize,
-                ),
+                style: context.textTheme.bodyMedium
+                    ?.copyWith(
+                      fontWeight: AppFontWeight.normal.value,
+                      fontSize: _fontSize,
+                    )
+                    .merge(widget.textStyle),
                 obscureText: widget.obscureText,
+                showCursor: widget.showCursor,
+                cursorColor: widget.cursorColor,
                 decoration: InputDecoration(
                   focusColor: Colors.transparent,
                   hoverColor: Colors.transparent,

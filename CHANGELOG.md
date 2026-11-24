@@ -1,3 +1,10 @@
+## 1.8.0
+
+* `CustomPinField` rewritten on top of `CustomInputField`, dropping the `pinput` dependency. Same public API; a single hidden input drives the boxes, so typing, paste, SMS one-time-code autofill and backspace behave like a regular field
+* Add `textStyle`, `showCursor` and `cursorColor` to `CustomInputField`
+* Export `PdfDocument`, `PdfCompressionLevel` and `PdfCrossReferenceType` from `syncfusion_flutter_pdf`, so apps can recompress PDFs without depending on it directly
+* Upgrade dependencies: file_picker 13.4.1, flutter_svg 2.5.0, fluttertoast 10.0.3, flutter_cache_manager 3.5.0, cached_network_image 4.0.7, syncfusion_flutter_pdfviewer 35.2.13
+
 ## 1.7.3
 
 * Fix `CustomPinField` throwing "No Material widget found": pinput 7 depends on the decoupled `material_ui` `Material`, which doesn't see the `flutter/material` one used by this package. Pin pinput to ^6.0.2 until the package migrates to `material_ui`
