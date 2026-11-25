@@ -182,14 +182,20 @@ class _PagedTableViewState<E, S> extends State<PagedTableView<E, S>> {
         child: Column(
           crossAxisAlignment: .stretch,
           children: [
-            ClipRRect(
-              borderRadius:
-                  _boxDecoration.borderRadius ?? context.theme.borderRadiusNone,
-              child: DecoratedBox(
-                decoration: _boxDecoration,
-                child: _tableView(state),
-              ),
-            ),
+            if (_listController.isLoading ||
+                _listController.hasError ||
+                state.isEmpty)
+              ClipRRect(
+                borderRadius:
+                    _boxDecoration.borderRadius ??
+                    context.theme.borderRadiusNone,
+                child: DecoratedBox(
+                  decoration: _boxDecoration,
+                  child: _tableView(state),
+                ),
+              )
+            else
+              _dataTable,
             if (widget.showTableFooter) ...[
               widget.padding.bottom > 0
                   ? SizedBox(height: widget.padding.bottom)
@@ -303,9 +309,7 @@ class _PagedTableViewState<E, S> extends State<PagedTableView<E, S>> {
                     ),
                   ),
             ],
-          )
-        else
-          _dataTable,
+          ),
       ],
     );
   }
@@ -358,6 +362,8 @@ class _PagedTableViewState<E, S> extends State<PagedTableView<E, S>> {
         return RawScrollbar(
           padding: .zero,
           interactive: true,
+          thumbVisibility: true,
+          trackVisibility: true,
           controller: _horizontalScrollController,
           thickness: switch (defaultTargetPlatform) {
             .android => null,
@@ -365,58 +371,79 @@ class _PagedTableViewState<E, S> extends State<PagedTableView<E, S>> {
             _ => 10,
           },
           thumbColor: context.colorScheme.primary,
+          trackColor: context.colorScheme.onSurface.withValues(alpha: .1),
+          trackBorderColor: Colors.transparent,
           radius: context.theme.borderRadiusXLG.bottomLeft,
-          child: CustomScrollContent(
-            scrollDirection: .horizontal,
-            scrollController: _horizontalScrollController,
-            child: ConstrainedBox(
-              constraints: BoxConstraints(minWidth: constraints.maxWidth),
-              child: DataTable(
-                decoration: _boxDecoration,
-                clipBehavior: widget.clipBehavior,
-                headingRowColor: _headingRowColor,
-                columns: widget.columns.asMap().entries.map((entry) {
-                  final c = entry.value;
-                  final columnWidth = c.width != null
-                      ? FixedColumnWidth(c.width!)
-                      : c.flex != null
-                      ? IntrinsicColumnWidth(flex: c.flex!.toDouble())
-                      : IntrinsicColumnWidth();
-                  return DataColumn(
-                    columnWidth: MinColumnWidth(
-                      columnWidth,
-                      IntrinsicColumnWidth(flex: c.flex?.toDouble()),
-                    ),
-                    tooltip: c.header,
-                    headingRowAlignment: .start,
-                    label: CustomScrollContent(
-                      alwaysScrollable: true,
-                      scrollDirection: .horizontal,
-                      child: Text(
-                        c.header,
-                        overflow: .ellipsis,
-                        style: context.textTheme.bodyMedium?.copyWith(
-                          fontWeight: AppFontWeight.semiBold.value,
-                          color: context.colorScheme.onSurface,
-                        ),
+          trackRadius: context.theme.borderRadiusXLG.bottomLeft,
+          child: Column(
+            crossAxisAlignment: .stretch,
+            children: [
+              ClipRRect(
+                borderRadius:
+                    _boxDecoration.borderRadius ??
+                    context.theme.borderRadiusNone,
+                child: DecoratedBox(
+                  decoration: _boxDecoration,
+                  child: CustomScrollContent(
+                    scrollDirection: .horizontal,
+                    scrollController: _horizontalScrollController,
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minWidth: constraints.maxWidth,
+                      ),
+                      child: DataTable(
+                        decoration: _boxDecoration,
+                        clipBehavior: widget.clipBehavior,
+                        headingRowColor: _headingRowColor,
+                        columns: widget.columns.asMap().entries.map((entry) {
+                          final c = entry.value;
+                          final columnWidth = c.width != null
+                              ? FixedColumnWidth(c.width!)
+                              : c.flex != null
+                              ? IntrinsicColumnWidth(flex: c.flex!.toDouble())
+                              : IntrinsicColumnWidth();
+                          return DataColumn(
+                            columnWidth: MinColumnWidth(
+                              columnWidth,
+                              IntrinsicColumnWidth(flex: c.flex?.toDouble()),
+                            ),
+                            tooltip: c.header,
+                            headingRowAlignment: .start,
+                            label: CustomScrollContent(
+                              alwaysScrollable: true,
+                              scrollDirection: .horizontal,
+                              child: Text(
+                                c.header,
+                                overflow: .ellipsis,
+                                style: context.textTheme.bodyMedium?.copyWith(
+                                  fontWeight: AppFontWeight.semiBold.value,
+                                  color: context.colorScheme.onSurface,
+                                ),
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                        rows: state.map((r) {
+                          return DataRow(
+                            selected: true,
+                            color: WidgetStatePropertyAll(
+                              context.colorScheme.surface,
+                            ),
+                            cells: widget.columns.map((c) {
+                              return DataCell(
+                                onTap: () => c.onTap?.call(r),
+                                c.cellBuilder(context, r, state.indexOf(r)),
+                              );
+                            }).toList(),
+                          );
+                        }).toList(),
                       ),
                     ),
-                  );
-                }).toList(),
-                rows: state.map((r) {
-                  return DataRow(
-                    selected: true,
-                    color: WidgetStatePropertyAll(context.colorScheme.surface),
-                    cells: widget.columns.map((c) {
-                      return DataCell(
-                        onTap: () => c.onTap?.call(r),
-                        c.cellBuilder(context, r, state.indexOf(r)),
-                      );
-                    }).toList(),
-                  );
-                }).toList(),
+                  ),
+                ),
               ),
-            ),
+              Spacing.sm.vertical,
+            ],
           ),
         );
       },
