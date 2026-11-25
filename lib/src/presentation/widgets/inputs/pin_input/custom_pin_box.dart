@@ -77,3 +77,24 @@ class _PinBox extends StatelessWidget {
     );
   }
 }
+
+/// Placeholder e borda de cada caixa.
+extension on _CustomPinFieldState {
+  String _hintAt(int index) {
+    final hint = widget.hintText ?? '';
+    if (hint.isEmpty) return '';
+    if (hint.length == 1) return hint;
+    return index < hint.length ? hint[index] : '';
+  }
+
+  BorderSide _borderSide(int index) {
+    final base = widget.borderSide ?? const BorderSide(color: Colors.grey);
+    if (_hasError) {
+      return base.copyWith(color: context.colorScheme.error, width: 1);
+    }
+    if (_isActive(index)) {
+      return base.copyWith(color: context.colorScheme.primary, width: 1);
+    }
+    return base.copyWith(width: widget.borderSide?.width ?? .5);
+  }
+}

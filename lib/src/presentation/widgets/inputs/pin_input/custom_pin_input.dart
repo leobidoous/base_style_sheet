@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 
 import '../../../../core/themes/app_theme_base.dart';
@@ -9,17 +9,15 @@ import '../../../../core/themes/app_theme_factory.dart';
 import '../../../../core/themes/spacing/spacing.dart';
 import '../../../../core/themes/typography/typography_constants.dart';
 import '../../../extensions/build_context_extensions.dart';
-import '../custom_input_field.dart';
+import '../custom_input_field.dart' show InputHeightType;
 import '../input_label.dart';
 
 part 'custom_pin_box.dart';
 part 'custom_pin_hidden_input.dart';
 
-/// Campo de código (PIN/OTP) em caixas. Um [CustomInputField] invisível
-/// recebe a digitação (colar e autofill de SMS incluídos); as caixas só
-/// desenham o valor. Valida ao completar, no submit ou no `Form.validate()`,
-/// nunca a cada tecla. [hintText] é o placeholder: um caractere por caixa
-/// (`'123456'`) ou um único repetido em todas (`'0'`).
+/// Campo de código (PIN/OTP) em caixas sobre um [EditableText] invisível.
+/// Valida ao completar/submit/`Form.validate()`, nunca a cada tecla.
+/// [hintText]: um caractere por caixa (`'123456'`) ou um repetido (`'0'`).
 class CustomPinField extends StatefulWidget {
   const CustomPinField({
     super.key,
@@ -75,8 +73,7 @@ class CustomPinField extends StatefulWidget {
   final TextEditingController? controller;
   final Function(String input)? onComplete;
 
-  /// `disabled` desliga a validação ao completar; qualquer outro valor
-  /// valida quando o código fica completo (nunca a cada tecla).
+  /// `disabled` não valida ao completar (nunca valida a cada tecla).
   final AutovalidateMode? autovalidateMode;
   final Function(String? input)? onChanged;
   final TextCapitalization textCapitalization;
@@ -141,6 +138,17 @@ class _CustomPinFieldState extends State<CustomPinField>
     super.dispose();
   }
 
+  @override
+  void didUpdateWidget(CustomPinField oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.isEnabled && !widget.isEnabled) _focusNode.unfocus();
+  }
+
+  void _requestFocus() {
+    _focusNode.requestFocus();
+    SystemChannels.textInput.invokeMethod<void>('TextInput.show');
+  }
+
   void _refresh() {
     if (mounted) setState(() {});
   }
@@ -156,7 +164,6 @@ class _CustomPinFieldState extends State<CustomPinField>
   }
 
   void _onChanged(String value) {
-    // Voltou a editar: o erro anterior deixa de valer.
     if (value.length < widget.maxLength && _validationError != null) {
       setState(() => _validationError = null);
     }
@@ -197,28 +204,10 @@ class _CustomPinFieldState extends State<CustomPinField>
   }
 
   bool _isActive(int index) {
-    if (!_focusNode.hasFocus) return false;
+    if (!widget.isEnabled || !_focusNode.hasFocus) return false;
     final length = _controller.text.length;
     return index == length ||
         (index == widget.maxLength - 1 && length == widget.maxLength);
-  }
-
-  String _hintAt(int index) {
-    final hint = widget.hintText ?? '';
-    if (hint.isEmpty) return '';
-    if (hint.length == 1) return hint;
-    return index < hint.length ? hint[index] : '';
-  }
-
-  BorderSide _borderSide(int index) {
-    final base = widget.borderSide ?? const BorderSide(color: Colors.grey);
-    if (_hasError) {
-      return base.copyWith(color: context.colorScheme.error, width: 1);
-    }
-    if (_isActive(index)) {
-      return base.copyWith(color: context.colorScheme.primary, width: 1);
-    }
-    return base.copyWith(width: widget.borderSide?.width ?? .5);
   }
 
   @override
@@ -238,8 +227,7 @@ class _CustomPinFieldState extends State<CustomPinField>
               builder: (context, constraints) {
                 final gap = widget.spacing.value;
                 final count = widget.maxLength;
-                // Caixas quadradas na altura do input; encolhem se faltar
-                // largura, mantendo o mesmo espaço entre elas.
+                // Quadradas; encolhem se faltar largura, com o mesmo espaço.
                 final size = math.min(
                   _height,
                   (constraints.maxWidth - gap * (count - 1)) / count,
@@ -248,8 +236,11 @@ class _CustomPinFieldState extends State<CustomPinField>
                   height: size,
                   child: Stack(
                     children: [
+                      Positioned.fill(child: _input()),
                       Positioned.fill(
-                        child: IgnorePointer(
+                        child: GestureDetector(
+                          behavior: .opaque,
+                          onTap: widget.isEnabled ? _requestFocus : null,
                           child: Row(
                             mainAxisAlignment: .center,
                             spacing: gap,
@@ -273,7 +264,6 @@ class _CustomPinFieldState extends State<CustomPinField>
                           ),
                         ),
                       ),
-                      Positioned.fill(child: _input(size)),
                     ],
                   ),
                 );
